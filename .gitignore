@@ -1,0 +1,16 @@
+_*
+*~
+.project
+.settings
+node_modules/
+npm-debug.log
+.DS_Store
+
+\#*
+.\#*
+
+*.swp
+
+*.geany
+
+Session.vim

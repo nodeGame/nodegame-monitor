@@ -1,0 +1,26 @@
+{
+  "name": "nodegame-monitor",
+  "description": "NodeGame monitor interface",
+  "version": "0.0.1",
+  "author": "Stefano Balietti <futur.dorko@gmail.com>",
+  "keywords": [
+    "nodegame",
+    "framework",
+    "web",
+    "game",
+    "multiplayer",
+    "realtime",
+    "monitor"
+  ],
+  "repository": "nodeGame/nodegame-monitor",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "~2.1.0"
+  },
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "files": [
+    "LICENSE"
+  ]
+}
