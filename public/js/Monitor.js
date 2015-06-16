@@ -94,6 +94,9 @@ function Monitor(node) {
         game_settings: {
             publishLevel: 0
         },
+        window: {
+            promptOnleave: false
+        },
         plot: stager.getState(),
         debug: true,
         verbosity: 100
