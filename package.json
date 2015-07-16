@@ -5,22 +5,20 @@
   "author": "Stefano Balietti <futur.dorko@gmail.com>",
   "keywords": [
     "nodegame",
-    "framework",
-    "web",
     "game",
     "multiplayer",
     "realtime",
     "monitor"
   ],
-  "repository": "nodeGame/nodegame-monitor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodeGame/nodegame-monitor.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "mocha": "~2.1.0"
   },
   "engines": {
     "node": ">= 0.10"
-  },
-  "files": [
-    "LICENSE"
-  ]
+  }
 }
