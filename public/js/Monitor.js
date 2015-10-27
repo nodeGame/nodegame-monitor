@@ -73,7 +73,7 @@ function Monitor(node) {
         }
     });
 
-    stager.init()
+    stager
         .loop('monitoring');
 
     return {
