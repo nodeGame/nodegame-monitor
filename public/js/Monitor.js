@@ -74,7 +74,7 @@ function Monitor(node) {
     });
 
     stager
-        .loop('monitoring');
+        .next('monitoring');
 
     return {
         io: {
@@ -90,9 +90,6 @@ function Monitor(node) {
             name: 'Monitor Screen',
             description: 'No Description',
             version: '0.3'
-        },
-        game_settings: {
-            publishLevel: 0
         },
         window: {
             promptOnleave: false
