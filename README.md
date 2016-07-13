@@ -1,3 +1,3 @@
 # nodeGame Monitor interface
 
-tba
+Displays an HTML interface to interact with a nodeGame server.
