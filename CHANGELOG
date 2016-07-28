@@ -1,5 +1,7 @@
 # CHANGELOG
 
-## 0.1.0
+## 0.2.0
+- Added index.js, and exporting public/ dir path.
 
-- Starged changelog.
+## 0.1.0
+- Started changelog.
