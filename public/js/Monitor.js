@@ -64,6 +64,14 @@ function Monitor(node) {
         tmpElem.id = 'games';
         tabContent.appendChild(tmpElem);
         node.widgets.append('GameList', tmpElem);
+
+        // Disable some listeners.
+
+        // Do not reply to PINGs.
+        node.off('get.PING');
+
+        // TODO: Check if we need more.
+
     });
 
     stager.addStage({
