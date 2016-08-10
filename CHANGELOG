@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.3.0
+- Monitor not responding to PINGs.
+
 ## 0.2.0
 - Added index.js, and exporting public/ dir path.
 
