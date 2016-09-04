@@ -34,6 +34,7 @@
         that = this;
 
         this.id = options.id;
+        this.links = document.createElement('div');
 
     }
 
@@ -50,7 +51,7 @@
     };
 
     ResultsView.prototype.append = function() {
-
+        this.bodyDiv.appendChild(this.links);
         // Query server:
         this.refresh();
     };
@@ -62,7 +63,20 @@
 
         // Listen for server reply:
         node.on.data('INFO_RESULTS', function(msg) {
+            that.displayData(msg.data);
         });
+    };
+
+    ResultsView.prototype.displayData = function(files) {
+        var i, element, dataDir;
+        for (i = 0; i < files.length; ++i) {
+            element = document.createElement('a');
+            // TODO: replace with basedir + 'data/'
+            element.href = '../data/' + files[i];
+            element.innerHTML = files[i];
+            this.links.appendChild(element);
+            this.links.appendChild(document.createElement('br'));
+        }
     };
 
 })(node);
