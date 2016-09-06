@@ -1,9 +1,9 @@
 /**
  * # ResultsView widget for nodeGame
- * Copyright(c) 2014 Stefano Balietti
+ * Copyright(c) 2016 Stefano Balietti
  * MIT Licensed
  *
- * Shows current, previous and next state.
+ * Shows files available in data/ dir.
  *
  * www.nodegame.org
  * ---
@@ -19,7 +19,7 @@
     // ## Meta-data
 
     ResultsView.version = '0.0.1';
-    ResultsView.description = 'Visually display results of games.'; 
+    ResultsView.description = 'Displays the results of games in data/ folder.'; 
 
     ResultsView.className = 'resultsView';
 
@@ -30,12 +30,10 @@
 
     function ResultsView(options) {
         var that;
-
         that = this;
 
         this.id = options.id;
         this.links = document.createElement('div');
-
     }
 
     ResultsView.prototype.refresh = function() {
@@ -68,11 +66,12 @@
     };
 
     ResultsView.prototype.displayData = function(files) {
-        var i, element, dataDir;
+        var i, element, dataDir, prefixLink;
+        prefixLink = window.location.origin + W.uriChannel + 'monitor/data/';
         for (i = 0; i < files.length; ++i) {
             element = document.createElement('a');
-            // TODO: replace with basedir + 'data/'
-            element.href = '../data/' + files[i];
+            element.setAttribute('target', '_blank');
+            element.href = prefixLink + files[i];
             element.innerHTML = files[i];
             this.links.appendChild(element);
             this.links.appendChild(document.createElement('br'));
