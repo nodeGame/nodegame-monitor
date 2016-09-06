@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.4.0
+- Displaying the content of the data/ dir to download.
+
 ## 0.3.0
 - Monitor not responding to PINGs.
 
