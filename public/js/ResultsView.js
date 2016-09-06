@@ -67,7 +67,9 @@
 
     ResultsView.prototype.displayData = function(files) {
         var i, element, dataDir, prefixLink;
-        prefixLink = window.location.origin + W.uriChannel + 'monitor/data/';
+        prefixLink = window.location.origin;
+        prefixLink += W.uriChannel ? W.uriChannel : '/';
+        prefixLink += 'monitor/data/';
         for (i = 0; i < files.length; ++i) {
             element = document.createElement('a');
             element.setAttribute('target', '_blank');
