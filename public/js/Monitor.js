@@ -39,6 +39,11 @@ function Monitor(node) {
             '<a href="#games" role="tab" data-toggle="tab">Games</a>';
         tabList.appendChild(tmpElem);
 
+        tmpElem = document.createElement('li');
+        tmpElem.innerHTML =
+            '<a href="#results" role="tab" data-toggle="tab">Results</a>';
+        tabList.appendChild(tmpElem);
+
         // Add widgets:
         tabContent = document.createElement('div');
         tabContent.className = 'tab-content';
@@ -64,6 +69,12 @@ function Monitor(node) {
         tmpElem.id = 'games';
         tabContent.appendChild(tmpElem);
         node.widgets.append('GameList', tmpElem);
+
+        tmpElem = document.createElement('div');
+        tmpElem.className = 'tab-pane';
+        tmpElem.id = 'results';
+        tabContent.appendChild(tmpElem);
+        node.widgets.append('ResultsView', tmpElem);
 
         // Disable some listeners.
 
