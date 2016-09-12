@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.4.2
+- Reconnecting players are re-added to PlayerList avoiding to raise an error if they re-disconnect.
+
 ## 0.4.1
 - Fix.
 
