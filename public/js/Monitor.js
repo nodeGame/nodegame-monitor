@@ -76,6 +76,11 @@ function Monitor(node) {
         tabContent.appendChild(tmpElem);
         node.widgets.append('ResultsView', tmpElem);
 
+        // Add reconnecting players to pl.
+        node.on.preconnect(function(p) {
+            node.game.pl.add(p);
+        });
+
         // Disable some listeners.
 
         // Do not reply to PINGs.
