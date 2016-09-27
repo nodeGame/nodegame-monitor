@@ -76,8 +76,7 @@ function Monitor(node) {
     function addTab(name, active) {
         var tmpElem, title;
         name = name.toLowerCase();
-        title = name;
-        title.charAt(0).toUpperCase();
+        title = name.charAt(0).toUpperCase() + name.slice(1);
         tmpElem = document.createElement('li');
         tmpElem.innerHTML =
             '<a href="#' + name + '" role="tab" data-toggle="tab">' +
