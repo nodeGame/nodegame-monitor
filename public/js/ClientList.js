@@ -242,10 +242,15 @@
 
     ClientList.prototype.append = function() {
         var that;
+
         var tableStructure;
         var commandPanel, commandPanelHeading, commandPanelBody;
+
         var buttonDiv, button, forceCheckbox, label;
-        var waitRoomCommandsDiv;
+
+        var waitRoomCommandsDiv, dispatchNGamesInput, dispatchGroupSizeInput;
+        var labelDNGI, labelDGSI;
+
         var buttonTable, tableRow, tableCell;
         var setupOpts, btnLabel;
         var selectionDiv, recipientSelector;
@@ -316,21 +321,46 @@
         label.appendChild(forceCheckbox);
         label.appendChild(document.createTextNode(' Force'));
 
-        // Add buttons for setup/start/stop/pause/resume:
+        // Add buttons to control waiting room (displayed only when needed).
         this.waitroomCommandsDiv = document.createElement('div');
         this.waitroomCommandsDiv.style.display = 'none';
 
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-                    'OPEN', 'Open', forceCheckbox));
+                    'OPEN', 'Open'));
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-                    'CLOSE', 'Close', forceCheckbox));
+                    'CLOSE', 'Close'));
+
+        // Need to create inputs before Dispatch button.
+        dispatchNGamesInput = document.createElement('input');
+        dispatchNGamesInput.size = 2;
+
+        dispatchGroupSizeInput = document.createElement('input');        
+        dispatchGroupSizeInput.size = 2;
+
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-                    'DISPATCH', 'Dispatch', forceCheckbox));
+            'DISPATCH', 'Dispatch', dispatchNGamesInput,
+            dispatchGroupSizeInput));
+
+        // Dispatch N Groups label.
+   
+        labelDNGI = document.createElement('label');
+        labelDNGI.style['margin-left'] = '5px';
+        labelDNGI.appendChild(document.createTextNode('#Groups'));
+        labelDNGI.appendChild(dispatchNGamesInput);
+        this.waitroomCommandsDiv.appendChild(labelDNGI);
+
+        // Dispatch Group Size label.
+
+        labelDGSI = document.createElement('label');
+        labelDGSI.style['margin-left'] = '5px';
+        labelDGSI.appendChild(document.createTextNode('#Size'));
+        labelDGSI.appendChild(dispatchGroupSizeInput);
+        this.waitroomCommandsDiv.appendChild(labelDGSI);
 
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
-        // this.waitroomCommandsDiv.appendChild(document.createElement('br'));
         
         buttonDiv.appendChild(this.waitroomCommandsDiv);
+        // End waiting Room controls.
 
         // Add buttons for setup/start/stop/pause/resume:
         buttonDiv.appendChild(this.createRoomCommandButton(
@@ -933,21 +963,27 @@
      * Make a button that sends a given WAITROOMCOMMAND.
      */
     ClientList.prototype.createWaitRoomCommandButton =
-        function(command, label, forceCheckbox) {
-            var that;
-            var button;
+        function(command, label, inputNGames, inputGroupSize) {
+            var that, button;
             that = this;
             button = document.createElement('button');
             button.innerHTML = label;
             button.onclick = function() {
+                var data, value;
+                data = {
+                    type: command,
+                    roomId: that.roomId,                        
+                };
+                if (command === 'DISPATCH') {
+                    value = JSUS.isInt(inputNGames.value, 1);
+                    if (value !== false) data.numberOfGames = value;
+                    value = JSUS.isInt(inputGroupSize.value, 1);
+                    if (value !== false) data.groupSize = value;
+                }
                 node.socket.send(node.msg.create({
-                target: 'SERVERCOMMAND',
+                    target: 'SERVERCOMMAND',
                     text:   'WAITROOMCOMMAND',
-                    data: {
-                        type:    command,
-                        roomId:  that.roomId,
-                        force:   forceCheckbox.checked
-                    }
+                    data: data
                 }));
             };
             

@@ -60,6 +60,9 @@ function Monitor(node) {
         // Do not reply to PINGs.
         node.off('get.PING');
 
+        node.on('SOCKET_DISCONNECT', function() {
+            alert('Disconnection detected');
+        });
         // TODO: Check if we need to disable more more.
 
     });
