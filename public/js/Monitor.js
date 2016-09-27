@@ -6,8 +6,10 @@ function Monitor(node) {
     var tabList, tabContent;
 
     stager.setOnInit(function() {
-        var button, tmpElem;
+        var button, autoRefreshLabel, autoRefresh, autoRefreshInterval;
+        var tmpElem;
         var channelList, roomList, clientList;
+
 
         // Add refresh button:
         button = document.createElement('button');
@@ -19,6 +21,26 @@ function Monitor(node) {
             clientList.refresh();
         };
         document.body.appendChild(button);
+        // Checkbox
+
+        autoRefresh = document.createElement('input');
+        autoRefresh.type = 'checkbox';
+        autoRefresh.onclick = function() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+            else {
+                autoRefreshInterval = setInterval(function() {
+                    button.click()
+                }, 2000);
+            }
+        };
+        autoRefresh.style['margin-left'] = '3px';
+        autoRefreshLabel = document.createElement('label');
+        autoRefreshLabel.style['margin-left'] = '5px';
+        autoRefreshLabel.appendChild(document.createTextNode('Auto'));
+        autoRefreshLabel.appendChild(autoRefresh);
+        document.body.appendChild(autoRefreshLabel);
 
         // Tabs:
         tabList = document.createElement('ul');
