@@ -1,5 +1,5 @@
 /**
- * # ResultsView widget for nodeGame
+ * # ServerView widget for nodeGame
  * Copyright(c) 2016 Stefano Balietti
  * MIT Licensed
  *
@@ -58,7 +58,7 @@
         that = this;
 
         // Listen for server reply:
-        node.on.data('INFO_RESULTS', function(msg) {
+        node.on.data('INFO_LOGS', function(msg) {
             that.displayData(msg.data);
         });
     };
@@ -67,7 +67,7 @@
         var i, element, dataDir, prefixLink;
         prefixLink = window.location.origin;
         prefixLink += W.uriChannel ? W.uriChannel : '/';
-        prefixLink += 'monitor/data/';
+        prefixLink += 'monitor/servernode/logs/';
         for (i = 0; i < files.length; ++i) {
             element = document.createElement('a');
             element.setAttribute('target', '_blank');

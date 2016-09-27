@@ -46,7 +46,7 @@ function Monitor(node) {
 
         // Server view.
         tmpElem = addTab('server');
-        tmpElem.appendChild(document.createTextNode('To do.'));
+        node.widgets.append('ServerView', tmpElem);
 
         //node.widgets.append('ResultsView', tmpElem);
 
