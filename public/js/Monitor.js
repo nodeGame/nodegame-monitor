@@ -1,5 +1,7 @@
 function Monitor(node) {
 
+    "use strict";
+
     var stager = new node.Stager();
     var tabList, tabContent;
 
@@ -48,8 +50,6 @@ function Monitor(node) {
         tmpElem = addTab('server');
         node.widgets.append('ServerView', tmpElem);
 
-        //node.widgets.append('ResultsView', tmpElem);
-
         // Add reconnecting players to pl.
         node.on.preconnect(function(p) {
             node.game.pl.add(p);
@@ -60,7 +60,7 @@ function Monitor(node) {
         // Do not reply to PINGs.
         node.off('get.PING');
 
-        // TODO: Check if we need more.
+        // TODO: Check if we need to disable more more.
 
     });
 
@@ -78,6 +78,7 @@ function Monitor(node) {
         name = name.toLowerCase();
         title = name.charAt(0).toUpperCase() + name.slice(1);
         tmpElem = document.createElement('li');
+        if (active) tmpElem.className = 'active';
         tmpElem.innerHTML =
             '<a href="#' + name + '" role="tab" data-toggle="tab">' +
             title + '</a>';
@@ -91,15 +92,7 @@ function Monitor(node) {
         return tmpElem;
     }
 
-    stager.addStage({
-        id: 'monitoring',
-        cb: function() {
-            console.log('Monitoring');
-        }
-    });
-
-    stager
-        .next('monitoring');
+    // Return configuration.
 
     return {
         socket: {
@@ -117,7 +110,7 @@ function Monitor(node) {
         window: {
             promptOnleave: false
         },
-        plot: stager.getState(),
+        plot: stager.next('monitoring').getState(),
         debug: true,
         verbosity: 100
     };

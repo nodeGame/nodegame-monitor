@@ -65,6 +65,8 @@
 
     ServerView.prototype.displayData = function(files) {
         var i, element, dataDir, prefixLink;
+        this.links.appendChild(document.createTextNode('Logs:'));
+        this.links.appendChild(document.createElement('br'));
         prefixLink = window.location.origin;
         prefixLink += W.uriChannel ? W.uriChannel : '/';
         prefixLink += 'monitor/servernode/logs/';
