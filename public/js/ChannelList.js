@@ -59,7 +59,6 @@
     }
 
     function ChannelList(options) {
-        this.id = options.id;
 
         this.table = new Table({
             render: {

@@ -23,14 +23,13 @@ function Monitor(node) {
         tabList.className = 'nav nav-tabs';
         tabList.setAttribute('role', 'tablist');
         document.body.appendChild(tabList);
-
-        // Add widgets:
         tabContent = document.createElement('div');
         tabContent.className = 'tab-content';
         document.body.appendChild(tabContent);
 
         // Channel and room list:
         tmpElem = addTab('channels');
+        channelList = node.widgets.append('ChannelList', tmpElem);
         roomList = node.widgets.append('RoomList', tmpElem);
 
         // Client list and controls:
