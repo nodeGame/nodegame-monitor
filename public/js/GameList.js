@@ -133,7 +133,7 @@
                 that.selectedGame = null;
                 that.selectedTreatment = null;
             }
-            else if (!that.gameData[that.selectedGame].treatments
+            else if (!that.gameData[that.selectedGame].settings
                       .hasOwnProperty(that.selectedTreatment)) {
 
                 that.selectedTreatment = null;
@@ -191,8 +191,8 @@
 
         treatmentList = document.createElement('span');
         firstElem = true;
-        for (treatment in selGame.treatments) {
-            if (selGame.treatments.hasOwnProperty(treatment)) {
+        for (treatment in selGame.settings) {
+            if (selGame.settings.hasOwnProperty(treatment)) {
                 // Add ', ' between elements:
                 if (!firstElem) {
                     elem = document.createElement('span');
@@ -230,7 +230,7 @@
         selGame = this.gameData[this.selectedGame];
         if (!selGame) return;
 
-        selTreatment = selGame.treatments[this.selectedTreatment];
+        selTreatment = selGame.settings[this.selectedTreatment];
         if (!selTreatment) return;
 
         this.treatmentTable.addRow(['<name>', this.selectedTreatment]);
