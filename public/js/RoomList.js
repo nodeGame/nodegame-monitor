@@ -58,7 +58,6 @@
     }
 
     function RoomList(options) {
-        this.id = options.id;
 
         this.channelName = options.channel || null;
         this.table = new Table({

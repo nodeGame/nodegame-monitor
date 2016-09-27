@@ -91,8 +91,6 @@
 
         that = this;
 
-        this.id = options.id;
-
         this.channelName = options.channel || null;
         this.roomId = options.roomId || null;
         this.roomName = options.roomName || null;
@@ -326,26 +324,26 @@
 
                 button = document.createElement('button');
                 button.innerHTML = 'On';
-                button.onclick = function(optName) {
+                button.onclick = (function(optName) {
                     return function() {
                         var opts = {};
                         opts[optName] = true;
                         node.remoteSetup('window', that.getSelectedClients(),
                                          opts);
                     };
-                }(setupOpts[btnLabel]);
+                })(setupOpts[btnLabel]);
                 tableCell.appendChild(button);
 
                 button = document.createElement('button');
                 button.innerHTML = 'Off';
-                button.onclick = function(optName) {
+                button.onclick = (function(optName) {
                     return function() {
                         var opts = {};
                         opts[optName] = false;
                         node.remoteSetup('window', that.getSelectedClients(),
                                          opts);
                     };
-                }(setupOpts[btnLabel]);
+                })(setupOpts[btnLabel]);
                 tableCell.appendChild(button);
             }
         }
@@ -472,11 +470,11 @@
                 elem = document.createElement('a');
                 elem.className = 'ng_clickable';
                 elem.innerHTML = roomObj.name;
-                elem.onclick = function(o) {
+                elem.onclick = (function(o) {
                     return function() {
                         that.setRoom(o.id, o.name);
                     };
-                }(roomObj);
+                })(roomObj);
 
                 this.roomTable.addRow(elem);
             }
@@ -589,8 +587,7 @@
         noneSelected = true;
         for (i in this.checkboxes) {
             if (this.checkboxes.hasOwnProperty(i)) {
-                if (this.checkboxes[i].checked)
-                {
+                if (this.checkboxes[i].checked) {
                     noneSelected = false;
                 }
                 else {
@@ -630,8 +627,7 @@
         recipients = [];
         for (i in this.checkboxes) {
             if (this.checkboxes.hasOwnProperty(i)) {
-                if (this.checkboxes[i].checked)
-                {
+                if (this.checkboxes[i].checked) {
                     recipients.push(i);
                 }
             }

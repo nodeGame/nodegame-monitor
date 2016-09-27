@@ -1,10 +1,11 @@
 function Monitor(node) {
 
     var stager = new node.Stager();
+    var tabList, tabContent;
 
     stager.setOnInit(function() {
-        var button, tabList, tmpElem;
-        var tabContent, channelList, roomList, clientList;
+        var button, tmpElem;
+        var channelList, roomList, clientList;
 
         // Add refresh button:
         button = document.createElement('button');
@@ -23,58 +24,32 @@ function Monitor(node) {
         tabList.setAttribute('role', 'tablist');
         document.body.appendChild(tabList);
 
-        tmpElem = document.createElement('li');
-        tmpElem.innerHTML =
-            '<a href="#channels" role="tab" data-toggle="tab">Channels</a>';
-        tabList.appendChild(tmpElem);
-
-        tmpElem = document.createElement('li');
-        tmpElem.className = 'active';
-        tmpElem.innerHTML =
-            '<a href="#clients" role="tab" data-toggle="tab">Clients</a>';
-        tabList.appendChild(tmpElem);
-
-        tmpElem = document.createElement('li');
-        tmpElem.innerHTML =
-            '<a href="#games" role="tab" data-toggle="tab">Games</a>';
-        tabList.appendChild(tmpElem);
-
-        tmpElem = document.createElement('li');
-        tmpElem.innerHTML =
-            '<a href="#results" role="tab" data-toggle="tab">Results</a>';
-        tabList.appendChild(tmpElem);
-
         // Add widgets:
         tabContent = document.createElement('div');
         tabContent.className = 'tab-content';
         document.body.appendChild(tabContent);
 
         // Channel and room list:
-        tmpElem = document.createElement('div');
-        tmpElem.className = 'tab-pane';
-        tmpElem.id = 'channels';
-        tabContent.appendChild(tmpElem);
-        channelList = node.widgets.append('ChannelList', tmpElem);
+        tmpElem = addTab('channels');
         roomList = node.widgets.append('RoomList', tmpElem);
 
         // Client list and controls:
-        tmpElem = document.createElement('div');
-        tmpElem.className = 'tab-pane active';
-        tmpElem.id = 'clients';
-        tabContent.appendChild(tmpElem);
+        tmpElem = addTab('clients', true);
         clientList = node.widgets.append('ClientList', tmpElem);
 
-        tmpElem = document.createElement('div');
-        tmpElem.className = 'tab-pane';
-        tmpElem.id = 'games';
-        tabContent.appendChild(tmpElem);
+        // Game list.
+        tmpElem = addTab('games');
         node.widgets.append('GameList', tmpElem);
 
-        tmpElem = document.createElement('div');
-        tmpElem.className = 'tab-pane';
-        tmpElem.id = 'results';
-        tabContent.appendChild(tmpElem);
+        // Results view.
+        tmpElem = addTab('results');
         node.widgets.append('ResultsView', tmpElem);
+
+        // Server view.
+        tmpElem = addTab('server');
+        tmpElem.appendChild(document.createTextNode('To do.'));
+
+        //node.widgets.append('ResultsView', tmpElem);
 
         // Add reconnecting players to pl.
         node.on.preconnect(function(p) {
@@ -90,6 +65,34 @@ function Monitor(node) {
 
     });
 
+    /**
+     * ### addTab
+     *
+     * Adds a tab to the header and returns it
+     *
+     * @param {string} name The name of the tab
+     *
+     * @return {HTMLElement} The div tab
+     */
+    function addTab(name, active) {
+        var tmpElem, title;
+        name = name.toLowerCase();
+        title = name;
+        title.charAt(0).toUpperCase();
+        tmpElem = document.createElement('li');
+        tmpElem.innerHTML =
+            '<a href="#' + name + '" role="tab" data-toggle="tab">' +
+            title + '</a>';
+        tabList.appendChild(tmpElem);
+
+        tmpElem = document.createElement('div');
+        tmpElem.className = 'tab-pane';
+        if (active) tmpElem.className += ' active';
+        tmpElem.id = name;
+        tabContent.appendChild(tmpElem);
+        return tmpElem;
+    }
+
     stager.addStage({
         id: 'monitoring',
         cb: function() {
@@ -101,11 +104,9 @@ function Monitor(node) {
         .next('monitoring');
 
     return {
-        io: {
-          reconnect: false
-        },
         socket: {
-            type: 'SocketIo'
+            type: 'SocketIo',
+            reconnection: false
         },
         events: {
             dumpEvents: true
@@ -113,7 +114,7 @@ function Monitor(node) {
         metadata: {
             name: 'Monitor Screen',
             description: 'No Description',
-            version: '0.3'
+            version: '0.5'
         },
         window: {
             promptOnleave: false

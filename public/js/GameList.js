@@ -65,8 +65,6 @@
 
         that = this;
 
-        this.id = options.id;
-
         this.gamesTable = new Table({
             render: {
                 pipeline: function(o) { return renderCell(o, that); },

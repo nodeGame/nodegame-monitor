@@ -12,45 +12,47 @@
 
     "use strict";
 
-    node.widgets.register('ResultsView', ResultsView);
+    node.widgets.register('ServerView', ServerView);
 
     var JSUS = node.JSUS;
 
     // ## Meta-data
 
-    ResultsView.version = '0.1.0';
-    ResultsView.description = 'Displays the results of games in data/ folder.'; 
+    ServerView.version = '0.0.1';
+    ServerView.description = 'Displays the results of games in data/ folder.'; 
 
-    ResultsView.className = 'resultsView';
+    ServerView.className = 'serverView';
 
     // ## Dependencies
-    ResultsView.dependencies = {
+    ServerView.dependencies = {
         JSUS: {},
     };
 
-    function ResultsView(options) {
+    function ServerView(options) {
+        var that;
+        that = this;
         this.links = document.createElement('div');
     }
 
-    ResultsView.prototype.refresh = function() {
+    ServerView.prototype.refresh = function() {
         // Ask server for games:
         node.socket.send(node.msg.create({
             target: 'SERVERCOMMAND',
             text:   'INFO',
             data: {
-                type: 'RESULTS'
+                type: 'LOGS'
             }
         }));
 
     };
 
-    ResultsView.prototype.append = function() {
+    ServerView.prototype.append = function() {
         this.bodyDiv.appendChild(this.links);
         // Query server:
         this.refresh();
     };
 
-    ResultsView.prototype.listeners = function() {
+    ServerView.prototype.listeners = function() {
         var that;
 
         that = this;
@@ -61,7 +63,7 @@
         });
     };
 
-    ResultsView.prototype.displayData = function(files) {
+    ServerView.prototype.displayData = function(files) {
         var i, element, dataDir, prefixLink;
         prefixLink = window.location.origin;
         prefixLink += W.uriChannel ? W.uriChannel : '/';
