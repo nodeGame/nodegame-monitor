@@ -91,12 +91,28 @@
 
         that = this;
 
+        // Channel currently selected.
         this.channelName = options.channel || null;
+
+        // Rooms available in currently selected channel.
+        this.availableRooms = options.availableRooms || {};
+
+        // Currently selected room id.
         this.roomId = options.roomId || null;
+
+        // Currently selected room name.
         this.roomName = options.roomName || null;
+
+        // Id of the logic of the currently selected room.
         this.roomLogicId = null;
+
+        // Table displaying the channels.
         this.channelTable = new Table();
+
+        // Table displaying the rooms.
         this.roomTable = new Table();
+
+        // Table displaying the clients.
         this.clientTable = new Table({
             render: {
                 pipeline: renderClientCell,
@@ -104,6 +120,10 @@
             }
         });
 
+        // Div containing the commands for the waiting room (when selected).
+        this.waitroomCommandsDiv = null;
+
+        // Flags for receiving data.
         this.waitingForChannels = false;
         this.waitingForRooms = false;
         this.waitingForClients = false;
@@ -136,7 +156,7 @@
             if (this.roomTable && this.roomTable.table.parentNode) {
                 this.roomTable.table.parentNode.style.display = 'none';
             }
-            this.setRoom(null, null);
+            this.setRoom(null);
         }
 
         this.channelName = channelName;
@@ -144,17 +164,30 @@
         this.refreshRooms();
     };
 
-    ClientList.prototype.setRoom = function(roomId, roomName) {
-        this.roomId = roomId;
-        this.roomName = roomName;
-        this.roomLogicId = null;
+    ClientList.prototype.setRoom = function(roomId) {
+        var roomObj, roomName;
 
-        if (!this.roomId || !this.roomName) {
+        if (null === roomId) {
+            roomName = null;
             // Hide client table if no room is selected:
             if (this.clientTable && this.clientTable.table.parentNode) {
                 this.clientTable.table.parentNode.style.display = 'none';
             }
         }
+        else {
+            roomObj = this.availableRooms[roomId];
+            if (!roomObj) {
+                throw new Error('ClientList.setRoom: roomId not found: ' +
+                                roomId);
+            }
+            roomName = roomObj.name;
+        }
+        
+        this.roomId = roomId;
+        this.roomName = roomName;
+        this.roomLogicId = null;
+    
+        node.emit('ROOM_SELECTED', roomObj);
 
         this.refreshClients();
     };
@@ -175,6 +208,7 @@
     ClientList.prototype.refreshRooms = function() {
         // Ask server for room list:
         this.waitingForRooms = true;
+        this.availableRooms = {};
         if ('string' !== typeof this.channelName) return;
         node.socket.send(node.msg.create({
             target: 'SERVERCOMMAND',
@@ -211,6 +245,7 @@
         var tableStructure;
         var commandPanel, commandPanelHeading, commandPanelBody;
         var buttonDiv, button, forceCheckbox, label;
+        var waitRoomCommandsDiv;
         var buttonTable, tableRow, tableCell;
         var setupOpts, btnLabel;
         var selectionDiv, recipientSelector;
@@ -218,7 +253,7 @@
         that = this;
 
         // Hide the panel initially:
-        this.setRoom(null, null);
+        this.setRoom(null);
 
         // Add tables in a 3x1 table element:
         tableStructure = document.createElement('table');
@@ -282,6 +317,22 @@
         label.appendChild(document.createTextNode(' Force'));
 
         // Add buttons for setup/start/stop/pause/resume:
+        this.waitroomCommandsDiv = document.createElement('div');
+        this.waitroomCommandsDiv.style.display = 'none';
+
+        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
+                    'OPEN', 'Open', forceCheckbox));
+        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
+                    'CLOSE', 'Close', forceCheckbox));
+        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
+                    'DISPATCH', 'Dispatch', forceCheckbox));
+
+        this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
+        // this.waitroomCommandsDiv.appendChild(document.createElement('br'));
+        
+        buttonDiv.appendChild(this.waitroomCommandsDiv);
+
+        // Add buttons for setup/start/stop/pause/resume:
         buttonDiv.appendChild(this.createRoomCommandButton(
                     'SETUP',  'Setup', forceCheckbox));
         buttonDiv.appendChild(this.createRoomCommandButton(
@@ -294,6 +345,8 @@
                     'RESUME', 'Resume', forceCheckbox));
 
         buttonDiv.appendChild(label);
+        
+        buttonDiv.appendChild(document.createElement('hr'));
 
         // Add StateBar:
         this.appendStateBar(commandPanelBody);
@@ -362,7 +415,6 @@
         // Add MsgBar:
         this.appendMsgBar();
 
-
         // Query server:
         this.refreshChannels();
 
@@ -388,7 +440,6 @@
         node.on.data('INFO_ROOMS', function(msg) {
             if (that.waitingForRooms) {
                 that.waitingForRooms = false;
-
                 // Update the contents:
                 that.writeRooms(msg.data);
                 that.updateTitle();
@@ -403,6 +454,19 @@
                 that.roomLogicId = msg.data.logicId;
                 that.writeClients(msg.data);
                 that.updateTitle();
+            }
+        });
+
+        node.on('ROOM_SELECTED', function(room) {
+            if (room && room.type === 'Waiting') {
+                if (that.waitroomCommandsDiv) {
+                    that.waitroomCommandsDiv.style.display = '';
+                }
+            }
+            else {
+                if (that.waitroomCommandsDiv) {
+                    that.waitroomCommandsDiv.style.display = 'none';
+                }
             }
         });
 
@@ -452,32 +516,36 @@
 
     ClientList.prototype.writeRooms = function(rooms) {
         var roomName, roomObj;
-        var elem;
+        var elem, i, len;
         var that;
 
         that = this;
 
+        // Clear available rooms object.
+        this.availableRooms = {};
+
         // Unhide table cell:
         this.roomTable.table.parentNode.style.display = '';
-
         this.roomTable.clear(true);
 
         // Create a clickable row for each room:
-        for (roomName in rooms) {
-            if (rooms.hasOwnProperty(roomName)) {
-                roomObj = rooms[roomName];
+        i = -1, len = rooms.length;
+        for ( ; ++i < len ; ) {
+            roomObj = rooms[i];
 
-                elem = document.createElement('a');
-                elem.className = 'ng_clickable';
-                elem.innerHTML = roomObj.name;
-                elem.onclick = (function(o) {
-                    return function() {
-                        that.setRoom(o.id, o.name);
-                    };
-                })(roomObj);
+            // Add room to availableRooms.
+            this.availableRooms[roomObj.id] = roomObj;
+            
+            // Add element to Table.
+            elem = document.createElement('a');
+            elem.className = 'ng_clickable';
+            elem.innerHTML = roomObj.name;
+            elem.onclick = (function(o) {
+                return function() { that.setRoom(o.id); };
+            })(roomObj);
 
-                this.roomTable.addRow(elem);
-            }
+            this.roomTable.addRow(elem);
+
         }
 
         this.roomTable.parse();
@@ -860,6 +928,31 @@
             }
         };
     };
+
+    /**
+     * Make a button that sends a given WAITROOMCOMMAND.
+     */
+    ClientList.prototype.createWaitRoomCommandButton =
+        function(command, label, forceCheckbox) {
+            var that;
+            var button;
+            that = this;
+            button = document.createElement('button');
+            button.innerHTML = label;
+            button.onclick = function() {
+                node.socket.send(node.msg.create({
+                target: 'SERVERCOMMAND',
+                    text:   'WAITROOMCOMMAND',
+                    data: {
+                        type:    command,
+                        roomId:  that.roomId,
+                        force:   forceCheckbox.checked
+                    }
+                }));
+            };
+            
+            return button;
+        };
 
     /**
      * Make a button that sends a given ROOMCOMMAND.
