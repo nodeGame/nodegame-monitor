@@ -1,8 +1,12 @@
 # CHANGELOG
 
+## 3.0.0
+- 02/10/2016 NodeGame Version Upgrade.
+
 ## 0.5.0
 - Auto refresh.
 - Waiting room commands.
+- Server Logs.
 
 ## 0.4.2
 - Reconnecting players are re-added to PlayerList avoiding to raise an error if they re-disconnect.
