@@ -66,6 +66,15 @@
         prefixLink = window.location.origin;
         prefixLink += W.uriChannel ? W.uriChannel : '/';
         prefixLink += 'monitor/data/';
+        if (files.length) {
+            element = document.createElement('a');
+            element.setAttribute('target', '_blank');
+            element.href = prefixLink + '*';
+            element.innerHTML = '<em>Download all the contents in a zip file</em>';
+            this.links.appendChild(element);
+            this.links.appendChild(document.createElement('br'));
+            this.links.appendChild(document.createElement('br'));
+        }
         for (i = 0; i < files.length; ++i) {
             element = document.createElement('a');
             element.setAttribute('target', '_blank');
