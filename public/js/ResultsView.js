@@ -18,7 +18,7 @@
 
     // ## Meta-data
 
-    ResultsView.version = '0.1.0';
+    ResultsView.version = '0.9.0';
     ResultsView.description = 'Displays the results of games in data/ folder.';
 
     ResultsView.className = 'resultsView';
