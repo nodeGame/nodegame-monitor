@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 3.0.1
+- Improved ResultsView (files can be sorted, and downloaded as zip).
+
 ## 3.0.0
 - 02/10/2016 NodeGame Version Upgrade.
 
