@@ -868,12 +868,9 @@
 
             // validate 'to' field:
             msg.to = that.getSelectedClients();
-            if ('number' === typeof msg.to) {
-                msg.to = '' + msg.to;
-            }
-            if ((!JSUS.isArray(msg.to) && 'string' !== typeof msg.to) ||
-                ('string' === typeof to && to.trim() === '')) {
-
+            if ('number' === typeof msg.to) msg.to = '' + msg.to;
+            
+            if ((!JSUS.isArray(msg.to) && 'string' !== typeof msg.to)) {
                 alert('Invalid "to" field');
                 msg._invalid = true;
             }

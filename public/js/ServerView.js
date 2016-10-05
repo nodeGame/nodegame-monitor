@@ -25,7 +25,7 @@
 
     // ## Dependencies
     ServerView.dependencies = {
-        JSUS: {},
+        JSUS: {}
     };
 
     function ServerView(options) {
@@ -64,7 +64,7 @@
     };
 
     ServerView.prototype.displayData = function(files) {
-        var i, element, dataDir, prefixLink;
+        var i, element, prefixLink;
         this.links.appendChild(document.createTextNode('Logs:'));
         this.links.appendChild(document.createElement('br'));
         prefixLink = window.location.origin;

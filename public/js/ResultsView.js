@@ -33,7 +33,26 @@
         var that;
         that = this;
 
+        this.sortBy = {
+            name: function(a, b) {
+                if (a[0].file < b[0].file) return -1;
+                if (a[0].file > b[0].file) return 1;
+                return 0;
+            },
+            date: function(a, b) {
+                var d1, d2;
+                d1 = Date.parse(a[1].mtime);
+                d2 = Date.parse(b[1].mtime);
+                if (d1 < d2) return 1;
+                if (d1 > d2) return -1;
+                return 0;
+            }
+        };
+
+        this.currentSort = 'name';
+
         this.lastModified = null;
+        this.lastModifiedSpan = null;
 
         this.prefixLink = null;
         this.prefixLink = window.location.origin;
@@ -56,6 +75,29 @@
                     }
                     else if (item.content.mtime) {
                         return document.createTextNode(item.content.mtime);
+                    }
+                    else {
+                        element = document.createElement('a');
+                        element.href = '#';
+                        element.innerHTML = item.content;
+                       
+                        if (item.content === 'File') {
+                            element.onclick = function() {
+                                if (that.currentSort === 'name') return;
+                                that.currentSort = 'name';
+                                that.receivedFiles.sort(that.sortBy.name);
+                                that.displayData();
+                            };
+                        }
+                        else if (item.content === 'Modified') {
+                            element.onclick = function() {
+                                if (that.currentSort === 'date') return;
+                                that.currentSort = 'date';
+                                that.receivedFiles.sort(that.sortBy.date);
+                                that.displayData();
+                            };
+                        }
+                        return element;
                     }
                 },
                 returnAt: 'first'
@@ -101,6 +143,9 @@
         b.onclick = this.refresh;
         this.header.appendChild(b);
 
+        this.lastModifiedSpan = document.createElement('span');
+        this.header.appendChild(this.lastModifiedSpan);
+
         this.bodyDiv.appendChild(document.createElement('br'));
         this.bodyDiv.appendChild(this.table.table);
 
@@ -114,21 +159,23 @@
 
         // Listen for server reply.
         node.on.data('INFO_RESULTS', function(msg) {
-            that.receivedFiles = msg.data;
-            that.displayData(msg.data);
+            console.log(msg.data);
+            if (that.lastModified === msg.data.lastModified) return;
+            that.lastModified = msg.data.lastModified;
+            that.receivedFiles = msg.data.files;
+            that.receivedFiles.sort(that.sortBy[that.currentSort]);
+            that.displayData();
         });
     };
 
-    ResultsView.prototype.displayData = function(files) {
-        var i, element;
+    ResultsView.prototype.displayData = function() {
+        var i, files;
+        files = this.receivedFiles;
+        this.lastModifiedSpan.innerHTML = 'Last modified: ' +
+            Date(this.lastModified);
         this.table.clear();
         if (files.length) {
             this.zipLink.style.display = '';
-            files.sort(function(a, b) {
-                if (a[0].file < b[0].file) return -1;
-                if (a[0].file > b[0].file) return 1;
-                return 0;
-            });
             for (i = 0; i < files.length; ++i) {
                 this.table.addRow(files[i]);
             }
