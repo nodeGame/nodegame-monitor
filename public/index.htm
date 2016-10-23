@@ -28,10 +28,16 @@
     node.setup('nodegame', conf);
     channel = JSUS.getQueryString('channel');
     if (!channel) {
-       alert('You must specify a channel!');
-       return;
+      alert('You must specify a channel!');
+      return;
     }
-    if (channel.charAt(0) !== '/') channel = '/' + channel;
+    if (channel.charAt(0) !== '/') {
+      node.game.channelName = channel;
+      channel = '/' + channel;
+    }
+    else {      
+      node.game.channelName = channel.substr(0,(channel.length -1));
+    }
     node.connect(channel, { query: 'clientType=mymonitor' });
     node.once('PLAYER_CREATED', function(player) {
       node.game.start();

@@ -160,7 +160,7 @@
         }
 
         this.channelName = channelName;
-
+        node.emit('CHANNEL_NAME', channelName);
         this.refreshRooms();
     };
 

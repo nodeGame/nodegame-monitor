@@ -59,6 +59,7 @@ function Monitor(node) {
         // Client list and controls:
         tmpElem = addTab('clients', true);
         clientList = node.widgets.append('ClientList', tmpElem);
+        this.clientList = clientList;
 
         // Game list.
         tmpElem = addTab('games');

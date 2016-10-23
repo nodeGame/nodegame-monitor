@@ -73,7 +73,6 @@
         this.treatmentDiv.appendChild(this.treatmentTable.table);
 
         this.gameData = {};
-        this.selectedGame = 'artex';
         this.selectedTreatment = null;
     }
 
@@ -101,18 +100,25 @@
 
         that = this;
 
+        node.on('CHANNEL_NAME', function() {
+            that.writeGameInfo();
+            that.writeTreatmentInfo();
+        });
+
         // Listen for server reply:
         node.on.data('INFO_GAMES', function(msg) {
+            var selectedGame;
+            selectedGame = node.game.clientList.channelName;
             that.gameData = msg.data;
             // that.writeGames();
 
             // If currently selected game or treatment disappeared, deselect it:
-            if (!that.gameData.hasOwnProperty(that.selectedGame)) {
+            if (!that.gameData.hasOwnProperty(selectedGame)) {
                 that.selectedGame = null;
                 that.selectedTreatment = null;
             }
-            else if (!that.gameData[that.selectedGame].settings
-                      .hasOwnProperty(that.selectedTreatment)) {
+            else if (!that.gameData[selectedGame].settings
+                      .hasOwnProperty(selectedTreatment)) {
 
                 that.selectedTreatment = null;
             }
@@ -128,13 +134,20 @@
         var firstElem;
         var aliases;
         var that;
+        var selectedGame;
+        selectedGame = node.game.clientList.channelName;
 
         that = this;
         this.detailTable.clear(true);
         this.detailTable.parse();
 
-        selGame = this.gameData[this.selectedGame];
-        if (!selGame) return;
+        selGame = this.gameData[selectedGame];
+        if (!selGame) {            
+            // Name.
+            this.detailTable.addRow('Select a game first!');
+            this.detailTable.parse();
+            return;
+        }
 
         // Name.
         this.detailTable.addRow([selGame.info.name]);
@@ -185,11 +198,13 @@
         var selTreatment;
         var prop, keys;
         var i, len;
+        var selectedGame;
+        selectedGame = node.game.clientList.channelName;
 
         this.treatmentTable.clear(true);
         this.treatmentTable.parse();
 
-        selGame = this.gameData[this.selectedGame];
+        selGame = this.gameData[selectedGame];
         if (!selGame) return;
 
         selTreatment = selGame.settings[this.selectedTreatment];
