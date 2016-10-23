@@ -62,7 +62,7 @@ function Monitor(node) {
 
         // Game list.
         tmpElem = addTab('games');
-        node.widgets.append('GameList', tmpElem);
+        node.widgets.append('GameDetails', tmpElem);
 
         // Results view.
         tmpElem = addTab('results');

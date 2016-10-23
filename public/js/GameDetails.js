@@ -1,9 +1,9 @@
 /**
- * # GameList widget for nodeGame
- * Copyright(c) 2014 Stefano Balietti
+ * # GameDetails widget for nodeGame
+ * Copyright(c) 2016 Stefano Balietti
  * MIT Licensed
  *
- * Shows current, previous and next state.
+ * Shows information about a game's configuration.
  *
  * www.nodegame.org
  * ---
@@ -12,91 +12,92 @@
 
     "use strict";
 
-    node.widgets.register('GameList', GameList);
+    node.widgets.register('GameDetails', GameDetails);
 
     var JSUS = node.JSUS,
         Table = node.window.Table;
 
     // ## Meta-data
 
-    GameList.version = '0.1.0';
-    GameList.description = 'Visually display available games on the server.';
+    GameDetails.version = '0.5.0';
+    GameDetails.description = 'Displays info about a game\'s configuration.';
 
-    //GameList.title = 'Games';
-    GameList.className = 'gamelist';
+    GameDetails.className = 'gamedetails';
 
     // ## Dependencies
 
-    GameList.dependencies = {
+    GameDetails.dependencies = {
         JSUS: {},
         Table: {}
     };
 
-    function renderCell(o, that) {
-        var content;
-        var text, textElem;
+//     function renderCell(o, that) {
+//         var content;
+//         var text, textElem;
+// 
+//         content = o.content;
+//         if ('object' === typeof content) {
+//             debugger
+//             switch (o.y) {
+//             case 0:
+//                 text = content.info.name;
+//                 break;
+//             }
+// 
+//             textElem = document.createElement('span');
+//             textElem.innerHTML = '<a class="ng_clickable">' + text + '</a>';
+//             textElem.onclick = function() {
+//                 that.selectedGame = content.info.name;
+//                 that.writeGameInfo();
+//                 that.selectedTreatment = null;
+//                 that.writeTreatmentInfo();
+//             };
+//         }
+//         else {
+//             textElem = document.createTextNode(content);
+//         }
+// 
+//         return textElem;
+//     }
 
-        content = o.content;
-        if ('object' === typeof content) {
-            switch (o.y) {
-            case 0:
-                text = content.info.name;
-                break;
-            }
-
-            textElem = document.createElement('span');
-            textElem.innerHTML = '<a class="ng_clickable">' + text + '</a>';
-            textElem.onclick = function() {
-                that.selectedGame = content.info.name;
-                that.writeGameInfo();
-                that.selectedTreatment = null;
-                that.writeTreatmentInfo();
-            };
-        }
-        else {
-            textElem = document.createTextNode(content);
-        }
-
-        return textElem;
-    }
-
-    function GameList(options) {
+    function GameDetails(options) {
         var that;
 
         that = this;
 
-        this.gamesTable = new Table({
-            render: {
-                pipeline: function(o) { return renderCell(o, that); },
-                returnAt: 'first'
-            }
-        });
-
-        this.gamesTableDiv = document.createElement('div');
-        JSUS.style(this.gamesTableDiv, {float: 'left'});
-        this.gamesTableDiv.appendChild(this.gamesTable.table);
+//         this.gamesTable = new Table({
+//             render: {
+//                 pipeline: function(o) { return renderCell(o, that); },
+//                 returnAt: 'first'
+//             }
+//         });
+        // this.gamesTableDiv = document.createElement('div');
+        // JSUS.style(this.gamesTableDiv, {float: 'left'});
+        // this.gamesTableDiv.appendChild(this.gamesTable.table);
 
         this.detailTable = new Table();
         this.detailTable.setLeft(
-                ['Name', 'Aliases', 'Description', 'Treatments']);
+            ['Name:', 'Aliases:', 'Description:', 'Treatments:']);
 
         this.gameDetailDiv = document.createElement('div');
-        JSUS.style(this.gameDetailDiv, {float: 'left'});
+        // JSUS.style(this.gameDetailDiv, {float: 'left'});
         this.gameDetailDiv.appendChild(this.detailTable.table);
 
+        this.gameDetailDiv.appendChild(document.createElement('br'));
+        
         this.treatmentTable = new Table();
         this.treatmentTable.setHeader(['Key', 'Value']);
 
         this.treatmentDiv = document.createElement('div');
-        JSUS.style(this.treatmentDiv, {float: 'left'});
+        // JSUS.style(this.treatmentDiv, {float: 'left'});
         this.treatmentDiv.appendChild(this.treatmentTable.table);
 
         this.gameData = {};
-        this.selectedGame = null;
+        this.selectedGame = 'artex';
         this.selectedTreatment = null;
     }
 
-    GameList.prototype.refresh = function() {
+    GameDetails.prototype.refresh = function() {
         // Ask server for games:
         node.socket.send(node.msg.create({
             target: 'SERVERCOMMAND',
@@ -106,11 +107,10 @@
             }
         }));
 
-        this.gamesTable.parse();
     };
 
-    GameList.prototype.append = function() {
-        this.bodyDiv.appendChild(this.gamesTableDiv);
+    GameDetails.prototype.append = function() {
+        // this.bodyDiv.appendChild(this.gamesTableDiv);
         this.bodyDiv.appendChild(this.gameDetailDiv);
         this.bodyDiv.appendChild(this.treatmentDiv);
 
@@ -118,7 +118,7 @@
         this.refresh();
     };
 
-    GameList.prototype.listeners = function() {
+    GameDetails.prototype.listeners = function() {
         var that;
 
         that = this;
@@ -126,7 +126,7 @@
         // Listen for server reply:
         node.on.data('INFO_GAMES', function(msg) {
             that.gameData = msg.data;
-            that.writeGames();
+            // that.writeGames();
 
             // If currently selected game or treatment disappeared, deselect it:
             if (!that.gameData.hasOwnProperty(that.selectedGame)) {
@@ -144,32 +144,32 @@
         });
     };
 
-    GameList.prototype.writeGames = function() {
-        var gameKey, gameObj;
+//     GameDetails.prototype.writeGames = function() {
+//         var gameKey, gameObj;
+// 
+//         this.gamesTable.clear(true);
+// 
+//         // Create a row for each game:
+//         for (gameKey in this.gameData) {
+//             if (this.gameData.hasOwnProperty(gameKey)) {
+//                 gameObj = this.gameData[gameKey];
+// 
+//                 if (gameObj.info.name === gameKey) {  // don't show aliases
+//                     this.gamesTable.addRow([gameObj]);
+//                 }
+//             }
+//         }
+// 
+//         this.gamesTable.parse();
+//     };
 
-        this.gamesTable.clear(true);
-
-        // Create a row for each game:
-        for (gameKey in this.gameData) {
-            if (this.gameData.hasOwnProperty(gameKey)) {
-                gameObj = this.gameData[gameKey];
-
-                if (gameObj.info.name === gameKey) {  // don't show aliases
-                    this.gamesTable.addRow([gameObj]);
-                }
-            }
-        }
-
-        this.gamesTable.parse();
-    };
-
-    GameList.prototype.writeGameInfo = function() {
+    GameDetails.prototype.writeGameInfo = function() {
         var selGame;
         var treatment, treatmentList, elem;
         var firstElem;
         var aliases;
         var that;
-
+//debugger
         that = this;
         this.detailTable.clear(true);
         this.detailTable.parse();
@@ -219,7 +219,7 @@
         this.detailTable.parse();
     };
 
-    GameList.prototype.writeTreatmentInfo = function() {
+    GameDetails.prototype.writeTreatmentInfo = function() {
         var selGame;
         var selTreatment;
         var prop;
