@@ -31,53 +31,25 @@
         Table: {}
     };
 
-//     function renderCell(o, that) {
-//         var content;
-//         var text, textElem;
-// 
-//         content = o.content;
-//         if ('object' === typeof content) {
-//             debugger
-//             switch (o.y) {
-//             case 0:
-//                 text = content.info.name;
-//                 break;
-//             }
-// 
-//             textElem = document.createElement('span');
-//             textElem.innerHTML = '<a class="ng_clickable">' + text + '</a>';
-//             textElem.onclick = function() {
-//                 that.selectedGame = content.info.name;
-//                 that.writeGameInfo();
-//                 that.selectedTreatment = null;
-//                 that.writeTreatmentInfo();
-//             };
-//         }
-//         else {
-//             textElem = document.createTextNode(content);
-//         }
-// 
-//         return textElem;
-//     }
-
     function GameDetails(options) {
         var that;
 
         that = this;
 
-//         this.gamesTable = new Table({
-//             render: {
-//                 pipeline: function(o) { return renderCell(o, that); },
-//                 returnAt: 'first'
-//             }
-//         });
-        // this.gamesTableDiv = document.createElement('div');
-        // JSUS.style(this.gamesTableDiv, {float: 'left'});
-        // this.gamesTableDiv.appendChild(this.gamesTable.table);
-
         this.detailTable = new Table();
-        this.detailTable.setLeft(
-            ['Name:', 'Aliases:', 'Description:', 'Treatments:']);
+        this.detailTable.setLeft([
+            'Name:',
+            'Aliases:',
+            'Description:',
+            'Treatments:',
+            'Channel:',
+            'Setup:',
+            'Sequence:',
+            'Wait Room:',
+            'Requirements:',
+            'Authentication:',
+            'Levels:',            
+        ]);
 
         this.gameDetailDiv = document.createElement('div');
         // JSUS.style(this.gameDetailDiv, {float: 'left'});
@@ -85,8 +57,16 @@
 
         this.gameDetailDiv.appendChild(document.createElement('br'));
         
-        this.treatmentTable = new Table();
-        this.treatmentTable.setHeader(['Key', 'Value']);
+        this.treatmentTable = new Table({
+            className: 'table table-striped details',
+            render: { pipeline : function(item) {
+                if (item.y % 2 === 0) {
+                    return document.createTextNode(item.content + ': ');
+                }
+            }}
+            
+        });
+        // this.treatmentTable.setHeader(['Key', 'Value']);
 
         this.treatmentDiv = document.createElement('div');
         // JSUS.style(this.treatmentDiv, {float: 'left'});
@@ -102,9 +82,7 @@
         node.socket.send(node.msg.create({
             target: 'SERVERCOMMAND',
             text:   'INFO',
-            data: {
-                type: 'GAMES'
-            }
+            data: { type: 'GAMES' }
         }));
 
     };
@@ -144,32 +122,13 @@
         });
     };
 
-//     GameDetails.prototype.writeGames = function() {
-//         var gameKey, gameObj;
-// 
-//         this.gamesTable.clear(true);
-// 
-//         // Create a row for each game:
-//         for (gameKey in this.gameData) {
-//             if (this.gameData.hasOwnProperty(gameKey)) {
-//                 gameObj = this.gameData[gameKey];
-// 
-//                 if (gameObj.info.name === gameKey) {  // don't show aliases
-//                     this.gamesTable.addRow([gameObj]);
-//                 }
-//             }
-//         }
-// 
-//         this.gamesTable.parse();
-//     };
-
     GameDetails.prototype.writeGameInfo = function() {
         var selGame;
         var treatment, treatmentList, elem;
         var firstElem;
         var aliases;
         var that;
-//debugger
+
         that = this;
         this.detailTable.clear(true);
         this.detailTable.parse();
@@ -177,18 +136,18 @@
         selGame = this.gameData[this.selectedGame];
         if (!selGame) return;
 
+        // Name.
         this.detailTable.addRow([selGame.info.name]);
         
-        if (JSUS.isArray(selGame.info.alias)) {
-            aliases = [selGame.info.alias.join(', ')]
-        }
-        else {
-            aliases = [selGame.info.alias];
-        }
-
+        // Aliases.
+        if (selGame.alias.length) aliases = [selGame.info.alias.join(', ')]
+        else aliases = ['-'];        
         this.detailTable.addRow(aliases);
-        this.detailTable.addRow([selGame.info.descr]);
 
+        // Descr.
+        this.detailTable.addRow([(selGame.info.description || '-')]);
+
+        // Treatments.
         treatmentList = document.createElement('span');
         firstElem = true;
         for (treatment in selGame.settings) {
@@ -205,16 +164,18 @@
 
                 elem = document.createElement('span');
                 elem.innerHTML = '<a class="ng_clickable">' + treatment +'</a>';
-                elem.onclick = function(t) {
+                elem.onclick = (function(t) {
                     return function() {
                         that.selectedTreatment = t;
                         that.writeTreatmentInfo();
                     };
-                }(treatment);
+                })(treatment);
                 treatmentList.appendChild(elem);
             }
         }
         this.detailTable.addRow([treatmentList]);
+
+        // Channel.
 
         this.detailTable.parse();
     };
@@ -222,7 +183,8 @@
     GameDetails.prototype.writeTreatmentInfo = function() {
         var selGame;
         var selTreatment;
-        var prop;
+        var prop, keys;
+        var i, len;
 
         this.treatmentTable.clear(true);
         this.treatmentTable.parse();
@@ -233,10 +195,28 @@
         selTreatment = selGame.settings[this.selectedTreatment];
         if (!selTreatment) return;
 
-        this.treatmentTable.addRow(['<name>', this.selectedTreatment]);
-        // Create a row for each option:
-        for (prop in selTreatment) {
-            if (selTreatment.hasOwnProperty(prop)) {
+        // this.treatmentTable.addRow(['name', this.selectedTreatment]);
+
+        keys = JSUS.keys(selTreatment);
+        keys.sort(function(a, b) {
+            if (a === 'name') return -1;
+            if (a === 'description') return -1;
+            if (a === 'fullDescription') return -1;
+            if (a.toLowerCase() < b.toLowerCase()) return -1;
+            if (a.toLowerCase() >= b.toLowerCase()) return 1;
+        });
+
+        i = -1, len = keys.length;
+        for ( ; ++i < len ; ) {
+            prop = keys[i];
+            if (prop === 'treatmentName') continue;
+            if (JSUS.isArray(selTreatment[prop])) {
+                this.treatmentTable.addRow([
+                    prop,
+                    selTreatment[prop].join(', ')
+                ]);
+            }
+            else {
                 this.treatmentTable.addRow([prop, selTreatment[prop]]);
             }
         }
