@@ -249,7 +249,8 @@
         var buttonDiv, button, forceCheckbox, label;
 
         var waitRoomCommandsDiv, dispatchNGamesInput, dispatchGroupSizeInput;
-        var labelDNGI, labelDGSI;
+        var treatmentInput;
+        var labelDNGI, labelDGSI, labelDTI;
 
         var buttonTable, tableRow, tableCell;
         var setupOpts, btnLabel;
@@ -330,6 +331,8 @@
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
                     'CLOSE', 'Close'));
 
+        this.waitroomCommandsDiv.appendChild(document.createElement('br'));
+
         // Need to create inputs before Dispatch button.
         dispatchNGamesInput = document.createElement('input');
         dispatchNGamesInput.size = 2;
@@ -337,9 +340,8 @@
         dispatchGroupSizeInput = document.createElement('input');        
         dispatchGroupSizeInput.size = 2;
 
-        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-            'DISPATCH', 'Dispatch', dispatchNGamesInput,
-            dispatchGroupSizeInput));
+        treatmentInput = document.createElement('input');
+        treatmentInput.size = 5;
 
         // Dispatch N Groups label.
    
@@ -356,6 +358,21 @@
         labelDGSI.appendChild(document.createTextNode('#Size'));
         labelDGSI.appendChild(dispatchGroupSizeInput);
         this.waitroomCommandsDiv.appendChild(labelDGSI);
+        
+        // Treatment Label.
+        labelDTI = document.createElement('label');
+        labelDTI.style['margin-left'] = '5px';
+        labelDTI.appendChild(document.createTextNode('Treatment'));
+        labelDTI.appendChild(treatmentInput);
+        this.waitroomCommandsDiv.appendChild(labelDTI);
+
+        // Dispatch Button.
+        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
+            'DISPATCH', 'Dispatch', dispatchNGamesInput,
+            dispatchGroupSizeInput, treatmentInput));
+
+        // TODO
+
 
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
         
@@ -960,7 +977,7 @@
      * Make a button that sends a given WAITROOMCOMMAND.
      */
     ClientList.prototype.createWaitRoomCommandButton =
-        function(command, label, inputNGames, inputGroupSize) {
+        function(command, label, inputNGames, inputGroupSize, treatmentInput) {
             var that, button;
             that = this;
             button = document.createElement('button');
@@ -976,6 +993,10 @@
                     if (value !== false) data.numberOfGames = value;
                     value = JSUS.isInt(inputGroupSize.value, 1);
                     if (value !== false) data.groupSize = value;
+                    value = treatmentInput.value;
+                    if (value && value.trim() !== '') {
+                        data.chosenTreatment = value;
+                    }
                 }
                 node.socket.send(node.msg.create({
                     target: 'SERVERCOMMAND',

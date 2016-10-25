@@ -10,6 +10,17 @@ function Monitor(node) {
         var tmpElem;
         var channelList, roomList, clientList;
 
+        // Object containing information about the rooms of the channel.
+        this.roomsInfo = null;
+
+        // Object containing information about the games of the channels.
+        this.gamesInfo = null;
+
+        // The name of the channel where the monitor is connected.
+        this.channelName = null;
+
+        // The name of the game of the channel where the monitor is connected.
+        this.gameName = null;
 
         // Add refresh button:
         button = document.createElement('button');

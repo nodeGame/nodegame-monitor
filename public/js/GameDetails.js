@@ -110,7 +110,9 @@
             var selectedGame;
             selectedGame = node.game.clientList.channelName;
             that.gameData = msg.data;
-            // that.writeGames();
+
+            // Store reference to games data.
+            node.game.gamesInfo = msg.data;
 
             // If currently selected game or treatment disappeared, deselect it:
             if (!that.gameData.hasOwnProperty(selectedGame)) {

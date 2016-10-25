@@ -115,6 +115,9 @@
             if (that.waitingForServer) {
                 that.waitingForServer = false;
 
+                // Store a reference to the rooms info data.
+                node.game.roomsInfo = msg.data;
+
                 // Update the contents:
                 that.writeRooms(msg.data);
                 that.updateTitle();
@@ -143,10 +146,13 @@
             if (rooms.hasOwnProperty(roomName)) {
                 roomObj = rooms[roomName];
 
-                this.table.addRow(
-                        [{id: roomObj.id, name: roomObj.name}, roomObj.id,
-                         '' + roomObj.nClients, '' + roomObj.nPlayers,
-                         '' + roomObj.nAdmins]);
+                this.table.addRow([
+                    {id: roomObj.id, name: roomObj.name},
+                    roomObj.id,
+                    '' + roomObj.nClients,
+                    '' + roomObj.nPlayers,
+                    '' + roomObj.nAdmins
+                ]);
             }
         }
 
