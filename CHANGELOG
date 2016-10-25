@@ -1,7 +1,10 @@
 # CHANGELOG
 
+## 3.1.1
+- Displaying logic's stage in rooms-list.
+
 ## 3.1.0
-- G
+- GameDetails.
 
 ## 3.0.1
 - Improved ResultsView (files can be sorted, and downloaded as zip).
