@@ -15,7 +15,8 @@
     node.widgets.register('RoomList', RoomList);
 
     var JSUS = node.JSUS,
-        Table = node.window.Table;
+        Table = node.window.Table,
+        GameStage = node.GameStage;
 
     // ## Meta-data
 
@@ -69,7 +70,7 @@
 
         // Create header:
         this.table.setHeader(['Name', 'ID',
-                              'Clients', 'Players', 'Admins']);
+                              'Clients', 'Players', 'Admins', 'Stage']);
 
         this.waitingForServer = false;
     }
@@ -151,7 +152,8 @@
                     roomObj.id,
                     '' + roomObj.nClients,
                     '' + roomObj.nPlayers,
-                    '' + roomObj.nAdmins
+                    '' + roomObj.nAdmins,
+                    '' + new GameStage(roomObj.logicStage)
                 ]);
             }
         }
