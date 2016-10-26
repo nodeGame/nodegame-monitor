@@ -560,10 +560,11 @@
                 clientObj.id || 'N/A',
                 clientObj.sid || 'N/A',
                 {
-                    type:        clientObj.clientType || 'N/A',
+                    type: 'string' !== typeof clientObj.clientType ?
+                        'N/A' : clientObj.clientType,                        
                     thisMonitor: (clientObj.id === node.player.id)
                 },
-                clientObj.admin || 'N/A',
+                'boolean' === typeof clientObj.admin ? clientObj.admin : 'N/A',
                 GameStage.toHash(clientObj.stage, 'S.s-r'),
                 stageLevels[clientObj.stageLevel],
                 'boolean' === typeof clientObj.paused ? clientObj.paused : 'N/A'

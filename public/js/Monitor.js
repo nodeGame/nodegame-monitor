@@ -23,6 +23,9 @@ function Monitor(node) {
         // ## The name of the channel where the monitor is connected.
         this.channelName = null;
 
+        // The name of the tab currently visibile.
+        this.tabInUse = null;
+
         // ## The name of the selected channel 
         this.channelInUse = null;
 
@@ -84,6 +87,11 @@ function Monitor(node) {
             if (active) tmpElem.className += ' active';
             tmpElem.id = name;
             tabContent.appendChild(tmpElem);
+            tmpElem.onclick = function() {
+                that.tabInUse = name;
+                node.game.refresh(name);
+                node.emit('TAB_SELECTED', name);
+            };
             return tmpElem;
         };
 
@@ -139,11 +147,23 @@ function Monitor(node) {
 
         };
 
-        this.refresh = function() {
-            node.game.refreshChannels();
-            node.game.refreshRooms();
-            node.game.refreshClients();
-            node.game.refreshGames();
+        this.refresh = function(mod) {
+            mod = mod || 'all';
+
+            if (mod === 'all' || mod === 'channels') {
+                node.game.refreshChannels();
+            }
+            if (!node.game.channelInUse) return;
+            if (mod === 'all' || mod === 'rooms') {
+                node.game.refreshRooms();
+            }
+            if (!node.game.roomInUse) return;
+            if (mod === 'all' || mod === 'clients') {
+                node.game.refreshClients();
+            }
+            if (mod === 'all' || mod === 'games') {
+                node.game.refreshGames();
+            }
         };
 
         this.alert = function(msg, type) {
@@ -157,9 +177,15 @@ function Monitor(node) {
         // ## Listeners (must be added before the widgets).
 
         node.on.data('INFO_CHANNELS', function(msg) {
+            var channels;
             if (that.waitingForChannels) {
                 that.waitingForChannels = false;
                 node.emit('INFO_CHANNELS', msg.data);
+                channels = Object.keys(msg.data);
+                if (channels.length === 1) {
+                    that.channelInUse = channels[0];
+                    node.emit('CHANNEL_SELECTED', channels[0]);
+                }
             }
         });
 
@@ -212,7 +238,10 @@ function Monitor(node) {
 
         // Refresh.
         this.refreshButton = document.getElementById('refresh');
-        this.refreshButton.onclick = node.game.refresh;
+        this.refreshButton.onclick = function() {
+            // TODO: refresh only node.game.tabInUse.
+            node.game.refresh();
+        }
         
         this.refreshDropDown = document.getElementById('refreshDropDown');
         this.refreshDropDown.onclick = function(event) {
@@ -223,6 +252,7 @@ function Monitor(node) {
             if (autoRefreshInterval) clearInterval(autoRefreshInterval);
             if (interval) {
                 autoRefreshInterval = setInterval(function() {
+                    // TODO: refresh only tab in use.
                     node.game.refresh();
                 }, interval);
             }
