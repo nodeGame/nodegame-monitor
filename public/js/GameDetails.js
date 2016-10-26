@@ -100,16 +100,16 @@
 
         that = this;
 
-        node.on('CHANNEL_NAME', function() {
+        node.on('CHANNEL_SELECTED', function(channel) {
             that.writeGameInfo();
             that.writeTreatmentInfo();
         });
 
         // Listen for server reply:
-        node.on.data('INFO_GAMES', function(msg) {
+        node.on.data('INFO_GAMES', function(games) {
             var selectedGame;
             selectedGame = node.game.clientList.channelName;
-            that.gameData = msg.data;
+            that.gameData = games;
 
             // Store reference to games data.
             node.game.gamesInfo = msg.data;
@@ -137,7 +137,8 @@
         var aliases;
         var that;
         var selectedGame;
-        selectedGame = node.game.clientList.channelName;
+
+        selectedGame = node.game.channelInUse;
 
         that = this;
         this.detailTable.clear(true);

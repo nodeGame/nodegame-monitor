@@ -123,11 +123,6 @@
         // Div containing the commands for the waiting room (when selected).
         this.waitroomCommandsDiv = null;
 
-        // Flags for receiving data.
-        this.waitingForChannels = false;
-        this.waitingForRooms = false;
-        this.waitingForClients = false;
-
         // Maps client IDs to the selection checkbox elements:
         this.checkboxes = {};
 
@@ -160,8 +155,8 @@
         }
 
         this.channelName = channelName;
-        node.emit('CHANNEL_NAME', channelName);
-        this.refreshRooms();
+        node.emit('CHANNEL_SELECTED', channelName);
+        node.game.refreshRooms();
     };
 
     ClientList.prototype.setRoom = function(roomId) {
@@ -189,55 +184,13 @@
     
         node.emit('ROOM_SELECTED', roomObj);
 
-        this.refreshClients();
-    };
-
-    ClientList.prototype.refreshChannels = function() {
-        // Ask server for channel list:
-        this.waitingForChannels = true;
-        node.socket.send(node.msg.create({
-            target: 'SERVERCOMMAND',
-            text:   'INFO',
-            data: {
-                type:      'CHANNELS',
-                extraInfo: true
-            }
-        }));
-    };
-
-    ClientList.prototype.refreshRooms = function() {
-        // Ask server for room list:
-        this.waitingForRooms = true;
-        this.availableRooms = {};
-        if ('string' !== typeof this.channelName) return;
-        node.socket.send(node.msg.create({
-            target: 'SERVERCOMMAND',
-            text:   'INFO',
-            data: {
-                type:    'ROOMS',
-                channel: this.channelName
-            }
-        }));
-    };
-
-    ClientList.prototype.refreshClients = function() {
-        // Ask server for client list:
-        this.waitingForClients = true;
-        if ('string' !== typeof this.roomId) return;
-        node.socket.send(node.msg.create({
-            target: 'SERVERCOMMAND',
-            text:   'INFO',
-            data: {
-                type:   'CLIENTS',
-                roomId: this.roomId
-            }
-        }));
+        node.game.refreshClients();
     };
 
     ClientList.prototype.refresh = function() {
-        this.refreshChannels();
-        this.refreshRooms();
-        this.refreshClients();
+        node.game.refreshChannels();
+        node.game.refreshRooms();
+        node.game.refreshClients();
     };
 
     ClientList.prototype.append = function() {
@@ -462,9 +415,6 @@
         // Add MsgBar:
         this.appendMsgBar();
 
-        // Query server:
-        this.refreshChannels();
-
         this.channelTable.parse();
     };
 
@@ -474,37 +424,29 @@
         that = this;
 
         // Listen for server reply:
-        node.on.data('INFO_CHANNELS', function(msg) {
-            if (that.waitingForChannels) {
-                that.waitingForChannels = false;
-
-                // Update the contents:
-                that.writeChannels(msg.data);
-                that.updateTitle();
-            }
+        node.on('INFO_CHANNELS', function(channels) {
+            // Update the contents:
+            that.writeChannels(channels);
+            that.updateTitle();            
         });
 
-        node.on.data('INFO_ROOMS', function(msg) {
-            if (that.waitingForRooms) {
-                that.waitingForRooms = false;
-                // Update the contents:
-                that.writeRooms(msg.data);
-                that.updateTitle();
-            }
+        node.on('INFO_ROOMS', function(rooms) {
+            debugger
+            // Update the contents:
+            that.writeRooms(rooms);
+            that.updateTitle();            
         });
 
-        node.on.data('INFO_CLIENTS', function(msg) {
-            if (that.waitingForClients) {
-                that.waitingForClients = false;
-
-                // Update the contents:
-                that.roomLogicId = msg.data.logicId;
-                that.writeClients(msg.data);
-                that.updateTitle();
-            }
+        node.on('INFO_CLIENTS', function(clients) {
+            debugger
+            // Update the contents:
+            that.roomLogicId = clients.logicId;
+            that.writeClients(clients);
+            that.updateTitle();
         });
 
         node.on('ROOM_SELECTED', function(room) {
+            debugger
             if (room && room.type === 'Waiting') {
                 if (that.waitroomCommandsDiv) {
                     that.waitroomCommandsDiv.style.display = '';
@@ -518,7 +460,7 @@
         });
 
         // Listen for events from ChannelList saying to switch channels:
-        //node.on('USECHANNEL', function(channel) {
+        //node.on('CHANNEL_SELECTED', function(channel) {
         //    that.setChannel(channel);
         //});
 

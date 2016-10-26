@@ -1,6 +1,6 @@
 /**
  * # ChannelList widget for nodeGame
- * Copyright(c) 2014 Stefano Balietti
+ * Copyright(c) 2016 Stefano Balietti
  * MIT Licensed
  *
  * Shows list of channels on the server.
@@ -19,8 +19,8 @@
 
     // ## Meta-data
 
-    ChannelList.version = '0.1.0';
-    ChannelList.description = 'Visually display all channels on the server.';
+    ChannelList.version = '0.2.0';
+    ChannelList.description = 'Displays all channels on the server.';
 
     ChannelList.title = 'Channels';
     ChannelList.className = 'channellist';
@@ -44,7 +44,7 @@
                 '<a class="ng_clickable">' + content + '</a>';
             textElem.onclick = function() {
                 // Signal the RoomList to switch channels:
-                node.emit('USECHANNEL', content);
+                node.emit('CHANNEL_SELECTED', content);
             };
         }
         else {
@@ -70,43 +70,17 @@
         // Create header:
         this.table.setHeader(['Name', 'Rooms',
                               'Clients', 'Players', 'Admins']);
-
-        this.waitingForServer = false;
     }
-
-    ChannelList.prototype.refresh = function() {
-        // Ask server for channel list:
-        this.waitingForServer = true;
-        node.socket.send(node.msg.create({
-            target: 'SERVERCOMMAND',
-            text:   'INFO',
-            data: {
-                type:      'CHANNELS',
-                extraInfo: true
-            }
-        }));
-
-        this.table.parse();
-    };
 
     ChannelList.prototype.append = function() {
         this.bodyDiv.appendChild(this.table.table);
-
-        // Query server:
-        this.refresh();
     };
 
     ChannelList.prototype.listeners = function() {
         var that;
-
         that = this;
-
-        // Listen for server reply:
-        node.on.data('INFO_CHANNELS', function(msg) {
-            if (that.waitingForServer) {
-                that.waitingForServer = false;
-                that.writeChannels(msg.data);
-            }
+        node.on('INFO_CHANNELS', function(channels) {
+            that.writeChannels(channels);            
         });
     };
 
@@ -120,11 +94,16 @@
             if (channels.hasOwnProperty(chanKey)) {
                 chanObj = channels[chanKey];
 
-                this.table.addRow(
-                 [chanObj.name, '' + chanObj.nGameRooms,
-                  chanObj.nConnClients + ' (+' + chanObj.nDisconnClients + ')',
-                  chanObj.nConnPlayers + ' (+' + chanObj.nDisconnPlayers + ')',
-                  chanObj.nConnAdmins + ' (+' + chanObj.nDisconnAdmins + ')']);
+                if (chanObj.ownChannel) this.channelName = chanKey;
+
+                this.table.addRow([
+                    chanObj.name, '' + chanObj.nGameRooms,
+                    chanObj.nConnClients +
+                        ' (+' + chanObj.nDisconnClients + ')',
+                    chanObj.nConnPlayers +
+                        ' (+' + chanObj.nDisconnPlayers + ')',
+                    chanObj.nConnAdmins + ' (+' + chanObj.nDisconnAdmins + ')'
+                ]);
             }
         }
 

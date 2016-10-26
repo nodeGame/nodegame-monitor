@@ -1,6 +1,6 @@
 /**
  * # RoomList widget for nodeGame
- * Copyright(c) 2014 Stefano Balietti
+ * Copyright(c) 2016 Stefano Balietti
  * MIT Licensed
  *
  * Shows list of rooms in a channel.
@@ -20,8 +20,8 @@
 
     // ## Meta-data
 
-    RoomList.version = '0.1.0';
-    RoomList.description = 'Visually display all rooms in a channel.';
+    RoomList.version = '0.2.0';
+    RoomList.description = 'Displays all rooms in a channel.';
 
     RoomList.title = 'Rooms';
     RoomList.className = 'roomlist';
@@ -79,31 +79,10 @@
         this.channelName = channelName;
     };
 
-    RoomList.prototype.refresh = function() {
-        if ('string' !== typeof this.channelName) return;
-
-        // Ask server for room list:
-        this.waitingForServer = true;
-        node.socket.send(node.msg.create({
-            target: 'SERVERCOMMAND',
-            text:   'INFO',
-            data: {
-                type:    'ROOMS',
-                channel: this.channelName
-            }
-        }));
-
-        this.table.parse();
-    };
-
     RoomList.prototype.append = function() {
         // Hide the panel initially:
         this.panelDiv.style.display = 'none';
-
         this.bodyDiv.appendChild(this.table.table);
-
-        // Query server:
-        this.refresh();
     };
 
     RoomList.prototype.listeners = function() {
@@ -112,28 +91,20 @@
         that = this;
 
         // Listen for server reply:
-        node.on.data('INFO_ROOMS', function(msg) {
-            if (that.waitingForServer) {
-                that.waitingForServer = false;
+        node.on('INFO_ROOMS', function(rooms) {
+            
+            // Update the contents:
+            that.writeRooms(rooms);
+            that.updateTitle();
 
-                // Store a reference to the rooms info data.
-                node.game.roomsInfo = msg.data;
-
-                // Update the contents:
-                that.writeRooms(msg.data);
-                that.updateTitle();
-
-                // Show the panel:
-                that.panelDiv.style.display = '';
-            }
+            // Show the panel:
+            that.panelDiv.style.display = '';            
         });
 
         // Listen for events from ChannelList saying to switch channels:
-        node.on('USECHANNEL', function(channel) {
+        node.on('CHANNEL_SELECTED', function(channel) {
             that.setChannel(channel);
-
-            // Query server:
-            that.refresh();
+            node.game.refreshRooms();
         });
     };
 
@@ -148,7 +119,7 @@
                 roomObj = rooms[roomName];
 
                 this.table.addRow([
-                    {id: roomObj.id, name: roomObj.name},
+                    { id: roomObj.id, name: roomObj.name },
                     roomObj.id,
                     '' + roomObj.nClients,
                     '' + roomObj.nPlayers,
