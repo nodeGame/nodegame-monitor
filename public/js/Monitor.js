@@ -5,6 +5,10 @@ function Monitor(node) {
     var stager = new node.Stager();
     var tabList, tabContent;
 
+    // Limit publishing updates.
+    stager.setDefaultProperty('publishLevel',
+                              node.constants.publishLevels.REGULAR);
+
     stager.setOnInit(function() {
         var that;
         var refreshButton, autoRefreshLabel;
@@ -145,18 +149,9 @@ function Monitor(node) {
         this.alert = function(msg, type) {
             var alertDiv, a;
             that.alertDiv.className = 'alert alert-' + (type || 'success');
-            that.alertContent.innerHTML = msg + '&nbsp;&nbsp;';
+            that.alertContent.innerHTML = '<span class="small">' + 
+                JSUS.getTime() + '</span>&nbsp-&nbsp;' + msg + '&nbsp;&nbsp;';
             that.alertDiv.style.display = '';
-//             a = document.createElement('a');
-//             a.href = '#';
-//             a.className = 'close';
-//             a['data-dismiss'] = 'alert';
-//             a['aria-label'] = 'close';
-//             a.innerHTML = '&times;';
-//             alertDiv.appendChild(a);
-//             alertDiv.appendChild(document.createTextNode(msg));
-//             this.alertDiv.innerHTML = '';
-//             this.alertDiv.appendChild(alertDiv);
         };
 
         // ## Listeners (must be added before the widgets).
@@ -213,9 +208,6 @@ function Monitor(node) {
         node.off('in.say.GAMECOMMAND');
         node.off('in.say.ALERT');
 
-        // Limit publishing updates.
-        stager.setDefaultProperty('publishLevel', 1);
-
         // ## Init.
 
         // Refresh.
@@ -226,7 +218,6 @@ function Monitor(node) {
         this.refreshDropDown.onclick = function(event) {
             var target, interval;
             target = event.target;
-debugger
             if (!target || !target.id) return;
             interval = parseInt(target.id.substring("refresh_".length), 10);
             if (autoRefreshInterval) clearInterval(autoRefreshInterval);
