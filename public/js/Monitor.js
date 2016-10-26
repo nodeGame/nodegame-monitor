@@ -14,6 +14,8 @@ function Monitor(node) {
 
         // ## Variables and methods.
 
+        that = this;
+
         // ## The name of the channel where the monitor is connected.
         this.channelName = null;
 
@@ -35,12 +37,23 @@ function Monitor(node) {
         // ## The name of the game the channel is monitoring.
         this.gameName = null;
 
+        // ## The DIV containing the alert box.
+        this.alertDiv = document.getElementById('alertDiv');
+        this.alertContent = document.getElementById('alertContent');
+        this.alertClose = document.getElementById('alertClose');
+        this.alertClose.onclick = function() {
+            that.alertDiv.style.display = 'none';
+        };
+
+        // ## The button controlling refresh/auto-refresh.
+        this.refreshButton = null;
+        // ## The auto-refresh options.
+        this.refreshDropDown = null;
+
         // Flags for receiving data.
         this.waitingForChannels = false;
         this.waitingForRooms = false;
         this.waitingForClients = false;
-
-        that = this;
 
         /**
          * ## addTab
@@ -129,6 +142,22 @@ function Monitor(node) {
             node.game.refreshGames();
         };
 
+        this.alert = function(msg, type) {
+            var alertDiv, a;
+            that.alertDiv.className = 'alert alert-' + (type || 'success');
+            that.alertContent.innerHTML = msg + '&nbsp;&nbsp;';
+            that.alertDiv.style.display = '';
+//             a = document.createElement('a');
+//             a.href = '#';
+//             a.className = 'close';
+//             a['data-dismiss'] = 'alert';
+//             a['aria-label'] = 'close';
+//             a.innerHTML = '&times;';
+//             alertDiv.appendChild(a);
+//             alertDiv.appendChild(document.createTextNode(msg));
+//             this.alertDiv.innerHTML = '';
+//             this.alertDiv.appendChild(alertDiv);
+        };
 
         // ## Listeners (must be added before the widgets).
 
@@ -189,32 +218,25 @@ function Monitor(node) {
 
         // ## Init.
 
-        // Add refresh refreshButton:
-        refreshButton = document.createElement('button');
-        refreshButton.innerHTML = 'Refresh';
-        refreshButton.onclick = node.game.refresh;
-        document.body.appendChild(refreshButton);
-
-        // AutoRefresh.
-        autoRefresh = document.createElement('input');
-        autoRefresh.type = 'checkbox';
-        autoRefresh.onclick = function() {
-            if (autoRefreshInterval) {
-                clearInterval(autoRefreshInterval);
-            }
-            else {
+        // Refresh.
+        this.refreshButton = document.getElementById('refresh');
+        this.refreshButton.onclick = node.game.refresh;
+        
+        this.refreshDropDown = document.getElementById('refreshDropDown');
+        this.refreshDropDown.onclick = function(event) {
+            var target, interval;
+            target = event.target;
+debugger
+            if (!target || !target.id) return;
+            interval = parseInt(target.id.substring("refresh_".length), 10);
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            if (interval) {
                 autoRefreshInterval = setInterval(function() {
-                    refreshButton.click()
-                }, 2000);
+                    node.game.refresh();
+                }, interval);
             }
         };
-        autoRefresh.style['margin-left'] = '3px';
-        autoRefreshLabel = document.createElement('label');
-        autoRefreshLabel.style['margin-left'] = '5px';
-        autoRefreshLabel.appendChild(document.createTextNode('Auto'));
-        autoRefreshLabel.appendChild(autoRefresh);
-        document.body.appendChild(autoRefreshLabel);
-
+        
         // Tabs.
         tabList = document.createElement('ul');
         tabList.className = 'nav nav-tabs';

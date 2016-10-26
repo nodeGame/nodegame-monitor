@@ -105,7 +105,7 @@
                 that.selectedTreatment = null;
             }
             else if (!node.game.gamesInfo[selectedGame].settings
-                      .hasOwnProperty(selectedTreatment)) {
+                      .hasOwnProperty(that.selectedTreatment)) {
 
                 that.selectedTreatment = null;
             }

@@ -454,7 +454,7 @@
 
         node.on('INFO_CLIENTS', function(clients) {
             // Update the contents:
-            that.roomLogicId = clients.logicId;
+            that.roomLogicId = clients.logic.id;
             that.writeClients(clients);
             that.updateTitle();
         });
@@ -547,55 +547,62 @@
             })(roomObj);
 
             this.roomTable.addRow(elem);
-
         }
 
         this.roomTable.parse();
     };
 
-    ClientList.prototype.writeClients = function(msg) {
-        var i;
-        var clientName, clientObj;
-        var prevSel;
-
-        // Unhide table cell:
-        this.clientTable.table.parentNode.style.display = '';
-
-        // Save previous state of selection:
-        prevSel = {};
-        for (i in this.checkboxes) {
-            if (this.checkboxes.hasOwnProperty(i)) {
-                prevSel[i] = this.checkboxes[i].checked;
-            }
+    ClientList.prototype.writeClients = (function() {
+        
+        function addClientToRow(prevSel, clientObj) {
+            this.clientTable.addRow([
+                {id: clientObj.id, prevSel: prevSel, that: this},
+                clientObj.id || 'N/A',
+                clientObj.sid || 'N/A',
+                {
+                    type:        clientObj.clientType || 'N/A',
+                    thisMonitor: (clientObj.id === node.player.id)
+                },
+                clientObj.admin || 'N/A',
+                GameStage.toHash(clientObj.stage, 'S.s-r'),
+                stageLevels[clientObj.stageLevel],
+                'boolean' === typeof clientObj.paused ? clientObj.paused : 'N/A'
+            ]);
         }
 
-        this.checkboxes = {};
-        this.clientTable.clear(true);
+        return function(msg) {
+            var i, len;
+            var clientId, clientObj;
+            var prevSel;
 
-        // Create a row for each client:
-        for (clientName in msg.clients) {
-            if (msg.clients.hasOwnProperty(clientName)) {
-                clientObj = msg.clients[clientName];
+            // Unhide table cell:
+            this.clientTable.table.parentNode.style.display = '';
 
-                this.clientTable.addRow([
-                    {id: clientObj.id, prevSel: prevSel, that: this},
-                    clientObj.id,
-                    clientObj.sid,
-                    {
-                        type:        clientObj.clientType,
-                        thisMonitor: (clientObj.id === node.player.id)
-                     },
-                    clientObj.admin,
-                    GameStage.toHash(clientObj.stage, '(r) S.s'),
-                    stageLevels[clientObj.stageLevel],
-                    'ok'
-                ]);
+            // Save previous state of selection:
+            prevSel = {};
+            for (i in this.checkboxes) {
+                if (this.checkboxes.hasOwnProperty(i)) {
+                    prevSel[i] = this.checkboxes[i].checked;
+                }
             }
-        }
 
-        this.clientTable.parse();
-        this.updateSelection(false);
-    };
+            this.checkboxes = {};
+            this.clientTable.clear(true);
+            addClientToRow.call(this, prevSel, msg.logic);
+
+            // Create a row for each client:
+            i = -1, len = msg.clients.length;
+            for ( ; ++i < len ; ) {           
+                clientObj = msg.clients[i];
+                clientId = clientObj.id;
+                if (clientId === this.roomLogicId) continue;
+                addClientToRow.call(this, prevSel, clientObj);
+            }
+
+            this.clientTable.parse();
+            this.updateSelection(false);
+        }
+    })();
 
     // Returns the array of client IDs that are selected with the checkboxes.
     ClientList.prototype.getSelectedCheckboxes = function() {
@@ -618,7 +625,7 @@
         try {
             return JSUS.parse(this.clientsField.value);
         }
-        catch (ex) {
+        catch(ex) {
             return this.clientsField.value;
         }
     };

@@ -17,9 +17,39 @@
 <!-- Third party libraries -->
 <script src="resources/jquery-1.11.1.min.js" charset="utf-8"></script>
 <script src="resources/bootstrap.js" charset="utf-8"></script>
-<link rel='stylesheet' href="./resources/bootstrap.css"></link>
+<link rel="stylesheet" href="./resources/bootstrap.css"></link>
 <!-- Final CSS -->
-<link rel='stylesheet' href='/stylesheets/monitor.css'></link>
+<link rel="stylesheet" href="./css/monitor.css"></link>
+<div id="header">
+  <div id="refresh-container" style="float: left; padding: 0; margin: 0">
+    <!-- Split button -->
+    <div class="btn-group">
+      <button type="button" class="btn btn-default" id="refresh">Refresh</button>
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu" id="refreshDropDown">
+        <li><a href="#" id="refresh_0">Manual</a></li>
+        <li><a href="#" id="refresh_500">Every 0.5 seconds</a></li>
+        <li><a href="#" id="refresh_1000">Every second</a></li>
+        <li><a href="#" id="refresh_2000">Every 2 seconds</a></li>
+      </ul>
+    </div>
+<!--    <button class="btn" id="refresh">
+      Refresh
+    </button>
+    <label id="autorefresh_label" style="margin-left: 5px;">
+      Auto <input type="checkbox" id="autorefresh" style="margin: 0 5px"/>
+    </label> -->
+  </div>
+  <div id="alert-container" style="float: right">
+    <div class="alert alert-success" id="alertDiv" style="display: none; padding: 0 0.2em 0 0.5em">
+      <a href="#" class="close" aria-label="close" id="alertClose">&times;</a>
+      <span id="alertContent"></span>
+    </div>
+  </div>
+</div>
 <!-- Connect -->
 <script>
   window.onload = function() {
