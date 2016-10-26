@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.2.0
+- More data displayed in Client List.
+- Improved inteface.
+- Introducing new methods to control the interface and the communication with server (still in progress).
+
 ## 3.1.1
 - Displaying logic's stage in rooms-list.
 
