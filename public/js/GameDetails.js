@@ -130,7 +130,6 @@
         this.detailTable.parse();
 
         selGame = node.game.gamesInfo[selectedGame];
-        debugger
         if (!selGame) {
             // Name.
             this.detailTable.addRow('Select a game first!');

@@ -159,7 +159,6 @@
     }
 
     ClientList.prototype.setChannel = function(channelName) {
-        debugger
         if (!channelName || channelName !== this.channelName) {
             // Hide room table if channel changed or no channel is selected:
             if (this.roomTable && this.roomTable.table.parentNode) {
@@ -448,14 +447,12 @@
         });
 
         node.on('INFO_ROOMS', function(rooms) {
-            debugger
             // Update the contents:
             that.writeRooms(rooms);
             that.updateTitle();            
         });
 
         node.on('INFO_CLIENTS', function(clients) {
-            debugger
             // Update the contents:
             that.roomLogicId = clients.logicId;
             that.writeClients(clients);
@@ -463,7 +460,6 @@
         });
 
         node.on('ROOM_SELECTED', function(room) {
-            debugger
             if (room && room.type === 'Waiting') {
                 if (that.waitroomCommandsDiv) {
                     that.waitroomCommandsDiv.style.display = '';

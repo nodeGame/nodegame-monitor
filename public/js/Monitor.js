@@ -99,7 +99,6 @@ function Monitor(node) {
         };
 
         this.refreshClients = function() {
-            debugger;
             if ('string' !== typeof that.roomInUse) return;
             // Ask server for client list.
             that.waitingForClients = true;
@@ -141,7 +140,6 @@ function Monitor(node) {
         });
 
         node.on.data('INFO_ROOMS', function(msg) {
-            debugger
             if (that.waitingForRooms) {
                 that.waitingForRooms = false;
                 // Store a reference.
@@ -151,7 +149,6 @@ function Monitor(node) {
         });
 
         node.on.data('INFO_CLIENTS', function(msg) {
-            debugger
             if (that.waitingForClients) {
                 that.waitingForClients = false;
                 // Store a reference.
@@ -173,7 +170,6 @@ function Monitor(node) {
         });
 
         node.on('CHANNEL_SELECTED', function(channel) {
-            debugger
             that.channelInUse = channel || null;
         });
 
