@@ -146,12 +146,13 @@
     }
 
     ClientList.prototype.setChannel = function(channelName) {
+        debugger
         if (!channelName || channelName !== this.channelName) {
             // Hide room table if channel changed or no channel is selected:
             if (this.roomTable && this.roomTable.table.parentNode) {
                 this.roomTable.table.parentNode.style.display = 'none';
             }
-            this.setRoom(null);
+            if (node.game.roomInUse !== null) this.setRoom(null);
         }
 
         this.channelName = channelName;
@@ -210,9 +211,6 @@
         var selectionDiv, recipientSelector;
 
         that = this;
-
-        // Hide the panel initially:
-        this.setRoom(null);
 
         // Add tables in a 3x1 table element:
         tableStructure = document.createElement('table');

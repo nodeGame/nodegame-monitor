@@ -72,19 +72,8 @@
         // JSUS.style(this.treatmentDiv, {float: 'left'});
         this.treatmentDiv.appendChild(this.treatmentTable.table);
 
-        this.gameData = {};
         this.selectedTreatment = null;
     }
-
-    GameDetails.prototype.refresh = function() {
-        // Ask server for games:
-        node.socket.send(node.msg.create({
-            target: 'SERVERCOMMAND',
-            text:   'INFO',
-            data: { type: 'GAMES' }
-        }));
-
-    };
 
     GameDetails.prototype.append = function() {
         // this.bodyDiv.appendChild(this.gamesTableDiv);
@@ -92,7 +81,7 @@
         this.bodyDiv.appendChild(this.treatmentDiv);
 
         // Query server:
-        this.refresh();
+        node.game.refreshGames();
     };
 
     GameDetails.prototype.listeners = function() {
@@ -106,20 +95,16 @@
         });
 
         // Listen for server reply:
-        node.on.data('INFO_GAMES', function(games) {
+        node.on('INFO_GAMES', function(games) {
             var selectedGame;
-            selectedGame = node.game.clientList.channelName;
-            that.gameData = games;
-
-            // Store reference to games data.
-            node.game.gamesInfo = msg.data;
+            selectedGame = node.game.channelInUse;
 
             // If currently selected game or treatment disappeared, deselect it:
-            if (!that.gameData.hasOwnProperty(selectedGame)) {
+            if (!node.game.gamesInfo.hasOwnProperty(selectedGame)) {
                 that.selectedGame = null;
                 that.selectedTreatment = null;
             }
-            else if (!that.gameData[selectedGame].settings
+            else if (!node.game.gamesInfo[selectedGame].settings
                       .hasOwnProperty(selectedTreatment)) {
 
                 that.selectedTreatment = null;
@@ -144,8 +129,9 @@
         this.detailTable.clear(true);
         this.detailTable.parse();
 
-        selGame = this.gameData[selectedGame];
-        if (!selGame) {            
+        selGame = node.game.gamesInfo[selectedGame];
+        debugger
+        if (!selGame) {
             // Name.
             this.detailTable.addRow('Select a game first!');
             this.detailTable.parse();
@@ -207,7 +193,7 @@
         this.treatmentTable.clear(true);
         this.treatmentTable.parse();
 
-        selGame = this.gameData[selectedGame];
+        selGame = node.game.gamesInfo[selectedGame];
         if (!selGame) return;
 
         selTreatment = selGame.settings[this.selectedTreatment];

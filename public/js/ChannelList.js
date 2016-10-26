@@ -43,6 +43,7 @@
             textElem.innerHTML =
                 '<a class="ng_clickable">' + content + '</a>';
             textElem.onclick = function() {
+                debugger
                 // Signal the RoomList to switch channels:
                 node.emit('CHANNEL_SELECTED', content);
             };

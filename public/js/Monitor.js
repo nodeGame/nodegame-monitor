@@ -110,11 +110,78 @@ function Monitor(node) {
             }));
         };
 
+        this.refreshGames = function() {
+            // Ask server for games.
+            node.socket.send(node.msg.create({
+                target: 'SERVERCOMMAND',
+                text:   'INFO',
+                data: { type: 'GAMES' }
+            }));
+
+        };
+
         this.refresh = function() {
             node.game.refreshChannels();
             node.game.refreshRooms();
             node.game.refreshClients();
+            node.game.refreshGames();
         };
+
+
+        // ## Listeners (must be added before the widgets).
+
+        node.on.data('INFO_CHANNELS', function(msg) {
+            if (that.waitingForChannels) {
+                that.waitingForChannels = false;
+                node.emit('INFO_CHANNELS', msg.data);
+            }
+        });
+
+        node.on.data('INFO_ROOMS', function(msg) {
+            debugger
+            if (that.waitingForRooms) {
+                that.waitingForRooms = false;
+                // Store a reference.
+                that.roomsInfo = msg.data;
+                node.emit('INFO_ROOMS', msg.data);
+            }
+        });
+
+        node.on.data('INFO_CLIENTS', function(msg) {
+            debugger
+            if (that.waitingForClients) {
+                that.waitingForClients = false;
+                node.emit('INFO_CLIENTS', msg.data);
+            }
+        });
+
+
+        // Listen for server reply:
+        node.on.data('INFO_GAMES', function(msg) {
+            // Store reference to games data.
+            node.game.gamesInfo = msg.data;
+            node.emit('INFO_GAMES', msg.data);
+        });
+
+        node.on('SOCKET_DISCONNECT', function() {
+            // alert('Disconnection detected');
+        });
+
+        node.on('CHANNEL_SELECTED', function(channel) {
+            debugger
+            that.channelInUse = channel || null;
+        });
+
+        node.on('ROOM_SELECTED', function(room) {
+            that.roomInUse = room ? room.id : null;
+        });
+
+        // Disable some listeners.
+
+        node.off('get.PING');
+        node.off('in.say.REDIRECT');
+        node.off('in.say.GAMECOMMAND');
+        node.off('in.say.ALERT');
 
         // ## Init.
 
@@ -174,52 +241,6 @@ function Monitor(node) {
         // Server view.
         tmpElem = this.addTab('server');
         node.widgets.append('ServerView', tmpElem);
-
-        // ## Disable some listeners.
-
-        node.off('get.PING');
-        node.off('in.say.REDIRECT');
-        node.off('in.say.GAMECOMMAND');
-        node.off('in.say.ALERT');
-
-        // ## Add new listeners.
-
-        node.on.data('INFO_CHANNELS', function(msg) {
-            if (that.waitingForChannels) {
-                that.waitingForChannels = false;
-                node.emit('INFO_CHANNELS', msg.data);
-            }
-        });
-
-        node.on.data('INFO_ROOMS', function(msg) {
-            debugger
-            if (that.waitingForRooms) {
-                that.waitingForRooms = false;
-                // Store a reference.
-                that.roomsInfo = msg.data;
-                node.emit('INFO_ROOMS', msg.data);
-            }
-        });
-
-        node.on.data('INFO_CLIENTS', function(msg) {
-            debugger
-            if (that.waitingForClients) {
-                that.waitingForClients = false;
-                node.emit('INFO_CLIENTS', msg.data);
-            }
-        });
-
-        node.on('SOCKET_DISCONNECT', function() {
-            alert('Disconnection detected');
-        });
-
-        node.on('CHANNEL_SELECTED', function(channel) {
-            that.channelInUse = channel || null;
-        });
-
-        node.on('ROOM_SELECTED', function(room) {
-            that.roomInUse = room ? room.id : null;
-        });
 
         // Refresh.
         this.refresh();
