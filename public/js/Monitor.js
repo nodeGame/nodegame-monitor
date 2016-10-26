@@ -29,6 +29,9 @@ function Monitor(node) {
         // ## Object containing information about the games of the channels.
         this.gamesInfo = null;
 
+        // ## Object containing info about the clients of a room.
+        this.clientsInfo = null;
+
         // ## The name of the game the channel is monitoring.
         this.gameName = null;
 
@@ -151,6 +154,8 @@ function Monitor(node) {
             debugger
             if (that.waitingForClients) {
                 that.waitingForClients = false;
+                // Store a reference.
+                that.clientsInfo = msg.data;
                 node.emit('INFO_CLIENTS', msg.data);
             }
         });
@@ -182,6 +187,9 @@ function Monitor(node) {
         node.off('in.say.REDIRECT');
         node.off('in.say.GAMECOMMAND');
         node.off('in.say.ALERT');
+
+        // Limit publishing updates.
+        stager.setDefaultProperty('publishLevel', 1);
 
         // ## Init.
 

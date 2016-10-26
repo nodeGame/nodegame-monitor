@@ -1,6 +1,6 @@
 /**
  * # ClientList widget for nodeGame
- * Copyright(c) 2014 Stefano Balietti
+ * Copyright(c) 2016 Stefano Balietti
  * MIT Licensed
  *
  * Shows list of clients and allows selection.
@@ -18,10 +18,21 @@
         Table = node.window.Table,
         GameStage = node.GameStage;
 
+    var stageLevels;
+    stageLevels = {};
+    (function(stageLevels) {
+        var level;
+        for (level in node.constants.stageLevels) {
+            if (node.constants.stageLevels.hasOwnProperty(level)) {
+                stageLevels[node.constants.stageLevels[level]] = level;
+            }
+        }
+    })(stageLevels);
+
     // ## Meta-data
 
-    ClientList.version = '0.1.0';
-    ClientList.description = 'Visually display all clients in a room.';
+    ClientList.version = '0.5.0';
+    ClientList.description = 'Displays all clients of a room.';
 
     ClientList.title = 'Clients';
     ClientList.className = 'clientlist';
@@ -60,7 +71,7 @@
                 content.that.checkboxes[content.id] = elem;
                 break;
 
-            case 2:
+            case 3:
                 // Type
                 if (content.thisMonitor) {
                     elem = document.createElement('em');
@@ -138,8 +149,10 @@
         // Create header for client table:
         this.channelTable.setHeader(['Channel']);
         this.roomTable.setHeader(['Room']);
-        this.clientTable.setHeader([this.selectAll, 'ID', 'Type', 'Admin',
-                                   'Stage', 'Connection', 'SID']);
+        this.clientTable.setHeader([
+            this.selectAll,
+            'ID', 'SID', 'Type', 'Admin', 'Stage', 'Level', 'Paused'
+        ]);
 
         this.clientsField = null;
         this.msgBar = {};
@@ -239,9 +252,12 @@
         selectionDiv = document.createElement('div');
         this.bodyDiv.appendChild(selectionDiv);
         selectionDiv.appendChild(document.createTextNode('Selected IDs: '));
-        this.clientsField = W.getTextArea();
+
+        this.clientsField = document.createElement('textarea');
         this.clientsField.rows = 1;
         this.clientsField.style['vertical-align'] = 'top';
+        this.clientsField.style.width = '50em';
+
         selectionDiv.appendChild(this.clientsField);
         recipientSelector = W.getRecipientSelector();
         recipientSelector.onchange = function() {
@@ -374,6 +390,7 @@
                 tableRow.appendChild(tableCell);
 
                 button = document.createElement('button');
+                button.className = 'btn';
                 button.innerHTML = 'On';
                 button.onclick = (function(optName) {
                     return function() {
@@ -386,6 +403,7 @@
                 tableCell.appendChild(button);
 
                 button = document.createElement('button');
+                button.className = 'btn';
                 button.innerHTML = 'Off';
                 button.onclick = (function(optName) {
                     return function() {
@@ -402,6 +420,7 @@
         // Add bot-start button:
         button = document.createElement('button');
         button.innerHTML = 'Start bot';
+        button.className = 'btn';
         button.onclick = function() {
             node.socket.send(node.msg.create({
                 target: 'SERVERCOMMAND',
@@ -562,17 +581,19 @@
             if (msg.clients.hasOwnProperty(clientName)) {
                 clientObj = msg.clients[clientName];
 
-                this.clientTable.addRow(
-                    [{id: clientObj.id, prevSel: prevSel, that: this},
-                     clientObj.id,
-                     {
-                         type:        clientObj.clientType,
-                         thisMonitor: (clientObj.id === node.player.id)
+                this.clientTable.addRow([
+                    {id: clientObj.id, prevSel: prevSel, that: this},
+                    clientObj.id,
+                    clientObj.sid,
+                    {
+                        type:        clientObj.clientType,
+                        thisMonitor: (clientObj.id === node.player.id)
                      },
-                     clientObj.admin,
-                     GameStage.toHash(clientObj.stage, 'S.s.r'),
-                     clientObj.disconnected ? 'disconnected' : 'connected',
-                     clientObj.sid]);
+                    clientObj.admin,
+                    GameStage.toHash(clientObj.stage, '(r) S.s'),
+                    stageLevels[clientObj.stageLevel],
+                    'ok'
+                ]);
             }
         }
 
@@ -861,17 +882,17 @@
 
         // Show 'Send' button.
         sendButton = W.addButton(this.msgBar.bodyDiv);
+        sendButton.className = 'btn';
         sendButton.onclick = function() {
-            var msg = parseFunction();
-
-            if (msg) {
-                node.socket.send(msg);
-            }
+            var msg;
+            msg = parseFunction();
+            if (msg) node.socket.send(msg);            
         };
 
         // Show a button that expands the table of advanced fields.
         advButton = W.addButton(this.msgBar.bodyDiv, undefined,
                 'Toggle advanced options');
+        advButton.className = 'btn';
         advButton.onclick = function() {
             that.msgBar.tableAdvanced.table.style.display =
                 that.msgBar.tableAdvanced.table.style.display === '' ?
@@ -892,7 +913,7 @@
         div.appendChild(stageField);
 
         sendButton = node.window.addButton(div);
-
+        sendButton.className = 'btn';
         that = this;
 
         sendButton.onclick = function() {
@@ -921,6 +942,7 @@
             var that, button;
             that = this;
             button = document.createElement('button');
+            button.className = 'btn';
             button.innerHTML = label;
             button.onclick = function() {
                 var data, value;
@@ -960,6 +982,7 @@
         that = this;
 
         button = document.createElement('button');
+        button.className = 'btn';    
         button.innerHTML = label;
         button.onclick = function() {
             var clients;
