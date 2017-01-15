@@ -1,6 +1,6 @@
 /**
  * # ResultsView widget for nodeGame
- * Copyright(c) 2016 Stefano Balietti
+ * Copyright(c) 2017 Stefano Balietti
  * MIT Licensed
  *
  * Shows files available in data/ dir.
@@ -55,11 +55,15 @@
         this.lastModifiedSpan = null;
 
         this.prefixLink = null;
-        this.prefixLink = window.location.origin;
-        this.prefixLink += W.uriChannel ? W.uriChannel : '/';
-        this.prefixLink += 'monitor/data/';
-
         this.zipLink = null;
+
+        node.once('NODEGAME_READY', function() {
+            that.prefixLink = window.location.origin;
+            that.prefixLink += W.uriChannel ? W.uriChannel : '/';
+            that.prefixLink += 'monitor/data/';
+            // Update the zipLink href, if it was already created.
+            if (that.zipLink) that.zipLink.href = that.prefixLink + '*';
+        });
 
         this.table = new W.Table({
             render: {
