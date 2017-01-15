@@ -1,7 +1,7 @@
 {
   "name": "nodegame-monitor",
   "description": "NodeGame monitor interface",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "author": "Stefano Balietti <futur.dorko@gmail.com>",
   "keywords": [
     "nodegame",
