@@ -258,6 +258,17 @@ function Monitor(node) {
             }
         };
         
+        // The monitor uri (differs if there is default channel or not).
+        this.monitorUri = null;
+
+        // Store the monitor uri when it is received from server.
+        node.once('NODEGAME_READY', function() {
+            that.monitorUri = window.location.origin;
+            that.monitorUri += W.uriChannel ? W.uriChannel : '/';
+            that.monitorUri += 'monitor/';
+            node.emit('MONITOR_URI', that.monitorUri);
+        });
+
         // Tabs.
         tabList = document.createElement('ul');
         tabList.className = 'nav nav-tabs';
@@ -284,6 +295,7 @@ function Monitor(node) {
         // Results view.
         tmpElem = this.addTab('results');
         node.widgets.append('ResultsView', tmpElem);
+        node.widgets.append('MemoryView', tmpElem);
 
         // Server view.
         tmpElem = this.addTab('server');

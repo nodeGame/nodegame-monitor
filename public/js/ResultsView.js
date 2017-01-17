@@ -57,10 +57,8 @@
         this.prefixLink = null;
         this.zipLink = null;
 
-        node.once('NODEGAME_READY', function() {
-            that.prefixLink = window.location.origin;
-            that.prefixLink += W.uriChannel ? W.uriChannel : '/';
-            that.prefixLink += 'monitor/data/';
+        node.once('MONITOR_URI', function(uri) {
+            that.prefixLink = uri + 'data/';
             // Update the zipLink href, if it was already created.
             if (that.zipLink) that.zipLink.href = that.prefixLink + '*';
         });
