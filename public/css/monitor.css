@@ -178,3 +178,20 @@ ul.nav-tabs {
     font-weight: bold;
     text-align: right;
 }
+
+
+/* Results View */
+
+.resultsView {
+    float: left;
+    max-width: 500px;
+    margin-right: 50px;
+}
+
+
+/* Memory View */
+
+.memoryView {
+    float: left;
+    max-width: 450px;
+}

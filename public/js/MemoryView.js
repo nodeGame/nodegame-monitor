@@ -65,13 +65,13 @@
 
         this.downloadAllLink = document.createElement('a');
         this.downloadAllLink.setAttribute('target', '_blank');
-        this.downloadAllLink.innerHTML = 'Download all the items ' +
-            'currently in the memory database of all game rooms.';
+        this.downloadAllLink.innerHTML = 'Download the ' +
+            'memory database of all game rooms.';
 
         this.header.appendChild(this.downloadAllLink);
         this.header.appendChild(document.createElement('br'));
         this.header.appendChild(document.createTextNode(
-            'Warning! If the total number of items is very high, ' +
+            'Warning! If the total number of items in database is very high, ' +
                 'and you know that items might contain cycles (under normal ' +
                 'conditions they do not), this operation might affect the ' +
                 'server\'s performance.'
