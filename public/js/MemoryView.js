@@ -22,6 +22,7 @@
     MemoryView.description = 'Shows items stored in the memory database ' +
         'of the logic of each game room.';
 
+    MemoryView.title = 'Memory Database';
     MemoryView.className = 'memoryView';
 
     // ## Dependencies
@@ -61,19 +62,19 @@
     MemoryView.prototype.append = function() {
         var b;
         this.bodyDiv.appendChild(this.header);
-        
+
         this.downloadAllLink = document.createElement('a');
         this.downloadAllLink.setAttribute('target', '_blank');
-        this.downloadAllLink.innerHTML = '<em>Download all the items ' +
-            'currently in the memory database of all game rooms.</em> ';      
+        this.downloadAllLink.innerHTML = 'Download all the items ' +
+            'currently in the memory database of all game rooms.';
 
         this.header.appendChild(this.downloadAllLink);
-
+        this.header.appendChild(document.createElement('br'));
         this.header.appendChild(document.createTextNode(
-            'Warning! If the total number of items is very high, and ' +
-                'you know that items might contain cycles (under normal ' +
-                'conditions they do not), this operation might affect the' +
-                'server\'s performance'
+            'Warning! If the total number of items is very high, ' +
+                'and you know that items might contain cycles (under normal ' +
+                'conditions they do not), this operation might affect the ' +
+                'server\'s performance.'
         ));
 
     };

@@ -21,6 +21,7 @@
     ResultsView.version = '0.9.0';
     ResultsView.description = 'Displays the results of games in data/ folder.';
 
+    ResultsView.title = 'Data Folder';
     ResultsView.className = 'resultsView';
 
     // ## Dependencies
@@ -133,7 +134,7 @@
         this.zipLink = document.createElement('a');
         this.zipLink.setAttribute('target', '_blank');
         this.zipLink.href = this.prefixLink + '*';
-        this.zipLink.innerHTML = '<em>Download all the content in a ' +
+        this.zipLink.innerHTML = '<em>Download all in a ' +
             'zip archive</em>';
         this.zipLink.style.display = 'none';
 
