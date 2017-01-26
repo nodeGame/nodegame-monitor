@@ -141,7 +141,7 @@
         this.detailTable.addRow([selGame.info.name]);
         
         // Aliases.
-        if (selGame.alias.length) aliases = [selGame.info.alias.join(', ')]
+        if (selGame.alias.length) aliases = [selGame.alias.join(', ')]
         else aliases = ['-'];        
         this.detailTable.addRow(aliases);
 
