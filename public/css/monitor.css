@@ -134,7 +134,7 @@ table {
     border-spacing: 10px 2px;
 }
 
-/* 
+/*
 th,td {
     text-align: center;
 }
@@ -174,7 +174,7 @@ ul.nav-tabs {
     vertical-align: text-top;
 }
 
-.details tr td:first-child {    
+.details tr td:first-child {
     font-weight: bold;
     text-align: right;
 }
@@ -194,4 +194,27 @@ ul.nav-tabs {
 .memoryView {
     float: left;
     max-width: 450px;
+}
+
+
+/* Auth Details */
+
+table.auth {
+    width: auto;
+    max-width: 300px;
+}
+
+table.auth td {
+    padding: 10px;
+    vertical-align: text-top;
+}
+
+table.auth tr td:first-child,
+table.auth tr th:first-child {
+    font-weight: bold;
+    text-align: right;
+}
+
+table.auth tr td {
+    font-weight: normal;
 }

@@ -120,9 +120,7 @@
         node.socket.send(node.msg.create({
             target: 'SERVERCOMMAND',
             text:   'INFO',
-            data: {
-                type: 'RESULTS'
-            }
+            data: { type: 'RESULTS' }
         }));
 
     };

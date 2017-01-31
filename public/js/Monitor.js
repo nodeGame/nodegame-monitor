@@ -297,6 +297,10 @@ function Monitor(node) {
         node.widgets.append('ResultsView', tmpElem);
         node.widgets.append('MemoryView', tmpElem);
 
+        // Auth view.
+        tmpElem = this.addTab('auth');
+        node.widgets.append('AuthView', tmpElem);
+
         // Server view.
         tmpElem = this.addTab('server');
         node.widgets.append('ServerView', tmpElem);
