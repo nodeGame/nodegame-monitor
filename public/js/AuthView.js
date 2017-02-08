@@ -121,6 +121,10 @@
                     }
                 }
             }
+            t.addRow(['Total Player IDs', this.auth.totalPlayerIds]);
+            if (this.auth.claimedIds) {
+                t.addRow(['Claimed IDs', this.auth.claimedIds]);
+            }
         }
         t.parse();        
     };
