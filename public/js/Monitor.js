@@ -289,17 +289,17 @@ function Monitor(node) {
         this.clientList = clientList;
 
         // Game details.
-        tmpElem = this.addTab('games');
+        tmpElem = this.addTab('settings');
         node.widgets.append('GameDetails', tmpElem);
+
+        // Auth view.
+        tmpElem = this.addTab('auth');
+        node.widgets.append('AuthView', tmpElem);
 
         // Results view.
         tmpElem = this.addTab('results');
         node.widgets.append('ResultsView', tmpElem);
         node.widgets.append('MemoryView', tmpElem);
-
-        // Auth view.
-        tmpElem = this.addTab('auth');
-        node.widgets.append('AuthView', tmpElem);
 
         // Server view.
         tmpElem = this.addTab('server');
