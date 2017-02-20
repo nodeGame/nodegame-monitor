@@ -14,7 +14,7 @@
 
     node.widgets.register('ClientList', ClientList);
 
-    var JSUS = node.JSUS,
+    var J = node.JSUS,
         Table = node.window.Table,
         GameStage = node.GameStage;
 
@@ -31,7 +31,7 @@
 
     // ## Meta-data
 
-    ClientList.version = '0.5.0';
+    ClientList.version = '0.5.1';
     ClientList.description = 'Displays all clients of a room.';
 
     ClientList.title = 'Clients';
@@ -49,7 +49,7 @@
         var elem;
 
         content = o.content;
-        if (JSUS.isElement(content)) {
+        if (J.isElement(content)) {
             return content;
         }
         else if ('object' === typeof content) {
@@ -454,7 +454,7 @@
 
         node.on('INFO_CLIENTS', function(clients) {
             // Update the contents:
-            that.roomLogicId = clients.logic.id;
+            that.roomLogicId = clients.logic ? clients.logic.id : null;
             that.writeClients(clients);
             that.updateTitle();
         });
@@ -589,7 +589,9 @@
 
             this.checkboxes = {};
             this.clientTable.clear(true);
-            addClientToRow.call(this, prevSel, msg.logic);
+
+            // Add logic first, if found.
+            if (msg.logic) addClientToRow.call(this, prevSel, msg.logic);
 
             // Create a row for each client:
             i = -1, len = msg.clients.length;
@@ -624,7 +626,7 @@
     // Returns the array of client IDs that are selected using the text-field.
     ClientList.prototype.getSelectedClients = function() {
         try {
-            return JSUS.parse(this.clientsField.value);
+            return J.parse(this.clientsField.value);
         }
         catch(ex) {
             return this.clientsField.value;
@@ -808,7 +810,7 @@
 
             if (key === 'stage' || key === 'to' || key === 'data') {
                 try {
-                    value = JSUS.parse(e.content.value);
+                    value = J.parse(e.content.value);
                 }
                 catch (ex) {
                     value = e.content.value;
@@ -852,7 +854,7 @@
             msg.to = that.getSelectedClients();
             if ('number' === typeof msg.to) msg.to = '' + msg.to;
             
-            if ((!JSUS.isArray(msg.to) && 'string' !== typeof msg.to)) {
+            if ((!J.isArray(msg.to) && 'string' !== typeof msg.to)) {
                 alert('Invalid "to" field');
                 msg._invalid = true;
             }
@@ -955,9 +957,9 @@
                     roomId: that.roomId,                        
                 };
                 if (command === 'DISPATCH') {
-                    value = JSUS.isInt(inputNGames.value, 1);
+                    value = J.isInt(inputNGames.value, 1);
                     if (value !== false) data.numberOfGames = value;
-                    value = JSUS.isInt(inputGroupSize.value, 1);
+                    value = J.isInt(inputGroupSize.value, 1);
                     if (value !== false) data.groupSize = value;
                     value = treatmentInput.value;
                     if (value && value.trim() !== '') {
@@ -996,15 +998,17 @@
             clients = that.getSelectedClients();
             if (!clients || clients.length === 0) return;
             // If the room's logic client is selected, handle it specially.
-            doLogic = !!JSUS.removeElement(that.roomLogicId, clients);
-
+            if (that.roomLogicId) {
+                doLogic = J.removeElement(that.roomLogicId, clients);
+            }
+            
             node.socket.send(node.msg.create({
                 target: 'SERVERCOMMAND',
                 text:   'ROOMCOMMAND',
                 data: {
                     type:    command,
                     roomId:  that.roomId,
-                    doLogic: doLogic,
+                    doLogic: !!doLogic,
                     clients: clients,
                     force:   forceCheckbox.checked
                 }
