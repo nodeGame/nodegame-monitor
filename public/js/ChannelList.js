@@ -1,6 +1,6 @@
 /**
  * # ChannelList widget for nodeGame
- * Copyright(c) 2016 Stefano Balietti
+ * Copyright(c) 2017 Stefano Balietti
  * MIT Licensed
  *
  * Shows list of channels on the server.
@@ -19,7 +19,7 @@
 
     // ## Meta-data
 
-    ChannelList.version = '0.2.0';
+    ChannelList.version = '0.3.0';
     ChannelList.description = 'Displays all channels on the server.';
 
     ChannelList.title = 'Channels';

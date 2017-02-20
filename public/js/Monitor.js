@@ -1,3 +1,13 @@
+/**
+ * # Monitor for nodeGame
+ * Copyright(c) 2017 Stefano Balietti
+ * MIT Licensed
+ *
+ * Creates interface with tabs showing the status of game and server
+ *
+ * www.nodegame.org
+ * ---
+ */
 function Monitor(node) {
 
     "use strict";
@@ -19,9 +29,6 @@ function Monitor(node) {
         // ## Variables and methods.
 
         that = this;
-
-        // ## The name of the channel where the monitor is connected.
-        this.channelName = null;
 
         // The name of the tab currently visibile.
         this.tabInUse = null;

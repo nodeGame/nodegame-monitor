@@ -1,6 +1,6 @@
 /**
  * # GameDetails widget for nodeGame
- * Copyright(c) 2016 Stefano Balietti
+ * Copyright(c) 2017 Stefano Balietti
  * MIT Licensed
  *
  * Shows information about a game's configuration.
@@ -14,7 +14,7 @@
 
     node.widgets.register('GameDetails', GameDetails);
 
-    var JSUS = node.JSUS,
+    var J = node.JSUS,
         Table = node.window.Table;
 
     // ## Meta-data
@@ -52,7 +52,7 @@
         ]);
 
         this.gameDetailDiv = document.createElement('div');
-        // JSUS.style(this.gameDetailDiv, {float: 'left'});
+        // J.style(this.gameDetailDiv, {float: 'left'});
         this.gameDetailDiv.appendChild(this.detailTable.table);
 
         this.gameDetailDiv.appendChild(document.createElement('br'));
@@ -69,7 +69,7 @@
         // this.treatmentTable.setHeader(['Key', 'Value']);
 
         this.treatmentDiv = document.createElement('div');
-        // JSUS.style(this.treatmentDiv, {float: 'left'});
+        // J.style(this.treatmentDiv, {float: 'left'});
         this.treatmentDiv.appendChild(this.treatmentTable.table);
 
         this.selectedTreatment = null;
@@ -123,16 +123,29 @@
         var that;
         var selectedGame;
 
-        selectedGame = node.game.channelInUse;
-
         that = this;
         this.detailTable.clear(true);
         this.detailTable.parse();
 
+        if (J.isEmpty(node.game.gamesInfo)) {
+            // Name.
+            this.detailTable.addRow('No game found!');
+            this.detailTable.parse();
+            return;
+        }
+        selectedGame = node.game.channelInUse;
+        if (!selectedGame) {
+            // Name.
+            this.detailTable.addRow('No game selected!');
+            this.detailTable.parse();
+            return;
+        }
+
         selGame = node.game.gamesInfo[selectedGame];
         if (!selGame) {
             // Name.
-            this.detailTable.addRow('Select a game first!');
+            this.detailTable.addRow('En error occurred. No info found ' +
+                                    'for game: ' + selectedGame);
             this.detailTable.parse();
             return;
         }
@@ -192,6 +205,8 @@
         this.treatmentTable.clear(true);
         this.treatmentTable.parse();
 
+        if (!node.game.gamesInfo) return;
+
         selGame = node.game.gamesInfo[selectedGame];
         if (!selGame) return;
 
@@ -200,7 +215,7 @@
 
         // this.treatmentTable.addRow(['name', this.selectedTreatment]);
 
-        keys = JSUS.keys(selTreatment);
+        keys = J.keys(selTreatment);
         keys.sort(function(a, b) {
             if (a === 'name') return -1;
             if (a === 'description') return -1;
@@ -213,7 +228,7 @@
         for ( ; ++i < len ; ) {
             prop = keys[i];
             if (prop === 'treatmentName') continue;
-            if (JSUS.isArray(selTreatment[prop])) {
+            if (J.isArray(selTreatment[prop])) {
                 this.treatmentTable.addRow([
                     prop,
                     selTreatment[prop].join(', ')

@@ -1,6 +1,6 @@
 /**
  * # ClientList widget for nodeGame
- * Copyright(c) 2016 Stefano Balietti
+ * Copyright(c) 2017 Stefano Balietti
  * MIT Licensed
  *
  * Shows list of clients and allows selection.
@@ -438,6 +438,13 @@
         var that;
 
         that = this;
+
+        // Upon successful connection select current channel.
+        node.on('NODEGAME_READY', function() {
+            setTimeout(function() {
+                that.setChannel(node.socket.channelName);
+            });
+        });
 
         // Listen for server reply:
         node.on('INFO_CHANNELS', function(channels) {
