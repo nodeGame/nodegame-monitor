@@ -1,9 +1,9 @@
 /**
  * # ServerView widget for nodeGame
- * Copyright(c) 2016 Stefano Balietti
+ * Copyright(c) 2017 Stefano Balietti <ste@nodegame.org>
  * MIT Licensed
  *
- * Shows files available in data/ dir.
+ * Shows files available in log/ dir.
  *
  * www.nodegame.org
  * ---
@@ -18,9 +18,10 @@
 
     // ## Meta-data
 
-    ServerView.version = '0.0.1';
-    ServerView.description = 'Displays the results of games in data/ folder.'; 
+    ServerView.version = '0.0.2';
+    ServerView.description = 'Displays the log files in the log/ folder.'; 
 
+    ServerView.title = 'Log Files';
     ServerView.className = 'serverView';
 
     // ## Dependencies
@@ -39,9 +40,7 @@
         node.socket.send(node.msg.create({
             target: 'SERVERCOMMAND',
             text:   'INFO',
-            data: {
-                type: 'LOGS'
-            }
+            data: { type: 'LOGS' }
         }));
 
     };
@@ -65,8 +64,6 @@
 
     ServerView.prototype.displayData = function(files) {
         var i, element, prefixLink;
-        this.links.appendChild(document.createTextNode('Logs:'));
-        this.links.appendChild(document.createElement('br'));
         prefixLink = window.location.origin;
         prefixLink += W.uriChannel ? W.uriChannel : '/';
         prefixLink += 'monitor/servernode/logs/';
