@@ -268,13 +268,16 @@
         selectionDiv.style['border-bottom'] = '1px solid #ddd';
         selectionDiv.style['margin'] = '10px 0px';
 
-        commandPanel = W.addDiv(this.bodyDiv, undefined,
-                {className: ['panel', 'panel-default', 'commandbuttons']});
-        commandPanelHeading = W.addDiv(commandPanel, undefined,
-                {className: ['panel-heading']});
+        commandPanel = W.add('div', this.bodyDiv, {
+            className: ['panel', 'panel-default', 'commandbuttons']
+        });
+        commandPanelHeading = W.add('div', commandPanel, {
+            className: ['panel-heading']
+        });
         commandPanelHeading.innerHTML = 'Commands';
-        commandPanelBody = W.addDiv(commandPanel, undefined,
-                {className: ['panel-body', 'commandbuttons']});
+        commandPanelBody = W.add('div', commandPanel, {
+            className: ['panel-body', 'commandbuttons']
+        });
 
         // Add row for buttons:
         buttonDiv = document.createElement('div');
@@ -879,13 +882,16 @@
         // append
 
         // Create sub-panel for MsgBar
-        this.msgBar.panelDiv = W.addDiv(this.bodyDiv, undefined,
-                {className: ['panel', 'panel-default', 'msgbar']});
-        this.msgBar.headingDiv = W.addDiv(this.msgBar.panelDiv, undefined,
-                {className: ['panel-heading']});
+        this.msgBar.panelDiv = W.add('div', this.bodyDiv, {
+            className: [ 'panel', 'panel-default', 'msgbar' ]
+        });
+        this.msgBar.headingDiv = W.add('div', this.msgBar.panelDiv, {
+            className: ['panel-heading']
+        });
         this.msgBar.headingDiv.innerHTML = 'Custom Message';
-        this.msgBar.bodyDiv = W.addDiv(this.msgBar.panelDiv, undefined,
-                {className: ['panel-body', 'msgbar']});
+        this.msgBar.bodyDiv = W.add('div', this.msgBar.panelDiv, {
+            className: ['panel-body', 'msgbar']
+        });
 
         // Show table of basic fields.
         this.msgBar.bodyDiv.appendChild(this.msgBar.table.table);
