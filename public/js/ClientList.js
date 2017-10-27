@@ -762,14 +762,19 @@
 
             table.add(field, i, 0);
             if (field === 'data') {
-                tmpElem = W.getTextArea(
-                        this.msgBar.id + '_' + field, {tabindex: i+1});
+                tmpElem = W.get('textarea', {
+                    id: this.msgBar.id + '_' + field,
+                    tabindex: i+1
+                });
                 tmpElem.rows = 1;
                 table.add(tmpElem, i, 1);
             }
             else {
-                table.add(W.getTextInput(
-                        this.msgBar.id + '_' + field, {tabindex: i+1}), i, 1);
+                table.add(W.get('input', {
+                    id: this.msgBar.id + '_' + field,
+                    tabindex: i+1,
+                    type: 'text',
+                }), i, 1);
             }
 
             if (field === 'action') {
@@ -928,7 +933,7 @@
         root.appendChild(div);
 
         div.appendChild(document.createTextNode('Change stage to: '));
-        stageField = W.getTextInput();
+        stageField = W.get('input', { type: 'text' });
         div.appendChild(stageField);
 
         sendButton = node.window.addButton(div);
