@@ -937,7 +937,7 @@
         stageField = W.get('input', { type: 'text' });
         div.appendChild(stageField);
 
-        sendButton = node.window.addButton(div);
+        sendButton = W.add('button', div);
         sendButton.className = 'btn';
         that = this;
 
