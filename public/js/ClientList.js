@@ -905,7 +905,7 @@
         this.msgBar.tableAdvanced.table.style.display = 'none';
 
         // Show 'Send' button.
-        sendButton = W.addButton(this.msgBar.bodyDiv);
+        sendButton = W.add('button', this.msgBar.bodyDiv);
         sendButton.className = 'btn';
         sendButton.onclick = function() {
             var msg;
@@ -914,8 +914,9 @@
         };
 
         // Show a button that expands the table of advanced fields.
-        advButton = W.addButton(this.msgBar.bodyDiv, undefined,
-                'Toggle advanced options');
+        advButton = W.add('button', this.msgBar.bodyDiv, {
+            innerHTML: 'Toggle advanced options'
+        });
         advButton.className = 'btn';
         advButton.onclick = function() {
             that.msgBar.tableAdvanced.table.style.display =
