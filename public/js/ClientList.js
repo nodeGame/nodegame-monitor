@@ -780,8 +780,9 @@
             if (field === 'action') {
                 this.msgBar.actionSel = W.getActionSelector(
                         this.msgBar.id + '_actions');
-                W.addAttributes2Elem(this.msgBar.actionSel,
-                        {tabindex: fields.length+2});
+                W.addAttributes(this.msgBar.actionSel, {
+                    tabindex: fields.length+2
+                });
                 table.add(this.msgBar.actionSel, i, 2);
                 this.msgBar.actionSel.onchange = function() {
                     W.getElementById(that.msgBar.id + '_action').value =
@@ -791,8 +792,9 @@
             else if (field === 'target') {
                 this.msgBar.targetSel = W.getTargetSelector(
                         this.msgBar.id + '_targets');
-                W.addAttributes2Elem(this.msgBar.targetSel,
-                        {tabindex: fields.length+3});
+                W.addAttributes(this.msgBar.targetSel, {
+                    tabindex: fields.length+3
+                });
                 table.add(this.msgBar.targetSel, i, 2);
                 this.msgBar.targetSel.onchange = function() {
                     W.getElementById(that.msgBar.id + '_target').value =
