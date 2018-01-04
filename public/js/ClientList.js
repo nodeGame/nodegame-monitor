@@ -299,8 +299,13 @@
                     'OPEN', 'Open'));
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
                     'CLOSE', 'Close'));
+        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
+                    'PLAYWITHBOTS', 'Connects Bots'));
 
-        this.waitroomCommandsDiv.appendChild(document.createElement('br'));
+        
+        this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
+        
+        //this.waitroomCommandsDiv.appendChild(document.createElement('br'));
 
         // Need to create inputs before Dispatch button.
         dispatchNGamesInput = document.createElement('input');
@@ -419,17 +424,21 @@
             }
         }
 
-        // Add bot-start button:
-        button = document.createElement('button');
-        button.innerHTML = 'Start bot';
-        button.className = 'btn';
-        button.onclick = function() {
-            node.socket.send(node.msg.create({
-                target: 'SERVERCOMMAND',
-                text:   'STARTBOT'
-            }));
-        };
-        commandPanelBody.appendChild(button);
+        // TODO: see if we need this now.
+        
+//         commandPanelBody.appendChild(document.createElement('hr'));
+//         
+//         // Add bot-start button:
+//         button = document.createElement('button');
+//         button.innerHTML = 'Start bot';
+//         button.className = 'btn';
+//         button.onclick = function() {
+//             node.socket.send(node.msg.create({
+//                 target: 'SERVERCOMMAND',
+//                 text:   'STARTBOT'
+//             }));
+//         };
+//         commandPanelBody.appendChild(button);
 
         // Add MsgBar:
         this.appendMsgBar();
@@ -895,7 +904,7 @@
         this.msgBar.headingDiv = W.add('div', this.msgBar.panelDiv, {
             className: ['panel-heading']
         });
-        this.msgBar.headingDiv.innerHTML = 'Custom Message';
+        this.msgBar.headingDiv.innerHTML = 'Send Custom Message';
         this.msgBar.bodyDiv = W.add('div', this.msgBar.panelDiv, {
             className: ['panel-body', 'msgbar']
         });
@@ -909,6 +918,7 @@
         // Show 'Send' button.
         sendButton = W.add('button', this.msgBar.bodyDiv);
         sendButton.className = 'btn';
+        sendButton.innerHTML = 'Send';
         sendButton.onclick = function() {
             var msg;
             msg = parseFunction();
@@ -941,6 +951,7 @@
 
         sendButton = W.add('button', div);
         sendButton.className = 'btn';
+        sendButton.innerHTML = 'Send';
         that = this;
 
         sendButton.onclick = function() {

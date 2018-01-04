@@ -248,7 +248,7 @@ function Monitor(node) {
         this.refreshButton.onclick = function() {
             // TODO: refresh only node.game.tabInUse.
             node.game.refresh();
-        }
+        };
         
         this.refreshDropDown = document.getElementById('refreshDropDown');
         this.refreshDropDown.onclick = function(event) {
