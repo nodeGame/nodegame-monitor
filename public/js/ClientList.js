@@ -220,7 +220,7 @@
         var treatmentInput;
         var labelDNGI, labelDGSI, labelDTI;
 
-        var buttonTable, tableRow, tableCell;
+        var buttonTable, tableRow, tableCell, tableRow2, tableCell2;
         var setupOpts, btnLabel;
         var selectionDiv, recipientSelector;
 
@@ -425,21 +425,30 @@
                 tableCell.appendChild(button);
             }
         }
-        tableCell = document.createElement('td');
-        tableRow.appendChild(tableCell);
+       
+        tableCell2 = document.createElement('td');
+        tableRow2 = document.createElement('tr');
+        tableRow2.appendChild(tableCell2);
         kickBtn = document.createElement('button');
         kickBtn.className = 'btn';
-        kickBtn.innerHTML = 'Kick Player';
+        kickBtn.innerHTML = 'Kick';
         kickBtn.onclick = (function() {
             var selectedClients = that.getSelectedClients();
             selectedClients.forEach((id) => {
-                node.disconnectClient({
-                    id: id,
-                    sid: that.clientMap[id].sid
-                });
+                if (that.clientMap[id].clientType == 'bot' ||
+                    that.clientMap[id].clientType == 'player') {
+                    node.disconnectClient({
+                        id: id,
+                        sid: that.clientMap[id].sid
+                    });
+                    console.log('Kicked from server: ' + id);
+                }
+                
             });
         });
-        tableCell.appendChild(kickBtn);
+        tableCell2.appendChild(kickBtn);
+        commandPanelBody.appendChild(document.createElement('hr'));
+        commandPanelBody.appendChild(tableRow2);
 
         // TODO: see if we need this now.
         
