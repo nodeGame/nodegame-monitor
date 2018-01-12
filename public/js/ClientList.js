@@ -123,6 +123,8 @@
         // Table displaying the rooms.
         this.roomTable = new Table();
 
+        this.clientMap = {};
+
         // Table displaying the clients.
         this.clientTable = new Table({
             render: {
@@ -212,7 +214,7 @@
         var tableStructure;
         var commandPanel, commandPanelHeading, commandPanelBody;
 
-        var buttonDiv, button, forceCheckbox, label;
+        var buttonDiv, button, forceCheckbox, label, kickBtn;
 
         var waitRoomCommandsDiv, dispatchNGamesInput, dispatchGroupSizeInput;
         var treatmentInput;
@@ -423,6 +425,21 @@
                 tableCell.appendChild(button);
             }
         }
+        tableCell = document.createElement('td');
+        tableRow.appendChild(tableCell);
+        kickBtn = document.createElement('button');
+        kickBtn.className = 'btn';
+        kickBtn.innerHTML = 'Kick Player';
+        kickBtn.onclick = (function() {
+            var selectedClients = that.getSelectedClients();
+            selectedClients.forEach((id) => {
+                node.disconnectClient({
+                    id: id,
+                    sid: that.clientMap[id].sid
+                });
+            });
+        });
+        tableCell.appendChild(kickBtn);
 
         // TODO: see if we need this now.
         
@@ -475,6 +492,8 @@
             // Update the contents:
             that.roomLogicId = clients.logic ? clients.logic.id : null;
             that.writeClients(clients);
+            //node.game.pl.clear();
+            //node.game.pl.importDB(clients);
             that.updateTitle();
         });
 
@@ -574,6 +593,7 @@
     ClientList.prototype.writeClients = (function() {
         
         function addClientToRow(prevSel, clientObj) {
+            this.clientMap[clientObj.id] = clientObj;
             this.clientTable.addRow([
                 {id: clientObj.id, prevSel: prevSel, that: this},
                 clientObj.id || 'N/A',
