@@ -174,9 +174,9 @@
         node.game.refreshRooms();
     };
 
-    ClientList.prototype.setRoom = function(roomId) {
+    ClientList.prototype.setRoom = function(roomId, refreshClients) {
         var roomObj, roomName;
-
+        
         if (null === roomId) {
             roomName = null;
             // Hide client table if no room is selected:
@@ -199,7 +199,7 @@
     
         node.emit('ROOM_SELECTED', roomObj);
 
-        node.game.refreshClients();
+        if (!!refreshClients) node.game.refreshClients();
     };
 
     ClientList.prototype.refresh = function() {
@@ -474,7 +474,6 @@
 
     ClientList.prototype.listeners = function() {
         var that;
-
         that = this;
 
         // Upon successful connection select current channel.
@@ -590,7 +589,7 @@
             elem.className = 'ng_clickable';
             elem.innerHTML = roomObj.name;
             elem.onclick = (function(o) {
-                return function() { that.setRoom(o.id); };
+                return function() { that.setRoom(o.id, false); };
             })(roomObj);
 
             this.roomTable.addRow(elem);
@@ -613,7 +612,8 @@
                     thisMonitor: (clientObj.id === node.player.id)
                 },
                 'boolean' === typeof clientObj.admin ? clientObj.admin : 'N/A',
-                GameStage.toHash(clientObj.stage, 'S.s-r'),
+                clientObj.stage ?
+                    GameStage.toHash(clientObj.stage, 'S.s-r') : 'N/A',
                 stageLevels[clientObj.stageLevel],
                 'boolean' === typeof clientObj.paused ? clientObj.paused : 'N/A'
             ]);
