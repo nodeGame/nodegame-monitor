@@ -151,7 +151,7 @@
         this.roomTable.setHeader(['Room']);
         this.clientTable.setHeader([
             this.selectAll,
-            'ID', 'SID', 'Type', 'Admin', 'Stage', 'Level', 'Paused'
+            'ID', 'SID', 'Type', 'Admin', 'Stage', 'Level', 'Paused', 'Error'
         ]);
 
         this.clientsField = null;
@@ -586,7 +586,8 @@
                 'boolean' === typeof clientObj.admin ? clientObj.admin : 'N/A',
                 GameStage.toHash(clientObj.stage, 'S.s-r'),
                 stageLevels[clientObj.stageLevel],
-                'boolean' === typeof clientObj.paused ? clientObj.paused : 'N/A'
+                'boolean' === typeof clientObj.paused ? clientObj.paused : 'N/A',
+                clientObj.log || '-'
             ]);
         }
 
