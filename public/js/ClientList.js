@@ -151,7 +151,7 @@
         this.roomTable.setHeader(['Room']);
         this.clientTable.setHeader([
             this.selectAll,
-            'ID', 'SID', 'Type', 'Admin', 'Stage', 'Level', 'Paused', 'Error'
+            'ID', 'SID', 'Type', 'Admin', 'Stage', 'Level', 'Paused', 'Last Error'
         ]);
 
         this.clientsField = null;
