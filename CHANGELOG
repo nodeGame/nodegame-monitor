@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 4.0.1
+- Last error on client displayed.
+
 ## 4.0.0
 - ServerView improved.
 - ClientList improved.
