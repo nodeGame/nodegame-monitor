@@ -1,6 +1,6 @@
 /**
  * # ClientList widget for nodeGame
- * Copyright(c) 2017 Stefano Balietti
+ * Copyright(c) 2018 Stefano Balietti
  * MIT Licensed
  *
  * Shows list of clients and allows selection.
@@ -31,7 +31,7 @@
 
     // ## Meta-data
 
-    ClientList.version = '0.5.1';
+    ClientList.version = '0.6.0';
     ClientList.description = 'Displays all clients of a room.';
 
     ClientList.title = 'Clients';
@@ -213,7 +213,8 @@
         var commandPanel, commandPanelHeading, commandPanelBody;
 
         var buttonDiv, button, forceCheckbox, label;
-
+        var extraButtonsDiv;
+        
         var waitRoomCommandsDiv, dispatchNGamesInput, dispatchGroupSizeInput;
         var treatmentInput;
         var labelDNGI, labelDGSI, labelDTI;
@@ -304,7 +305,7 @@
 
         
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
-        
+
         //this.waitroomCommandsDiv.appendChild(document.createElement('br'));
 
         // Need to create inputs before Dispatch button.
@@ -372,6 +373,8 @@
         // Add StateBar:
         this.appendStateBar(commandPanelBody);
 
+        commandPanelBody.appendChild(document.createElement('hr'));
+        
         // Add a table for buttons:
         buttonTable = document.createElement('table');
         commandPanelBody.appendChild(buttonTable);
@@ -426,7 +429,47 @@
 
         // TODO: see if we need this now.
         
-//         commandPanelBody.appendChild(document.createElement('hr'));
+        commandPanelBody.appendChild(document.createElement('hr'));
+
+        var inputGroup = document.createElement('div');
+        inputGroup.className = "input-group";
+
+        var myInput = document.createElement('input');
+        myInput.type = "text";
+        myInput.className ="form-control"
+        myInput.placeholder = "Full URI or a page within the game"
+        myInput["aria-label"] = "Full URI or a page within the game"
+
+        inputGroup.appendChild(myInput);
+        
+        var tmp = document.createElement('span');
+        tmp.className = "input-group-btn";
+        
+        button = document.createElement('button');
+        button.className = 'btn btn-default';
+        button.innerHTML = 'Redirect';
+        button.type = 'button';
+        button.onclick = function() {
+            var uri, clients;
+            uri = myInput.value;
+            if (!uri) {
+                node.warn('cannot redirect, empty uri.');
+                return false;
+            }
+            clients = that.getSelectedClients();
+            if (!clients || !clients.length) {
+                node.warn('cannot redirect, no client selected.');
+                return false;
+            }
+            node.redirect(uri, clients);
+        };
+
+        tmp.appendChild(button)
+        inputGroup.appendChild(tmp);
+        
+        
+        commandPanelBody.appendChild(inputGroup);
+            
 //         
 //         // Add bot-start button:
 //         button = document.createElement('button');
