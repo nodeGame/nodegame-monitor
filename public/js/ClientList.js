@@ -449,6 +449,7 @@
         button.className = 'btn btn-default';
         button.innerHTML = 'Redirect';
         button.type = 'button';
+        button.style['padding-bottom'] = '7px';
         button.onclick = function() {
             var uri, clients;
             uri = myInput.value;
