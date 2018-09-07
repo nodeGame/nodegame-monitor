@@ -123,6 +123,8 @@
         // Table displaying the rooms.
         this.roomTable = new Table();
 
+        this.clientMap = {};
+
         // Table displaying the clients.
         this.clientTable = new Table({
             render: {
@@ -172,9 +174,9 @@
         node.game.refreshRooms();
     };
 
-    ClientList.prototype.setRoom = function(roomId) {
+    ClientList.prototype.setRoom = function(roomId, refreshClients) {
         var roomObj, roomName;
-
+        
         if (null === roomId) {
             roomName = null;
             // Hide client table if no room is selected:
@@ -197,7 +199,7 @@
     
         node.emit('ROOM_SELECTED', roomObj);
 
-        node.game.refreshClients();
+        if (!!refreshClients) node.game.refreshClients();
     };
 
     ClientList.prototype.refresh = function() {
@@ -212,14 +214,14 @@
         var tableStructure;
         var commandPanel, commandPanelHeading, commandPanelBody;
 
-        var buttonDiv, button, forceCheckbox, label;
+        var buttonDiv, button, forceCheckbox, label, kickBtn;
         var extraButtonsDiv;
-        
+
         var waitRoomCommandsDiv, dispatchNGamesInput, dispatchGroupSizeInput;
         var treatmentInput;
         var labelDNGI, labelDGSI, labelDTI;
 
-        var buttonTable, tableRow, tableCell;
+        var buttonTable, tableRow, tableCell, tableRow2, tableCell2;
         var setupOpts, btnLabel;
         var selectionDiv, recipientSelector;
 
@@ -426,6 +428,30 @@
                 tableCell.appendChild(button);
             }
         }
+       
+        tableCell2 = document.createElement('td');
+        tableRow2 = document.createElement('tr');
+        tableRow2.appendChild(tableCell2);
+        kickBtn = document.createElement('button');
+        kickBtn.className = 'btn';
+        kickBtn.innerHTML = 'Kick';
+        kickBtn.onclick = (function() {
+            var selectedClients = that.getSelectedClients();
+            selectedClients.forEach((id) => {
+                if (that.clientMap[id].clientType == 'bot' ||
+                    that.clientMap[id].clientType == 'player') {
+                    node.disconnectClient({
+                        id: id,
+                        sid: that.clientMap[id].sid
+                    });
+                    console.log('Kicked from server: ' + id);
+                }
+                
+            });
+        });
+        tableCell2.appendChild(kickBtn);
+        commandPanelBody.appendChild(document.createElement('hr'));
+        commandPanelBody.appendChild(tableRow2);
 
         // TODO: see if we need this now.
         
@@ -492,7 +518,6 @@
 
     ClientList.prototype.listeners = function() {
         var that;
-
         that = this;
 
         // Upon successful connection select current channel.
@@ -519,6 +544,8 @@
             // Update the contents:
             that.roomLogicId = clients.logic ? clients.logic.id : null;
             that.writeClients(clients);
+            //node.game.pl.clear();
+            //node.game.pl.importDB(clients);
             that.updateTitle();
         });
 
@@ -606,7 +633,7 @@
             elem.className = 'ng_clickable';
             elem.innerHTML = roomObj.name;
             elem.onclick = (function(o) {
-                return function() { that.setRoom(o.id); };
+                return function() { that.setRoom(o.id, false); };
             })(roomObj);
 
             this.roomTable.addRow(elem);
@@ -618,6 +645,7 @@
     ClientList.prototype.writeClients = (function() {
         
         function addClientToRow(prevSel, clientObj) {
+            this.clientMap[clientObj.id] = clientObj;
             this.clientTable.addRow([
                 {id: clientObj.id, prevSel: prevSel, that: this},
                 clientObj.id || 'N/A',
@@ -628,7 +656,8 @@
                     thisMonitor: (clientObj.id === node.player.id)
                 },
                 'boolean' === typeof clientObj.admin ? clientObj.admin : 'N/A',
-                GameStage.toHash(clientObj.stage, 'S.s-r'),
+                clientObj.stage ?
+                    GameStage.toHash(clientObj.stage, 'S.s-r') : 'N/A',
                 stageLevels[clientObj.stageLevel],
                 'boolean' === typeof clientObj.paused ? clientObj.paused : 'N/A',
                 clientObj.log || '-'
