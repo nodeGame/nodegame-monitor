@@ -1,7 +1,9 @@
 # CHANGELOG
 
-## Current
+## 4.1.0
 - Added Redirect Bar in Commands.
+- Added Kick Button (just disconnect).
+- Added Last Error.
 
 ## 4.0.1
 - Last error on client displayed.
