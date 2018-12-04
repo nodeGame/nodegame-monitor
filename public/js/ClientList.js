@@ -432,6 +432,7 @@
         tableCell2 = document.createElement('td');
         tableRow2 = document.createElement('tr');
         tableRow2.appendChild(tableCell2);
+
         kickBtn = document.createElement('button');
         kickBtn.className = 'btn';
         kickBtn.innerHTML = 'Kick';
@@ -450,6 +451,33 @@
             });
         });
         tableCell2.appendChild(kickBtn);
+
+        var chatBtn;
+        chatBtn = document.createElement('button');
+        chatBtn.className = 'btn';
+        chatBtn.innerHTML = 'Chat';
+        chatBtn.onclick = (function() {
+            var selectedClients = that.getSelectedClients();
+            if (!selectedClients.length) return;
+            selectedClients.forEach((id) => {
+                if (that.clientMap[id].clientType == 'bot' ||
+                    that.clientMap[id].clientType == 'player') {
+                    
+                    node.remoteSetup('widgets', id, {
+                        append: {
+                            Chat: {
+                                recipient: 'MONITOR',
+                                recipientName: 'MONITOR',
+                                mode: 'ONE_TO_ONE'
+                            }
+                        }
+                    });                   
+                }
+            });
+            node.widgets.append('Chat');
+        });
+        tableCell2.appendChild(chatBtn);
+
         commandPanelBody.appendChild(document.createElement('hr'));
         commandPanelBody.appendChild(tableRow2);
 
