@@ -31,7 +31,7 @@
 
     // ## Meta-data
 
-    ClientList.version = '0.6.0';
+    ClientList.version = '0.7.0';
     ClientList.description = 'Displays all clients of a room.';
 
     ClientList.title = 'Clients';
@@ -132,6 +132,10 @@
                 returnAt: 'first'
             }
         });
+
+        // If a chat is already open, do not open a new one (for now).
+        // TODO: open multiple ones, if recipients are different.
+        this.chat = null;
 
         // Div containing the commands for the waiting room (when selected).
         this.waitroomCommandsDiv = null;
@@ -468,13 +472,19 @@
                             Chat: {
                                 recipient: 'MONITOR',
                                 recipientName: 'MONITOR',
-                                mode: 'ONE_TO_ONE'
+                                mode: 'ONE_TO_ONE',
+                                // TODO: not used for now, because
+                                // it registers listeners locally
+                                // and at the next step they are killed.
+                                // root: function() {
+                                //     return document.body;
+                                // }
                             }
                         }
                     });                   
                 }
             });
-            node.widgets.append('Chat');
+            if (!that.chat) that.chat = node.widgets.append('Chat');
         });
         tableCell2.appendChild(chatBtn);
 
