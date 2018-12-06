@@ -472,9 +472,10 @@
                         append: {
                             Chat: {
                                 recipient: 'MONITOR',
-                                recipientName: 'MONITOR',
+                                recipientName: 'Monitor',
                                 mode: 'ONE_TO_ONE',
                                 collapsible: true,
+                                title: 'Chat with Monitor'
                                 // TODO: not used for now, because
                                 // it registers listeners locally
                                 // and at the next step they are killed.
