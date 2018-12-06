@@ -461,18 +461,20 @@
         chatBtn.className = 'btn';
         chatBtn.innerHTML = 'Chat';
         chatBtn.onclick = (function() {
-            var selectedClients = that.getSelectedClients();
+            var ids, selectedClients;
+            selectedClients = that.getSelectedClients();
             if (!selectedClients.length) return;
             selectedClients.forEach((id) => {
-                if (that.clientMap[id].clientType == 'bot' ||
-                    that.clientMap[id].clientType == 'player') {
-                    
+                if (that.clientMap[id].clientType == 'player') {
+                    if (!ids) ids = id;
+                    else ids += ', ' + id;
                     node.remoteSetup('widgets', id, {
                         append: {
                             Chat: {
                                 recipient: 'MONITOR',
                                 recipientName: 'MONITOR',
                                 mode: 'ONE_TO_ONE',
+                                collapsible: true,
                                 // TODO: not used for now, because
                                 // it registers listeners locally
                                 // and at the next step they are killed.
@@ -484,7 +486,14 @@
                     });                   
                 }
             });
-            if (!that.chat) that.chat = node.widgets.append('Chat');
+            if (!that.chat) {
+                that.chat = node.widgets.append('Chat', 
+                                                commandPanelBody,
+                                                {
+                                                    title: ids,
+                                                    collapsible: true
+                                                });
+            }
         });
         tableCell2.appendChild(chatBtn);
 
