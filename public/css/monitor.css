@@ -1,19 +1,44 @@
 /*
- * Game Socket Default CSS
+ * Monitor Default CSS
  */
 
 body {
-    margin: 5px;
-    padding: 5px;
+  margin: 5px;
+  padding: 5px;
 }
 
 input, button, select, textarea {
-    padding: 5px;
-    margin: 2px;
-    border: 1px solid #CCC;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+  padding: 5px;
+  margin: 2px;
+  border: 1px solid #CCC;
+  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
+#wall {
+  width: auto;
+  height: 200px;
+  /*margin-bottom: 10px;
+      border: 1px solid #CCC;*/
+  padding: 5px;
+  font-family: Verdana;
+  font-size: 11px;
+  color: black;
+  overflow: auto;
+}
+
+page,body {
+  padding: 5px;
+}
+
+/* Also in nodegame.css */
+.panel-collapse-link {
+  display: inline-block;
+  float: right;
+  cursor: pointer;
+}
+
+
+/*
 fieldset {
     float: left;
     padding-top: 5px;
@@ -21,9 +46,6 @@ fieldset {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
-page,body {
-    padding: 5px;
-}
 
 #status-bar {
     width: 100%;
@@ -36,18 +58,6 @@ page,body {
     overflow: auto;
 }
 
-
-#wall {
-    width: auto;
-    height: 200px;
-    /*margin-bottom: 10px;
-      border: 1px solid #CCC;*/
-    padding: 5px;
-    font-family: Verdana;
-    font-size: 11px;
-    color: black;
-    overflow: auto;
-}
 
 #sendButton {
     //float: left;
@@ -69,12 +79,13 @@ page,body {
 
 
 div#gameboard {
-    width: 300px;
-    height: 130px;
-    border: 1px solid black;
-    padding: 5px;
-    margin: 5px;
+  width: 300px;
+  height: 130px;
+  border: 1px solid black;
+  padding: 5px;
+  margin: 5px;
 }
+
 
 fieldset#wall_fieldset, fieldset#gb_fieldset {
     width: 500px;
@@ -89,30 +100,30 @@ fieldset#chat_fieldset {
     padding: 5px;
     margin: 5px;
 }
+*/
 
-#chat_chat {
-    overflow-y: scroll;
-    height: 200px;
-    width: 450px;
-    border: 1px solid #CCC;
-    padding: 5px;
+.chat_chat {
+  overflow-y: scroll;
+  height: 200px;
+  width: 100%;
+  padding: 5px;
 }
 
-#chat_textarea {
-    height: 100px;
-    width: 400px;
+.chat_textarea {
+  height: 50px;
+  width: 100%;
 }
 
 .chat_me {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 table#gametable {
-    border: 1px solid #CCC;
+  border: 1px solid #CCC;
 }
 
 table#gametable tr td {
-    border: 1px solid #CCC;
+  border: 1px solid #CCC;
 }
 
 
@@ -121,17 +132,17 @@ table#gametable tr td {
  */
 
 .panel-heading > ol.breadcrumb {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .ng_clickable:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 table {
-    border-collapse: separate;
-    border-spacing: 10px 2px;
+  border-collapse: separate;
+  border-spacing: 10px 2px;
 }
 
 /*
@@ -141,80 +152,80 @@ th,td {
 */
 
 th:first-child,td:first-child {
-    text-align: left;
+  text-align: left;
 }
 
 div.panel.msgbar table tbody tr td:nth-child(3) {
-    text-align: left;
+  text-align: left;
 }
 
 div.panel.commandbuttons {
-    width: 500px;
-    float: left;
-    margin-right: 10px;
+  width: 500px;
+  float: left;
+  margin-right: 10px;
 }
 
 div.panel.msgbar {
-    width: 500px;
-    float: left;
+  width: 500px;
+  float: left;
 }
 
 ul.nav-tabs {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 /* Game Details */
 
 .details {
-    max-width: 500px;
+  max-width: 500px;
 }
 
 .details td {
-    padding: 10px;
-    vertical-align: text-top;
+  padding: 10px;
+  vertical-align: text-top;
 }
 
 .details tr td:first-child {
-    font-weight: bold;
-    text-align: right;
+  font-weight: bold;
+  text-align: right;
 }
 
 
 /* Results View */
 
 .resultsView {
-    float: left;
-    max-width: 500px;
-    margin-right: 50px;
+  float: left;
+  max-width: 500px;
+  margin-right: 50px;
 }
 
 
 /* Memory View */
 
 .memoryView {
-    float: left;
-    max-width: 450px;
+  float: left;
+  max-width: 450px;
 }
 
 
 /* Auth Details */
 
 table.auth {
-    width: auto;
-    max-width: 300px;
+  width: auto;
+  max-width: 300px;
 }
 
 table.auth td {
-    padding: 10px;
-    vertical-align: text-top;
+  padding: 10px;
+  vertical-align: text-top;
 }
 
 table.auth tr td:first-child,
 table.auth tr th:first-child {
-    font-weight: bold;
-    text-align: right;
+  font-weight: bold;
+  text-align: right;
 }
 
 table.auth tr td {
-    font-weight: normal;
+  font-weight: normal;
 }

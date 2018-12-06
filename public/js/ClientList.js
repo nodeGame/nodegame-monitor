@@ -461,13 +461,13 @@
         chatBtn.className = 'btn';
         chatBtn.innerHTML = 'Chat';
         chatBtn.onclick = (function() {
-            var ids, selectedClients;
+            var title, selectedClients;
             selectedClients = that.getSelectedClients();
             if (!selectedClients.length) return;
             selectedClients.forEach((id) => {
                 if (that.clientMap[id].clientType == 'player') {
-                    if (!ids) ids = id;
-                    else ids += ', ' + id;
+                    if (!title) title = that.roomName + ': ' + id;
+                    else title += ', ' + id;
                     node.remoteSetup('widgets', id, {
                         append: {
                             Chat: {
@@ -490,7 +490,7 @@
                 that.chat = node.widgets.append('Chat', 
                                                 commandPanelBody,
                                                 {
-                                                    title: ids,
+                                                    title: title,
                                                     collapsible: true
                                                 });
             }
