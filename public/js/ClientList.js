@@ -135,7 +135,7 @@
 
         // If a chat is already open, do not open a new one (for now).
         // TODO: open multiple ones, if recipients are different.
-        this.chat = null;
+        this.chats = {};
 
         // Div containing the commands for the waiting room (when selected).
         this.waitroomCommandsDiv = null;
@@ -475,6 +475,7 @@
                                 recipientName: 'Monitor',
                                 mode: 'ONE_TO_ONE',
                                 collapsible: true,
+                                closable: true,
                                 title: 'Chat with Monitor'
                                 // TODO: not used for now, because
                                 // it registers listeners locally
@@ -487,13 +488,14 @@
                     });                   
                 }
             });
-            if (!that.chat) {
-                that.chat = node.widgets.append('Chat', 
-                                                commandPanelBody,
-                                                {
-                                                    title: title,
-                                                    collapsible: true
-                                                });
+            if (!that.chats[title]) {
+                that.chats[title] = node.widgets.append('Chat', 
+                                                        commandPanelBody,
+                                                        {
+                                                            title: title,
+                                                            collapsible: true,
+                                                            closable: true
+                                                        });
             }
         });
         tableCell2.appendChild(chatBtn);
@@ -544,7 +546,19 @@
         
         
         commandPanelBody.appendChild(inputGroup);
-            
+
+
+//        var chatPanel = W.add('div', this.bodyDiv, {
+//            className: ['panel', 'panel-default', 'chat']
+//        });
+//        var chatPanelHeading = W.add('div', commandPanel, {
+//            className: ['panel-heading'],
+//            innerHTML: 'Chat'
+//        });
+//        var chatPanelBody = W.add('div', commandPanel, {
+//            className: ['panel-body', 'chat']
+//        });
+        
 //         
 //         // Add bot-start button:
 //         button = document.createElement('button');
