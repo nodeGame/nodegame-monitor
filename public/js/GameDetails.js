@@ -1,6 +1,6 @@
 /**
  * # GameDetails widget for nodeGame
- * Copyright(c) 2017 Stefano Balietti
+ * Copyright(c) 2018 Stefano Balietti
  * MIT Licensed
  *
  * Shows information about a game's configuration.
@@ -19,9 +19,10 @@
 
     // ## Meta-data
 
-    GameDetails.version = '0.5.0';
+    GameDetails.version = '0.5.1';
     GameDetails.description = 'Displays info about a game\'s configuration.';
 
+    GameDetails.title = 'Game Details';
     GameDetails.className = 'gamedetails';
 
     // ## Dependencies

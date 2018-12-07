@@ -216,7 +216,7 @@
         var that;
 
         var tableStructure;
-        var commandPanel, commandPanelHeading, commandPanelBody;
+        var commandPanel, commandPanelBody, commandPanelHeading;
 
         var buttonDiv, button, forceCheckbox, label, kickBtn;
         var extraButtonsDiv;
@@ -1015,9 +1015,7 @@
             return gameMsg;
         };
 
-
-
-        // append
+        // Append.
 
         // Create sub-panel for MsgBar
         this.msgBar.panelDiv = W.add('div', this.bodyDiv, {
