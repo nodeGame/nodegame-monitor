@@ -47,10 +47,15 @@ page,body {
 .chat_textarea {
   height: 50px;
   width: 100%;
+  resize: none;
 }
 
 .chat_me {
   font-weight: bold;
+}
+
+.chat_submit {
+  height: 70px;
 }
 
 table#gametable {

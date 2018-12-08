@@ -508,7 +508,7 @@
         commandPanelBody.appendChild(document.createElement('hr'));
 
         var inputGroup = document.createElement('div');
-        inputGroup.className = "input-group";
+        inputGroup.className = 'input-group';
 
         var myInput = document.createElement('input');
         myInput.type = "text";
@@ -519,7 +519,7 @@
         inputGroup.appendChild(myInput);
         
         var tmp = document.createElement('span');
-        tmp.className = "input-group-btn";
+        tmp.className = 'input-group-btn';
         
         button = document.createElement('button');
         button.className = 'btn btn-default';
