@@ -461,19 +461,20 @@
         chatBtn.className = 'btn';
         chatBtn.innerHTML = 'Chat';
         chatBtn.onclick = (function() {
-            var title, selectedClients;
+            var title, selectedClients, recipients;
             selectedClients = that.getSelectedClients();
             if (!selectedClients.length) return;
+            recipients = [];
             selectedClients.forEach((id) => {
                 if (that.clientMap[id].clientType == 'player') {
+                    recipients.push(id);
                     if (!title) title = that.roomName + ': ' + id;
                     else title += ', ' + id;
                     node.remoteSetup('widgets', id, {
                         append: {
                             Chat: {
-                                recipient: 'MONITOR',
-                                recipientName: 'Monitor',
-                                mode: 'ONE_TO_ONE',
+                                recipients: [ node.game.channelInUse ],
+                                recipientsNames: [ 'Monitor' ],
                                 collapsible: true,
                                 closable: true,
                                 title: 'Chat with Monitor'
@@ -489,16 +490,21 @@
                 }
             });
             if (!that.chats[title]) {
-                that.chats[title] = node.widgets.append('Chat', 
-                                                        commandPanelBody,
-                                                        {
-                                                            title: title,
-                                                            collapsible: true,
-                                                            closable: true
-                                                        });
+                that.chats[title] =
+                    // was
+                    // node.widgets.append('Chat', commandPanelBody, {
+                    node.widgets.append('Chat', buttonDiv, {
+                                            recipients: recipients, 
+                                            title: title,
+                                            collapsible: true,
+                                            closable: true
+                                        });
             }
         });
-        tableCell2.appendChild(chatBtn);
+
+        buttonDiv.appendChild(chatBtn);
+        // was
+        //tableCell2.appendChild(chatBtn);
 
         commandPanelBody.appendChild(document.createElement('hr'));
         commandPanelBody.appendChild(tableRow2);
