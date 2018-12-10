@@ -221,10 +221,10 @@
         var treatmentInput;
         var labelDNGI, labelDGSI, labelDTI;
 
-        var buttonTable, tableRow, tableCell, tableRow2, tableCell2;
-        var setupOpts, btnLabel;
         var selectionDiv, recipientSelector;
-
+        var tableRow2, tableCell2;
+        var buttonTable, tableRow, tableCell;
+        
         that = this;
 
         // Add tables in a 3x1 table element:
@@ -375,60 +375,6 @@
         // Add StateBar:
         this.appendStateBar(commandPanelBody);
 
-        commandPanelBody.appendChild(document.createElement('hr'));
-
-        // Add a table for buttons:
-        buttonTable = document.createElement('table');
-        commandPanelBody.appendChild(buttonTable);
-
-        // Add buttons for disable right click/ESC, prompt on leave, waitscreen.
-        setupOpts = {
-            'Disable right-click': 'disableRightClick',
-            'Disable Esc': 'noEscape',
-            'Prompt on leave': 'promptOnleave',
-            'Wait-screen': 'waitScreen'
-        };
-
-        for (btnLabel in setupOpts) {
-            if (setupOpts.hasOwnProperty(btnLabel)) {
-                tableRow = document.createElement('tr');
-                buttonTable.appendChild(tableRow);
-
-                tableCell = document.createElement('td');
-                tableCell.innerHTML = btnLabel;
-                tableRow.appendChild(tableCell);
-
-                tableCell = document.createElement('td');
-                tableRow.appendChild(tableCell);
-
-                button = document.createElement('button');
-                button.className = 'btn';
-                button.innerHTML = 'On';
-                button.onclick = (function(optName) {
-                    return function() {
-                        var opts = {};
-                        opts[optName] = true;
-                        node.remoteSetup('window', that.getSelectedClients(),
-                                         opts);
-                    };
-                })(setupOpts[btnLabel]);
-                tableCell.appendChild(button);
-
-                button = document.createElement('button');
-                button.className = 'btn';
-                button.innerHTML = 'Off';
-                button.onclick = (function(optName) {
-                    return function() {
-                        var opts = {};
-                        opts[optName] = false;
-                        node.remoteSetup('window', that.getSelectedClients(),
-                                         opts);
-                    };
-                })(setupOpts[btnLabel]);
-                tableCell.appendChild(button);
-            }
-        }
-
         tableCell2 = document.createElement('td');
         tableRow2 = document.createElement('tr');
         tableRow2.appendChild(tableCell2);
@@ -503,17 +449,10 @@
             collapsible: true
         });
 
-//        var chatPanel = W.add('div', this.bodyDiv, {
-//            className: ['panel', 'panel-default', 'chat']
-//        });
-//        var chatPanelHeading = W.add('div', commandPanel, {
-//            className: ['panel-heading'],
-//            innerHTML: 'Chat'
-//        });
-//        var chatPanelBody = W.add('div', commandPanel, {
-//            className: ['panel-body', 'chat']
-//        });
-
+        node.widgets.append('UIControls', this.bodyDiv, {
+            collapsible: true
+        });
+        
 //
 //         // Add bot-start button:
 //         button = document.createElement('button');

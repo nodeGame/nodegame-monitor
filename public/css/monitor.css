@@ -68,6 +68,15 @@ page,body {
   max-width: 800px;
 }
 
+/* UIControls */
+
+.uicontrols {
+  float: left;
+  width: 300px;
+}
+
+/* ... */
+
 table#gametable {
   border: 1px solid #CCC;
 }
