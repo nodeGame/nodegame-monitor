@@ -37,6 +37,10 @@ page,body {
   cursor: pointer;
 }
 
+/*
+ * Monitor widgets
+ */
+
 .chat_chat {
   overflow-y: scroll;
   height: 200px;
@@ -58,6 +62,12 @@ page,body {
   height: 70px;
 }
 
+.chat {
+  float: left;
+  min-width: 500px;
+  max-width: 800px;
+}
+
 table#gametable {
   border: 1px solid #CCC;
 }
@@ -66,10 +76,6 @@ table#gametable tr td {
   border: 1px solid #CCC;
 }
 
-
-/*
- * Monitor widgets
- */
 
 .panel-heading > ol.breadcrumb {
   margin: 0;

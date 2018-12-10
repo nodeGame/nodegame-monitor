@@ -133,10 +133,6 @@
             }
         });
 
-        // If a chat is already open, do not open a new one (for now).
-        // TODO: open multiple ones, if recipients are different.
-        this.chats = {};
-
         // Div containing the commands for the waiting room (when selected).
         this.waitroomCommandsDiv = null;
 
@@ -456,69 +452,6 @@
         });
         tableCell2.appendChild(kickBtn);
 
-        var chatBtn;
-        chatBtn = document.createElement('button');
-        chatBtn.className = 'btn';
-        chatBtn.innerHTML = 'Chat';
-        chatBtn.onclick = (function() {
-            var chatEvent;
-            var title, selectedClients, recipients;
-            selectedClients = that.getSelectedClients();
-            if (!selectedClients.length) return;
-            recipients = [];
-            selectedClients.forEach((id) => {
-                if (that.clientMap[id].clientType == 'player') {
-                    recipients.push(id);
-                    if (!title) title = that.roomName + ': ' + id;
-                    else title += ', ' + id;
-                }
-            });
-
-            if (that.chats[title]) {
-                chatEvent = that.chats[title].chatEvent;
-            }
-            else {
-                chatEvent = 'CHAT_' + Math.floor(Math.random() * 10000000);
-                that.chats[title] =
-                    // was
-                    // node.widgets.append('Chat', commandPanelBody, {
-                    node.widgets.append('Chat', buttonDiv, {
-                        chatEvent: chatEvent,
-                        participants: recipients,
-                        title: title,
-                        collapsible: true,
-                        closable: true
-                    });
-            }
-            node.remoteSetup('widgets', recipients, {
-                append: {
-                    Chat: {
-                        chatEvent: chatEvent,
-                        participants: [
-                            {
-                                recipient: 'MONITOR',
-                                sender: node.game.channelInUse,
-                                name: 'Monitor'
-                            }
-                        ],
-                        collapsible: true,
-                        closable: true,
-                        title: 'Chat with Monitor'
-                        // TODO: not used for now, because
-                        // it registers listeners locally
-                        // and at the next step they are killed.
-                        // root: function() {
-                        //     return document.body;
-                        // }
-                    }
-                }
-            });
-        });
-
-        buttonDiv.appendChild(chatBtn);
-        // was
-        //tableCell2.appendChild(chatBtn);
-
         commandPanelBody.appendChild(document.createElement('hr'));
         commandPanelBody.appendChild(tableRow2);
 
@@ -566,6 +499,9 @@
 
         commandPanelBody.appendChild(inputGroup);
 
+        node.widgets.append('Chatter', this.bodyDiv, {
+            collapsible: true
+        });
 
 //        var chatPanel = W.add('div', this.bodyDiv, {
 //            className: ['panel', 'panel-default', 'chat']
