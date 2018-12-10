@@ -180,7 +180,7 @@
 
     ClientList.prototype.setRoom = function(roomId, refreshClients) {
         var roomObj, roomName;
-        
+
         if (null === roomId) {
             roomName = null;
             // Hide client table if no room is selected:
@@ -196,11 +196,11 @@
             }
             roomName = roomObj.name;
         }
-        
+
         this.roomId = roomId;
         this.roomName = roomName;
         this.roomLogicId = null;
-    
+
         node.emit('ROOM_SELECTED', roomObj);
 
         if (!!refreshClients) node.game.refreshClients();
@@ -309,7 +309,7 @@
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
                     'PLAYWITHBOTS', 'Connects Bots'));
 
-        
+
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
 
         //this.waitroomCommandsDiv.appendChild(document.createElement('br'));
@@ -318,14 +318,14 @@
         dispatchNGamesInput = document.createElement('input');
         dispatchNGamesInput.size = 2;
 
-        dispatchGroupSizeInput = document.createElement('input');        
+        dispatchGroupSizeInput = document.createElement('input');
         dispatchGroupSizeInput.size = 2;
 
         treatmentInput = document.createElement('input');
         treatmentInput.size = 5;
 
         // Dispatch N Groups label.
-   
+
         labelDNGI = document.createElement('label');
         labelDNGI.style['margin-left'] = '5px';
         labelDNGI.appendChild(document.createTextNode('#Groups'));
@@ -339,7 +339,7 @@
         labelDGSI.appendChild(document.createTextNode('#Size'));
         labelDGSI.appendChild(dispatchGroupSizeInput);
         this.waitroomCommandsDiv.appendChild(labelDGSI);
-        
+
         // Treatment Label.
         labelDTI = document.createElement('label');
         labelDTI.style['margin-left'] = '5px';
@@ -356,7 +356,7 @@
 
 
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
-        
+
         buttonDiv.appendChild(this.waitroomCommandsDiv);
         // End waiting Room controls.
 
@@ -373,14 +373,14 @@
                     'RESUME', 'Resume', forceCheckbox));
 
         buttonDiv.appendChild(label);
-        
+
         buttonDiv.appendChild(document.createElement('hr'));
 
         // Add StateBar:
         this.appendStateBar(commandPanelBody);
 
         commandPanelBody.appendChild(document.createElement('hr'));
-        
+
         // Add a table for buttons:
         buttonTable = document.createElement('table');
         commandPanelBody.appendChild(buttonTable);
@@ -432,7 +432,7 @@
                 tableCell.appendChild(button);
             }
         }
-       
+
         tableCell2 = document.createElement('td');
         tableRow2 = document.createElement('tr');
         tableRow2.appendChild(tableCell2);
@@ -451,7 +451,7 @@
                     });
                     console.log('Kicked from server: ' + id);
                 }
-                
+
             });
         });
         tableCell2.appendChild(kickBtn);
@@ -461,6 +461,7 @@
         chatBtn.className = 'btn';
         chatBtn.innerHTML = 'Chat';
         chatBtn.onclick = (function() {
+            var chatEvent;
             var title, selectedClients, recipients;
             selectedClients = that.getSelectedClients();
             if (!selectedClients.length) return;
@@ -470,36 +471,48 @@
                     recipients.push(id);
                     if (!title) title = that.roomName + ': ' + id;
                     else title += ', ' + id;
-                    node.remoteSetup('widgets', id, {
-                        append: {
-                            Chat: {
-                                recipients: [ node.game.channelInUse ],
-                                recipientsNames: [ 'Monitor' ],
-                                collapsible: true,
-                                closable: true,
-                                title: 'Chat with Monitor'
-                                // TODO: not used for now, because
-                                // it registers listeners locally
-                                // and at the next step they are killed.
-                                // root: function() {
-                                //     return document.body;
-                                // }
-                            }
-                        }
-                    });                   
                 }
             });
-            if (!that.chats[title]) {
+
+            if (that.chats[title]) {
+                chatEvent = that.chats[title].chatEvent;
+            }
+            else {
+                chatEvent = 'CHAT_' + Math.floor(Math.random() * 10000000);
                 that.chats[title] =
                     // was
                     // node.widgets.append('Chat', commandPanelBody, {
                     node.widgets.append('Chat', buttonDiv, {
-                                            recipients: recipients, 
-                                            title: title,
-                                            collapsible: true,
-                                            closable: true
-                                        });
+                        chatEvent: chatEvent,
+                        participants: recipients,
+                        title: title,
+                        collapsible: true,
+                        closable: true
+                    });
             }
+            node.remoteSetup('widgets', recipients, {
+                append: {
+                    Chat: {
+                        chatEvent: chatEvent,
+                        participants: [
+                            {
+                                recipient: 'MONITOR',
+                                sender: node.game.channelInUse,
+                                name: 'Monitor'
+                            }
+                        ],
+                        collapsible: true,
+                        closable: true,
+                        title: 'Chat with Monitor'
+                        // TODO: not used for now, because
+                        // it registers listeners locally
+                        // and at the next step they are killed.
+                        // root: function() {
+                        //     return document.body;
+                        // }
+                    }
+                }
+            });
         });
 
         buttonDiv.appendChild(chatBtn);
@@ -510,7 +523,7 @@
         commandPanelBody.appendChild(tableRow2);
 
         // TODO: see if we need this now.
-        
+
         commandPanelBody.appendChild(document.createElement('hr'));
 
         var inputGroup = document.createElement('div');
@@ -518,15 +531,15 @@
 
         var myInput = document.createElement('input');
         myInput.type = "text";
-        myInput.className ="form-control"
-        myInput.placeholder = "Full URI or a page within the game"
-        myInput["aria-label"] = "Full URI or a page within the game"
+        myInput.className ="form-control";
+        myInput.placeholder = "Full URI or a page within the game";
+        myInput["aria-label"] = "Full URI or a page within the game";
 
         inputGroup.appendChild(myInput);
-        
+
         var tmp = document.createElement('span');
         tmp.className = 'input-group-btn';
-        
+
         button = document.createElement('button');
         button.className = 'btn btn-default';
         button.innerHTML = 'Redirect';
@@ -547,10 +560,10 @@
             node.redirect(uri, clients);
         };
 
-        tmp.appendChild(button)
+        tmp.appendChild(button);
         inputGroup.appendChild(tmp);
-        
-        
+
+
         commandPanelBody.appendChild(inputGroup);
 
 
@@ -564,8 +577,8 @@
 //        var chatPanelBody = W.add('div', commandPanel, {
 //            className: ['panel-body', 'chat']
 //        });
-        
-//         
+
+//
 //         // Add bot-start button:
 //         button = document.createElement('button');
 //         button.innerHTML = 'Start bot';
@@ -599,13 +612,13 @@
         node.on('INFO_CHANNELS', function(channels) {
             // Update the contents:
             that.writeChannels(channels);
-            that.updateTitle();            
+            that.updateTitle();
         });
 
         node.on('INFO_ROOMS', function(rooms) {
             // Update the contents:
             that.writeRooms(rooms);
-            that.updateTitle();            
+            that.updateTitle();
         });
 
         node.on('INFO_CLIENTS', function(clients) {
@@ -695,7 +708,7 @@
 
             // Add room to availableRooms.
             this.availableRooms[roomObj.id] = roomObj;
-            
+
             // Add element to Table.
             elem = document.createElement('a');
             elem.className = 'ng_clickable';
@@ -711,7 +724,7 @@
     };
 
     ClientList.prototype.writeClients = (function() {
-        
+
         function addClientToRow(prevSel, clientObj) {
             this.clientMap[clientObj.id] = clientObj;
             this.clientTable.addRow([
@@ -720,7 +733,7 @@
                 clientObj.sid || 'N/A',
                 {
                     type: 'string' !== typeof clientObj.clientType ?
-                        'N/A' : clientObj.clientType,                        
+                        'N/A' : clientObj.clientType,
                     thisMonitor: (clientObj.id === node.player.id)
                 },
                 'boolean' === typeof clientObj.admin ? clientObj.admin : 'N/A',
@@ -756,7 +769,7 @@
 
             // Create a row for each client:
             i = -1, len = msg.clients.length;
-            for ( ; ++i < len ; ) {           
+            for ( ; ++i < len ; ) {
                 clientObj = msg.clients[i];
                 clientId = clientObj.id;
                 if (clientId === this.roomLogicId) continue;
@@ -1021,7 +1034,7 @@
             // validate 'to' field:
             msg.to = that.getSelectedClients();
             if ('number' === typeof msg.to) msg.to = '' + msg.to;
-            
+
             if ((!J.isArray(msg.to) && 'string' !== typeof msg.to)) {
                 alert('Invalid "to" field');
                 msg._invalid = true;
@@ -1062,7 +1075,7 @@
         sendButton.onclick = function() {
             var msg;
             msg = parseFunction();
-            if (msg) node.socket.send(msg);            
+            if (msg) node.socket.send(msg);
         };
 
         // Show a button that expands the table of advanced fields.
@@ -1126,7 +1139,7 @@
                 var data, value;
                 data = {
                     type: command,
-                    roomId: that.roomId,                        
+                    roomId: that.roomId,
                 };
                 if (command === 'DISPATCH') {
                     value = J.isInt(inputNGames.value, 1);
@@ -1144,7 +1157,7 @@
                     data: data
                 }));
             };
-            
+
             return button;
         };
 
@@ -1160,7 +1173,7 @@
         that = this;
 
         button = document.createElement('button');
-        button.className = 'btn';    
+        button.className = 'btn';
         button.innerHTML = label;
         button.onclick = function() {
             var clients;
@@ -1173,7 +1186,7 @@
             if (that.roomLogicId) {
                 doLogic = J.removeElement(that.roomLogicId, clients);
             }
-            
+
             node.socket.send(node.msg.create({
                 target: 'SERVERCOMMAND',
                 text:   'ROOMCOMMAND',
