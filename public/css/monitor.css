@@ -14,11 +14,23 @@ input, button, select, textarea {
   font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
+#selectionDiv {
+  padding: 10px 0px;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin: 10px 0px;
+}
+
+#selectionDiv textarea {
+  vertical-align: top;
+  width: 100%;
+}
+
 #wall {
   width: auto;
   height: 200px;
   /*margin-bottom: 10px;
-      border: 1px solid #CCC;*/
+    border: 1px solid #CCC;*/
   padding: 5px;
   font-family: Verdana;
   font-size: 11px;
@@ -46,6 +58,11 @@ page,body {
 
 .clientlist {
   width: 100%;
+}
+
+.gamecontrols {
+  /* width: 350px; */
+  float: left;
 }
 
 /*

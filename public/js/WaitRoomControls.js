@@ -102,14 +102,6 @@
         this.bodyDiv.appendChild(this.waitroomCommandsDiv);
     };
 
-    WaitRoomControls.prototype.listeners = function() {
-        var that = this;
-        node.on('ROOM_SELECTED', function(room) {
-            if (room && room.type === 'Waiting') that.show();            
-            else if (!that.isHidden()) that.hide();            
-        });
-    };
-
     /**
      * Make a button that sends a given WAITROOMCOMMAND.
      */

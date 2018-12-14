@@ -208,15 +208,9 @@
     ClientList.prototype.append = function() {
         var that;
 
+        var selectionDiv;
         var tableStructure;
-        var commandPanel, commandPanelBody, commandPanelHeading;
-
-        var buttonDiv, button, forceCheckbox, label, kickBtn;
-        var extraButtonsDiv;
-
-        var selectionDiv, recipientSelector;
-        var tableRow2, tableCell2;
-        var buttonTable, tableRow, tableCell;
+        var tableRow, tableCell;
         
         that = this;
 
@@ -245,155 +239,51 @@
 
         // Add client selection field:
         selectionDiv = document.createElement('div');
-        this.bodyDiv.appendChild(selectionDiv);
-        selectionDiv.appendChild(document.createTextNode('Selected IDs: '));
+        selectionDiv.id = "selectionDiv";
 
+        this.bodyDiv.appendChild(selectionDiv);
+        
         this.clientsField = document.createElement('textarea');
         this.clientsField.rows = 1;
-        this.clientsField.style['vertical-align'] = 'top';
-        this.clientsField.style.width = '50em';
 
+        selectionDiv.appendChild(document.createTextNode('Selected IDs: '));
         selectionDiv.appendChild(this.clientsField);
-        recipientSelector = W.getRecipientSelector();
-        recipientSelector.onchange = function() {
-            that.clientsField.value = recipientSelector.value;
-        };
-        selectionDiv.appendChild(recipientSelector);
-        selectionDiv.style['padding'] = '10px 0px';
-        selectionDiv.style['border-top'] = '1px solid #ddd';
-        selectionDiv.style['border-bottom'] = '1px solid #ddd';
-        selectionDiv.style['margin'] = '10px 0px';
-
-        commandPanel = W.add('div', this.bodyDiv, {
-            className: ['panel', 'panel-default', 'commandbuttons']
-        });
-        commandPanelHeading = W.add('div', commandPanel, {
-            className: ['panel-heading']
-        });
-        commandPanelHeading.innerHTML = 'Commands';
-        commandPanelBody = W.add('div', commandPanel, {
-            className: ['panel-body', 'commandbuttons']
-        });
-
-        // Add row for buttons:
-        buttonDiv = document.createElement('div');
-        commandPanelBody.appendChild(buttonDiv);
-
-        // Force checkbox:
-        label = document.createElement('label');
-        forceCheckbox = document.createElement('input');
-        forceCheckbox.type = 'checkbox';
-        forceCheckbox.style['margin-left'] = '5px';
-        label.appendChild(forceCheckbox);
-        label.appendChild(document.createTextNode(' Force'));
-
-
-        // Add buttons for setup/start/stop/pause/resume:
-        buttonDiv.appendChild(this.createRoomCommandButton(
-                    'SETUP',  'Setup', forceCheckbox));
-        buttonDiv.appendChild(this.createRoomCommandButton(
-                    'START',  'Start', forceCheckbox));
-        buttonDiv.appendChild(this.createRoomCommandButton(
-                    'STOP',   'Stop', forceCheckbox));
-        buttonDiv.appendChild(this.createRoomCommandButton(
-                    'PAUSE',  'Pause', forceCheckbox));
-        buttonDiv.appendChild(this.createRoomCommandButton(
-                    'RESUME', 'Resume', forceCheckbox));
-
-        buttonDiv.appendChild(label);
-
-        buttonDiv.appendChild(document.createElement('hr'));
-
-        // Add StateBar:
-        this.appendStateBar(commandPanelBody);
-
-        tableCell2 = document.createElement('td');
-        tableRow2 = document.createElement('tr');
-        tableRow2.appendChild(tableCell2);
-
-        kickBtn = document.createElement('button');
-        kickBtn.className = 'btn';
-        kickBtn.innerHTML = 'Kick';
-        kickBtn.onclick = (function() {
-            var selectedClients = that.getSelectedClients();
-            selectedClients.forEach((id) => {
-                if (that.clientMap[id].clientType == 'bot' ||
-                    that.clientMap[id].clientType == 'player') {
-                    node.disconnectClient({
-                        id: id,
-                        sid: that.clientMap[id].sid
-                    });
-                    console.log('Kicked from server: ' + id);
-                }
-
-            });
-        });
-        tableCell2.appendChild(kickBtn);
-
-        commandPanelBody.appendChild(document.createElement('hr'));
-        commandPanelBody.appendChild(tableRow2);
-
-        // TODO: see if we need this now.
-
-        commandPanelBody.appendChild(document.createElement('hr'));
-
-        var inputGroup = document.createElement('div');
-        inputGroup.className = 'input-group';
-
-        var myInput = document.createElement('input');
-        myInput.type = "text";
-        myInput.className ="form-control";
-        myInput.placeholder = "Full URI or a page within the game";
-        myInput["aria-label"] = "Full URI or a page within the game";
-
-        inputGroup.appendChild(myInput);
-
-        var tmp = document.createElement('span');
-        tmp.className = 'input-group-btn';
-
-        button = document.createElement('button');
-        button.className = 'btn btn-default';
-        button.innerHTML = 'Redirect';
-        button.type = 'button';
-        button.style['padding-bottom'] = '7px';
-        button.onclick = function() {
-            var uri, clients;
-            uri = myInput.value;
-            if (!uri) {
-                node.warn('cannot redirect, empty uri.');
-                return false;
-            }
-            clients = that.getSelectedClients();
-            if (!clients || !clients.length) {
-                node.warn('cannot redirect, no client selected.');
-                return false;
-            }
-            node.redirect(uri, clients);
-        };
-
-        tmp.appendChild(button);
-        inputGroup.appendChild(tmp);
-
-
-        commandPanelBody.appendChild(inputGroup);
-
         
-        node.widgets.append('WaitRoomControls', this.bodyDiv, {
-            collapsible: true,
-            hidden: true
-        });
-
-        node.widgets.append('Chatter', this.bodyDiv, {
-            collapsible: true
-        });
-
-        node.widgets.append('UIControls', this.bodyDiv, {
-            collapsible: true
-        });
-
-        node.widgets.append('CustomMsg', this.bodyDiv, {
-            collapsible: true
-        });
+        this.waitroomControls = node.widgets.append(
+            'WaitRoomControls',
+            document.body,
+            {
+                collapsible: true,
+                hidden: true
+            });
+        
+        this.gameControls = node.widgets.append(
+            'GameControls',
+            document.body, {
+                collapsible: true,
+                hidden: true
+            });
+        
+        this.chatter = node.widgets.append(
+            'Chatter',
+            document.body, {
+                collapsible: true,
+                hidden: true
+            });
+        
+        this.uicontrols = node.widgets.append(
+            'UIControls',
+            document.body, {
+                collapsible: true,
+                hidden: true
+            });
+        
+        this.customMsg = node.widgets.append(
+            'CustomMsg',
+            document.body, {
+                collapsible: true,
+                hidden: true
+            });
         
 //
 //         // Add bot-start button:
@@ -443,6 +333,23 @@
             //node.game.pl.clear();
             //node.game.pl.importDB(clients);
             that.updateTitle();
+        });
+
+        node.on('ROOM_SELECTED', function(room) {
+            room = room || {};
+            if (room.type === 'Waiting') {
+                that.waitroomControls.show();
+                
+            }
+            else {
+                if (!that.waitroomControls.isHidden()) {
+                    that.waitroomControls.hide();
+                }
+                that.gameControls.show();
+                that.chatter.show();
+                that.uicontrols.show();
+                that.customMsg.show();
+            }
         });
 
         // Listen for events from ChannelList saying to switch channels:
@@ -691,83 +598,6 @@
             }
         }
         this.clientsField.value = JSON.stringify(recipients);
-    };
-
-    ClientList.prototype.appendStateBar = function(root) {
-        var that;
-        var div;
-        var sendButton, stageField;
-
-        div = document.createElement('div');
-        root.appendChild(div);
-
-        div.appendChild(document.createTextNode('Change stage to: '));
-        stageField = W.get('input', { type: 'text' });
-        div.appendChild(stageField);
-
-        sendButton = W.add('button', div);
-        sendButton.className = 'btn';
-        sendButton.innerHTML = 'Send';
-        that = this;
-
-        sendButton.onclick = function() {
-            var to;
-            var stage;
-
-            // Should be within the range of valid values
-            // but we should add a check
-            to = that.getSelectedClients();
-
-            try {
-                stage = new node.GameStage(stageField.value);
-                node.remoteCommand('goto_step', to, stage);
-            }
-            catch (e) {
-                node.err('Invalid stage, not sent: ' + e);
-            }
-        };
-    };
-
-    /**
-     * Make a button that sends a given ROOMCOMMAND.
-     */
-    ClientList.prototype.createRoomCommandButton =
-        function(command, label, forceCheckbox) {
-
-        var that;
-        var button;
-
-        that = this;
-
-        button = document.createElement('button');
-        button.className = 'btn';
-        button.innerHTML = label;
-        button.onclick = function() {
-            var clients;
-            var doLogic;
-
-            // Get selected clients.
-            clients = that.getSelectedClients();
-            if (!clients || clients.length === 0) return;
-            // If the room's logic client is selected, handle it specially.
-            if (that.roomLogicId) {
-                doLogic = J.removeElement(that.roomLogicId, clients);
-            }
-
-            node.socket.send(node.msg.create({
-                target: 'SERVERCOMMAND',
-                text:   'ROOMCOMMAND',
-                data: {
-                    type:    command,
-                    roomId:  that.roomId,
-                    doLogic: !!doLogic,
-                    clients: clients,
-                    force:   forceCheckbox.checked
-                }
-            }));
-        };
-
-        return button;
     };
 
 })(node);
