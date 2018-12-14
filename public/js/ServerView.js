@@ -3,7 +3,7 @@
  * Copyright(c) 2018 Stefano Balietti <ste@nodegame.org>
  * MIT Licensed
  *
- * Shows files available in log/ dir.
+ * Shows information about server and its submodules
  *
  * www.nodegame.org
  * ---
@@ -19,10 +19,10 @@
     // ## Meta-data
 
     ServerView.version = '0.1.0';
-    ServerView.description = 'Displays the log files in the log/ folder.';
+    ServerView.description = 'Shows information about server and its submodules';
 
     ServerView.title = 'Server Info';
-    ServerView.className = 'serverView';
+    ServerView.className = 'serverview';
 
     // ## Dependencies
     ServerView.dependencies = {
@@ -33,16 +33,6 @@
         this.links = document.createElement('div');
     }
 
-    ServerView.prototype.refresh = function() {
-        // Ask server for games:
-        node.socket.send(node.msg.create({
-            target: 'SERVERCOMMAND',
-            text:   'INFO',
-            data: { type: 'LOGS' }
-        }));
-
-    };
-
     ServerView.prototype.append = function() {
         this.bodyDiv.appendChild(this.links);
         // Query server:
@@ -51,19 +41,11 @@
             text:   'INFO',
             data: { type: 'VERSIONS' }
         }));
-        this.refresh();
     };
 
     ServerView.prototype.listeners = function() {
         var that;
-
         that = this;
-
-        // Listen for server reply:
-        node.on.data('INFO_LOGS', function(msg) {
-            that.displayLogsData(msg.data);
-        });
-
         // Listen for server reply:
         node.on.data('INFO_VERSIONS', function(msg) {
             that.displayVersionsData(msg.data);
@@ -91,25 +73,7 @@
         ul.appendChild(createVersionLi('socket.io', vm.socketio));
 
         this.links.appendChild(ul);
-        this.links.appendChild(document.createElement('hr'));
-    };
-
-    ServerView.prototype.displayLogsData = function(files) {
-        var i, element, prefixLink, title;
-        prefixLink = window.location.origin;
-        prefixLink += W.uriChannel ? W.uriChannel : '/';
-        prefixLink += 'monitor/servernode/logs/';
-        title = document.createElement('p');
-        title.innerHTML = '<strong>Log Files:</strong>';
-        this.links.appendChild(title);
-        for (i = 0; i < files.length; ++i) {
-            element = document.createElement('a');
-            element.setAttribute('target', '_blank');
-            element.href = prefixLink + files[i];
-            element.innerHTML = files[i];
-            this.links.appendChild(element);
-            this.links.appendChild(document.createElement('br'));
-        }
+        // this.links.appendChild(document.createElement('hr'));
     };
 
     // ## Helper functions.
