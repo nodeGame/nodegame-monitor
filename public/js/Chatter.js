@@ -116,7 +116,7 @@
             type: 'checkbox',
             className: 'chat-checkbox'
         });
-        label.appendChild(document.createTextNode('Include non-players'));
+        label.appendChild(document.createTextNode('non-players'));
         
 
         // Append.

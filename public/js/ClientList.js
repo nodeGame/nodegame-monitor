@@ -133,8 +133,6 @@
             }
         });
 
-        // Div containing the commands for the waiting room (when selected).
-        this.waitroomCommandsDiv = null;
 
         // Maps client IDs to the selection checkbox elements:
         this.checkboxes = {};
@@ -157,7 +155,6 @@
         ]);
 
         this.clientsField = null;
-        this.msgBar = {};
     }
 
     ClientList.prototype.setChannel = function(channelName) {
@@ -216,10 +213,6 @@
 
         var buttonDiv, button, forceCheckbox, label, kickBtn;
         var extraButtonsDiv;
-
-        var waitRoomCommandsDiv, dispatchNGamesInput, dispatchGroupSizeInput;
-        var treatmentInput;
-        var labelDNGI, labelDGSI, labelDTI;
 
         var selectionDiv, recipientSelector;
         var tableRow2, tableCell2;
@@ -294,67 +287,6 @@
         label.appendChild(forceCheckbox);
         label.appendChild(document.createTextNode(' Force'));
 
-        // Add buttons to control waiting room (displayed only when needed).
-        this.waitroomCommandsDiv = document.createElement('div');
-        this.waitroomCommandsDiv.style.display = 'none';
-
-        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-                    'OPEN', 'Open'));
-        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-                    'CLOSE', 'Close'));
-        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-                    'PLAYWITHBOTS', 'Connects Bots'));
-
-
-        this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
-
-        //this.waitroomCommandsDiv.appendChild(document.createElement('br'));
-
-        // Need to create inputs before Dispatch button.
-        dispatchNGamesInput = document.createElement('input');
-        dispatchNGamesInput.size = 2;
-
-        dispatchGroupSizeInput = document.createElement('input');
-        dispatchGroupSizeInput.size = 2;
-
-        treatmentInput = document.createElement('input');
-        treatmentInput.size = 5;
-
-        // Dispatch N Groups label.
-
-        labelDNGI = document.createElement('label');
-        labelDNGI.style['margin-left'] = '5px';
-        labelDNGI.appendChild(document.createTextNode('#Groups'));
-        labelDNGI.appendChild(dispatchNGamesInput);
-        this.waitroomCommandsDiv.appendChild(labelDNGI);
-
-        // Dispatch Group Size label.
-
-        labelDGSI = document.createElement('label');
-        labelDGSI.style['margin-left'] = '5px';
-        labelDGSI.appendChild(document.createTextNode('#Size'));
-        labelDGSI.appendChild(dispatchGroupSizeInput);
-        this.waitroomCommandsDiv.appendChild(labelDGSI);
-
-        // Treatment Label.
-        labelDTI = document.createElement('label');
-        labelDTI.style['margin-left'] = '5px';
-        labelDTI.appendChild(document.createTextNode('Treatment'));
-        labelDTI.appendChild(treatmentInput);
-        this.waitroomCommandsDiv.appendChild(labelDTI);
-
-        // Dispatch Button.
-        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-            'DISPATCH', 'Dispatch', dispatchNGamesInput,
-            dispatchGroupSizeInput, treatmentInput));
-
-        // TODO
-
-
-        this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
-
-        buttonDiv.appendChild(this.waitroomCommandsDiv);
-        // End waiting Room controls.
 
         // Add buttons for setup/start/stop/pause/resume:
         buttonDiv.appendChild(this.createRoomCommandButton(
@@ -445,11 +377,21 @@
 
         commandPanelBody.appendChild(inputGroup);
 
+        
+        node.widgets.append('WaitRoomControls', this.bodyDiv, {
+            collapsible: true,
+            hidden: true
+        });
+
         node.widgets.append('Chatter', this.bodyDiv, {
             collapsible: true
         });
 
         node.widgets.append('UIControls', this.bodyDiv, {
+            collapsible: true
+        });
+
+        node.widgets.append('CustomMsg', this.bodyDiv, {
             collapsible: true
         });
         
@@ -466,8 +408,6 @@
 //         };
 //         commandPanelBody.appendChild(button);
 
-        // Add MsgBar:
-        this.appendMsgBar();
 
         this.channelTable.parse();
     };
@@ -503,19 +443,6 @@
             //node.game.pl.clear();
             //node.game.pl.importDB(clients);
             that.updateTitle();
-        });
-
-        node.on('ROOM_SELECTED', function(room) {
-            if (room && room.type === 'Waiting') {
-                if (that.waitroomCommandsDiv) {
-                    that.waitroomCommandsDiv.style.display = '';
-                }
-            }
-            else {
-                if (that.waitroomCommandsDiv) {
-                    that.waitroomCommandsDiv.style.display = 'none';
-                }
-            }
         });
 
         // Listen for events from ChannelList saying to switch channels:
@@ -766,205 +693,6 @@
         this.clientsField.value = JSON.stringify(recipients);
     };
 
-    ClientList.prototype.appendMsgBar = function() {
-        var that;
-        var fields, i, field;
-        var table, tmpElem;
-        var advButton, sendButton;
-        var validateTableMsg, parseFunction;
-
-        that = this;
-
-        this.msgBar.id = 'clientlist_msgbar';
-
-        this.msgBar.recipient = null;
-        this.msgBar.actionSel = null;
-        this.msgBar.targetSel = null;
-
-        this.msgBar.table = new Table();
-        this.msgBar.tableAdvanced = new Table();
-
-
-        // init
-
-        // Create fields.
-        fields = ['action', 'target', 'text', 'data', 'from', 'priority',
-                  'reliable', 'forward', 'session', 'stage', 'created', 'id'];
-
-        for (i = 0; i < fields.length; ++i) {
-            field = fields[i];
-
-            // Put ACTION, TARGET, TEXT, DATA in the first table which is
-            // always visible, the other fields in the "advanced" table which
-            // is hidden by default.
-            table = i < 4 ? this.msgBar.table : this.msgBar.tableAdvanced;
-
-            table.add(field, i, 0);
-            if (field === 'data') {
-                tmpElem = W.get('textarea', {
-                    id: this.msgBar.id + '_' + field,
-                    tabindex: i+1
-                });
-                tmpElem.rows = 1;
-                table.add(tmpElem, i, 1);
-            }
-            else {
-                table.add(W.get('input', {
-                    id: this.msgBar.id + '_' + field,
-                    tabindex: i+1,
-                    type: 'text',
-                }), i, 1);
-            }
-
-            if (field === 'action') {
-                this.msgBar.actionSel = W.getActionSelector(
-                        this.msgBar.id + '_actions');
-                W.addAttributes(this.msgBar.actionSel, {
-                    tabindex: fields.length+2
-                });
-                table.add(this.msgBar.actionSel, i, 2);
-                this.msgBar.actionSel.onchange = function() {
-                    W.getElementById(that.msgBar.id + '_action').value =
-                        that.msgBar.actionSel.value;
-                };
-            }
-            else if (field === 'target') {
-                this.msgBar.targetSel = W.getTargetSelector(
-                        this.msgBar.id + '_targets');
-                W.addAttributes(this.msgBar.targetSel, {
-                    tabindex: fields.length+3
-                });
-                table.add(this.msgBar.targetSel, i, 2);
-                this.msgBar.targetSel.onchange = function() {
-                    W.getElementById(that.msgBar.id + '_target').value =
-                        that.msgBar.targetSel.value;
-                };
-            }
-        }
-
-        this.msgBar.table.parse();
-        this.msgBar.tableAdvanced.parse();
-
-
-        // helper functions
-        validateTableMsg = function(e, msg) {
-            var key, value;
-
-            if (msg._invalid) return;
-
-            if (e.y === 2) return;
-
-            if (e.y === 0) {
-                // Saving the value of last key.
-                msg._lastKey = e.content;
-                return;
-            }
-
-            // Fetching the value of last key.
-            key = msg._lastKey;
-            value = e.content.value;
-
-            if (key === 'stage' || key === 'to' || key === 'data') {
-                try {
-                    value = J.parse(e.content.value);
-                }
-                catch (ex) {
-                    value = e.content.value;
-                }
-            }
-
-            // Validate input.
-            if (key === 'action') {
-                if (value.trim() === '') {
-                    alert('Missing "action" field');
-                    msg._invalid = true;
-                }
-                else {
-                    value = value.toLowerCase();
-                }
-
-            }
-            else if (key === 'target') {
-                if (value.trim() === '') {
-                    alert('Missing "target" field');
-                    msg._invalid = true;
-                }
-                else {
-                    value = value.toUpperCase();
-                }
-            }
-
-            // Assigning the value.
-            msg[key] = value;
-        };
-        parseFunction = function() {
-            var msg, gameMsg;
-
-            msg = {};
-
-            that.msgBar.table.forEach(validateTableMsg, msg);
-            if (msg._invalid) return null;
-            that.msgBar.tableAdvanced.forEach(validateTableMsg, msg);
-
-            // validate 'to' field:
-            msg.to = that.getSelectedClients();
-            if ('number' === typeof msg.to) msg.to = '' + msg.to;
-
-            if ((!J.isArray(msg.to) && 'string' !== typeof msg.to)) {
-                alert('Invalid "to" field');
-                msg._invalid = true;
-            }
-
-            if (msg._invalid) return null;
-            delete msg._lastKey;
-            delete msg._invalid;
-            gameMsg = node.msg.create(msg);
-            node.info('MsgBar msg created. ' +  gameMsg.toSMS());
-            return gameMsg;
-        };
-
-        // Append.
-
-        // Create sub-panel for MsgBar
-        this.msgBar.panelDiv = W.add('div', this.bodyDiv, {
-            className: [ 'panel', 'panel-default', 'msgbar' ]
-        });
-        this.msgBar.headingDiv = W.add('div', this.msgBar.panelDiv, {
-            className: ['panel-heading']
-        });
-        this.msgBar.headingDiv.innerHTML = 'Send Custom Message';
-        this.msgBar.bodyDiv = W.add('div', this.msgBar.panelDiv, {
-            className: ['panel-body', 'msgbar']
-        });
-
-        // Show table of basic fields.
-        this.msgBar.bodyDiv.appendChild(this.msgBar.table.table);
-
-        this.msgBar.bodyDiv.appendChild(this.msgBar.tableAdvanced.table);
-        this.msgBar.tableAdvanced.table.style.display = 'none';
-
-        // Show 'Send' button.
-        sendButton = W.add('button', this.msgBar.bodyDiv);
-        sendButton.className = 'btn';
-        sendButton.innerHTML = 'Send';
-        sendButton.onclick = function() {
-            var msg;
-            msg = parseFunction();
-            if (msg) node.socket.send(msg);
-        };
-
-        // Show a button that expands the table of advanced fields.
-        advButton = W.add('button', this.msgBar.bodyDiv, {
-            innerHTML: 'Toggle advanced options'
-        });
-        advButton.className = 'btn';
-        advButton.onclick = function() {
-            that.msgBar.tableAdvanced.table.style.display =
-                that.msgBar.tableAdvanced.table.style.display === '' ?
-                'none' : '';
-        };
-    };
-
     ClientList.prototype.appendStateBar = function(root) {
         var that;
         var div;
@@ -999,42 +727,6 @@
             }
         };
     };
-
-    /**
-     * Make a button that sends a given WAITROOMCOMMAND.
-     */
-    ClientList.prototype.createWaitRoomCommandButton =
-        function(command, label, inputNGames, inputGroupSize, treatmentInput) {
-            var that, button;
-            that = this;
-            button = document.createElement('button');
-            button.className = 'btn';
-            button.innerHTML = label;
-            button.onclick = function() {
-                var data, value;
-                data = {
-                    type: command,
-                    roomId: that.roomId,
-                };
-                if (command === 'DISPATCH') {
-                    value = J.isInt(inputNGames.value, 1);
-                    if (value !== false) data.numberOfGames = value;
-                    value = J.isInt(inputGroupSize.value, 1);
-                    if (value !== false) data.groupSize = value;
-                    value = treatmentInput.value;
-                    if (value && value.trim() !== '') {
-                        data.chosenTreatment = value;
-                    }
-                }
-                node.socket.send(node.msg.create({
-                    target: 'SERVERCOMMAND',
-                    text:   'WAITROOMCOMMAND',
-                    data: data
-                }));
-            };
-
-            return button;
-        };
 
     /**
      * Make a button that sends a given ROOMCOMMAND.

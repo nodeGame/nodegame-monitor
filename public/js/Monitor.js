@@ -1,6 +1,6 @@
 /**
  * # Monitor for nodeGame
- * Copyright(c) 2017 Stefano Balietti
+ * Copyright(c) 2018 Stefano Balietti
  * MIT Licensed
  *
  * Creates interface with tabs showing the status of game and server
@@ -311,6 +311,7 @@ function Monitor(node) {
         // Server view.
         tmpElem = this.addTab('server');
         node.widgets.append('ServerView', tmpElem);
+        node.widgets.append('LogFiles', tmpElem);
 
         // Refresh.
         this.refresh();
@@ -330,7 +331,7 @@ function Monitor(node) {
         metadata: {
             name: 'Monitor Screen',
             description: 'No Description',
-            version: '0.6'
+            version: '1.0'
         },
         window: {
             promptOnleave: false
