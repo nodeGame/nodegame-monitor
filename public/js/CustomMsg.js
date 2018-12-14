@@ -35,13 +35,13 @@
     }
 
     CustomMsg.prototype.append = function() {        
-        var that;
+        var cl;
         var fields, i, field;
         var table, tmpElem;
         var advButton, sendButton;
         var validateTableMsg, parseFunction;
 
-        that = this;
+        cl = node.game.clientList;
 
         this.recipient = null;
         this.actionSel = null;
@@ -171,7 +171,7 @@
             that.msgBar.tableAdvanced.forEach(validateTableMsg, msg);
 
             // validate 'to' field:
-            msg.to = that.getSelectedClients();
+            msg.to = clgetSelectedClients();
             if ('number' === typeof msg.to) msg.to = '' + msg.to;
 
             if ((!J.isArray(msg.to) && 'string' !== typeof msg.to)) {
