@@ -34,15 +34,13 @@
     }
 
     UIControls.prototype.append = function() {
-        var cl, label;
+        var label;
         var setupOpts, btnLabel;
         var button;
         var buttonTable;
         var tableRow2, tableCell2;
         var buttonTable, tableRow, tableCell;
 
-        cl = node.game.clientList;
-        
         // Add a table for buttons:
         buttonTable = document.createElement('table');
 
@@ -71,8 +69,10 @@
                 button.innerHTML = 'On';
                 button.onclick = (function(optName) {
                     return function() {
-                        var opts = {};
+                        var cl, opts;
+                        opts = {};
                         opts[optName] = true;
+                        cl = node.game.clientList;
                         node.remoteSetup('window', cl.getSelectedClients(),
                                          opts);
                     };
@@ -84,8 +84,10 @@
                 button.innerHTML = 'Off';
                 button.onclick = (function(optName) {
                     return function() {
-                        var opts = {};
+                        var cl, opts;
+                        opts = {};
                         opts[optName] = false;
+                        cl = node.game.clientList;
                         node.remoteSetup('window', cl.getSelectedClients(),
                                          opts);
                     };

@@ -35,12 +35,13 @@
     }
 
     CustomMsg.prototype.append = function() {        
-        var cl;
+        var cl, that;
         var fields, i, field;
         var table, tmpElem;
         var advButton, sendButton;
         var validateTableMsg, parseFunction;
 
+        that = this;
         cl = node.game.clientList;
 
         this.recipient = null;
@@ -89,8 +90,8 @@
                 });
                 table.add(this.actionSel, i, 2);
                 this.actionSel.onchange = function() {
-                    W.getElementById(that.msgBar.id + '_action').value =
-                        that.msgBar.actionSel.value;
+                    W.getElementById(that.wid + '_action').value =
+                        that.actionSel.value;
                 };
             }
             else if (field === 'target') {
@@ -100,8 +101,8 @@
                 });
                 table.add(this.targetSel, i, 2);
                 this.targetSel.onchange = function() {
-                    W.getElementById(that.msgBar.id + '_target').value =
-                        that.msgBar.targetSel.value;
+                    W.getElementById(that.wid + '_target').value =
+                        that.targetSel.value;
                 };
             }
         }
@@ -166,9 +167,9 @@
 
             msg = {};
 
-            that.msgBar.table.forEach(validateTableMsg, msg);
+            that.table.forEach(validateTableMsg, msg);
             if (msg._invalid) return null;
-            that.msgBar.tableAdvanced.forEach(validateTableMsg, msg);
+            that.tableAdvanced.forEach(validateTableMsg, msg);
 
             // validate 'to' field:
             msg.to = clgetSelectedClients();
@@ -211,8 +212,8 @@
         });
         advButton.className = 'btn';
         advButton.onclick = function() {
-            that.msgBar.tableAdvanced.table.style.display =
-                that.msgBar.tableAdvanced.table.style.display === '' ?
+            that.tableAdvanced.table.style.display =
+                that.tableAdvanced.table.style.display === '' ?
                 'none' : '';
         };
     };

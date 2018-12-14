@@ -1,5 +1,6 @@
-/*
+/* *******************
  * Monitor Default CSS
+ * *******************
  */
 
 body {
@@ -14,6 +15,11 @@ input, button, select, textarea {
   font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
+table {
+  border-collapse: separate;
+  border-spacing: 10px 2px;
+}
+
 #selectionDiv {
   padding: 10px 0px;
   border-top: 1px solid #ddd;
@@ -24,22 +30,7 @@ input, button, select, textarea {
 #selectionDiv textarea {
   vertical-align: top;
   width: 100%;
-}
-
-#wall {
-  width: auto;
-  height: 200px;
-  /*margin-bottom: 10px;
-    border: 1px solid #CCC;*/
-  padding: 5px;
-  font-family: Verdana;
-  font-size: 11px;
-  color: black;
-  overflow: auto;
-}
-
-page,body {
-  padding: 5px;
+  padding: 10px;
 }
 
 /* Also in nodegame.css */
@@ -60,14 +51,31 @@ page,body {
   width: 100%;
 }
 
+/* ***************
+ * Monitor widgets
+ * ***************
+ */
+
 .gamecontrols {
-  /* width: 350px; */
+  max-width: 400px;
   float: left;
 }
 
-/*
- * Monitor widgets
- */
+/* Wall */
+
+#wall {
+  width: auto;
+  height: 200px;
+  /*margin-bottom: 10px;
+    border: 1px solid #CCC;*/
+  padding: 5px;
+  font-family: Verdana;
+  font-size: 11px;
+  color: black;
+  overflow: auto;
+}
+
+/* Chat */
 
 .chat_chat {
   overflow-y: scroll;
@@ -101,7 +109,7 @@ page,body {
   /* width: 300px; */
 }
 
-/* ... */
+/* GameTable */
 
 table#gametable {
   border: 1px solid #CCC;
@@ -111,7 +119,6 @@ table#gametable tr td {
   border: 1px solid #CCC;
 }
 
-
 .panel-heading > ol.breadcrumb {
   margin: 0;
   padding: 0;
@@ -120,17 +127,6 @@ table#gametable tr td {
 .ng_clickable:hover {
   cursor: pointer;
 }
-
-table {
-  border-collapse: separate;
-  border-spacing: 10px 2px;
-}
-
-/*
-th,td {
-    text-align: center;
-}
-*/
 
 th:first-child,td:first-child {
   text-align: left;
@@ -171,7 +167,6 @@ ul.nav-tabs {
   text-align: right;
 }
 
-
 /* Results View */
 
 .resultsView {
@@ -179,13 +174,11 @@ ul.nav-tabs {
   margin-right: 50px;
 }
 
-
 /* Memory View */
 
 .memoryView {
   max-width: 450px;
 }
-
 
 /* Auth Details */
 

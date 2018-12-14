@@ -36,9 +36,8 @@
         var tableRow2, tableCell2;
         var btnDiv, button, forceCheckbox, label, kickBtn;
         var extraButtonsDiv, buttonTable;
-        
+
         that = this;
-        
 
         // Add row for buttons:
         btnDiv = document.createElement('div');
@@ -53,7 +52,6 @@
         label.appendChild(forceCheckbox);
         label.appendChild(document.createTextNode(' Force'));
 
-
         // Add buttons for setup/start/stop/pause/resume:
         btnDiv.appendChild(createCmdButton('SETUP', 'Setup', forceCheckbox));
         btnDiv.appendChild(createCmdButton('START', 'Start', forceCheckbox));
@@ -65,7 +63,24 @@
         btnDiv.appendChild(document.createElement('hr'));
 
         // Add StateBar.
-        appendStateBar(this.bodyDiv);
+        var stageBar = getInputAndButton(
+            'Change stage to', 'Set',
+            function(stageField) {
+                
+                var to, stage;
+                to = node.game.clientList.getSelectedClients();
+                try {
+                    stage = new node.GameStage(stageField.value);
+                    node.remoteCommand('goto_step', to, stage);
+                }
+                catch (e) {
+                    node.err('Invalid stage, not sent: ' + e);
+                }
+            });
+
+        this.bodyDiv.appendChild(stageBar);
+
+        // appendStateBar(this.bodyDiv);
 
         tableCell2 = document.createElement('td');
         tableRow2 = document.createElement('tr');
@@ -97,68 +112,80 @@
 
         this.bodyDiv.appendChild(document.createElement('hr'));
 
-        var inputGroup = document.createElement('div');
-        inputGroup.className = 'input-group';
+//         var inputGroup = document.createElement('div');
+//         inputGroup.className = 'input-group';
+//
+//         var myInput = document.createElement('input');
+//         myInput.type = "text";
+//         myInput.className ="form-control";
+//         myInput.placeholder = "Full URI or a page within the game";
+//         myInput["aria-label"] = "Full URI or a page within the game";
+//
+//         inputGroup.appendChild(myInput);
+//
+//         var tmp = document.createElement('span');
+//         tmp.className = 'input-group-btn';
+//
+//         button = document.createElement('button');
+//         button.className = 'btn btn-default';
+//         button.innerHTML = 'Redirect';
+//         button.type = 'button';
+//         button.style['padding-bottom'] = '7px';
+//         button.onclick = function() {
+//             var uri, clients;
+//             uri = myInput.value;
+//             if (!uri) {
+//                 node.warn('cannot redirect, empty uri.');
+//                 return false;
+//             }
+//             clients = that.getSelectedClients();
+//             if (!clients || !clients.length) {
+//                 node.warn('cannot redirect, no client selected.');
+//                 return false;
+//             }
+//             node.redirect(uri, clients);
+//         };
+//
+//         tmp.appendChild(button);
+//         inputGroup.appendChild(tmp);
 
-        var myInput = document.createElement('input');
-        myInput.type = "text";
-        myInput.className ="form-control";
-        myInput.placeholder = "Full URI or a page within the game";
-        myInput["aria-label"] = "Full URI or a page within the game";
 
-        inputGroup.appendChild(myInput);
-
-        var tmp = document.createElement('span');
-        tmp.className = 'input-group-btn';
-
-        button = document.createElement('button');
-        button.className = 'btn btn-default';
-        button.innerHTML = 'Redirect';
-        button.type = 'button';
-        button.style['padding-bottom'] = '7px';
-        button.onclick = function() {
-            var uri, clients;
-            uri = myInput.value;
-            if (!uri) {
-                node.warn('cannot redirect, empty uri.');
-                return false;
-            }
-            clients = that.getSelectedClients();
-            if (!clients || !clients.length) {
-                node.warn('cannot redirect, no client selected.');
-                return false;
-            }
-            node.redirect(uri, clients);
-        };
-
-        tmp.appendChild(button);
-        inputGroup.appendChild(tmp);
-
+        var inputGroup = getInputAndButton(
+            'Full URI or a page within the game',
+            'Redirect',
+            function() {
+                var uri, clients;
+                uri = myInput.value;
+                if (!uri) {
+                    node.warn('cannot redirect, empty uri.');
+                    return false;
+                }
+                clients = that.getSelectedClients();
+                if (!clients || !clients.length) {
+                    node.warn('cannot redirect, no client selected.');
+                                     return false;
+                }
+                node.redirect(uri, clients);
+            });
 
         this.bodyDiv.appendChild(inputGroup);
-
-
-        // Append.
-        this.bodyDiv.appendChild(label);
-        this.bodyDiv.appendChild(document.createElement('hr'));
     };
 
 
     // Helper functions.
-    
+
     /**
      * Make a button that sends a given ROOMCOMMAND.
      */
     function createCmdButton(cmd, label, forceCheckbox) {
-        var button, cl;
+        var button;
         button = document.createElement('button');
         button.className = 'btn';
         button.innerHTML = label;
-        cl = node.game.clientList;
         button.onclick = function() {
-            var clients;
-            var doLogic;
-
+            var cl;
+            var clients, doLogic;
+            cl = node.game.clientList;
             // Get selected clients.
             clients = cl.getSelectedClients();
             if (!clients || clients.length === 0) return;
@@ -184,7 +211,6 @@
     };
 
     function appendStateBar(root) {
-        var cl;
         var div;
         var sendButton, stageField;
 
@@ -198,12 +224,11 @@
         sendButton = W.add('button', div);
         sendButton.className = 'btn';
         sendButton.innerHTML = 'Send';
-        
+
         cl = node.game.clientList;
-        sendButton.onclick = function() {
-            var to;
-            var stage;
-            to = cl.getSelectedClients();
+        sendButton.onclick = function(stageField) {
+            var to, stage;
+            to = node.game.clientList.getSelectedClients();
             try {
                 stage = new node.GameStage(stageField.value);
                 node.remoteCommand('goto_step', to, stage);
@@ -213,5 +238,35 @@
             }
         };
     };
-    
+
+
+    function getInputAndButton(placeHolder, text, onclick) {
+        var inputGroup = document.createElement('div');
+        inputGroup.className = 'input-group';
+
+        var myInput = document.createElement('input');
+        myInput.type = "text";
+        myInput.className ="form-control";
+        myInput.placeholder = placeHolder;
+        myInput["aria-label"] = placeHolder;
+        inputGroup.appendChild(myInput);
+
+        var tmp = document.createElement('span');
+        tmp.className = 'input-group-btn';
+
+        var button = document.createElement('button');
+        button.className = 'btn btn-default';
+        button.innerHTML = text;
+        button.type = 'button';
+        button.style['padding-bottom'] = '7px';
+
+        // Pass input to onclick callback.
+        if (onclick) button.onclick = function() { onclick(myInput); };
+        
+        tmp.appendChild(button);
+        inputGroup.appendChild(tmp);
+
+        return inputGroup;
+    }
+
 })(node);

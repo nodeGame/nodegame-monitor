@@ -42,19 +42,19 @@
     }
 
     Chatter.prototype.append = function() {
-        var cl, that, label;
+        var that, label;
         that = this;
 
-        cl = node.game.clientList;
         this.chatButton = document.createElement('button');
         this.chatButton.className = 'btn';
         this.chatButton.innerHTML = 'Chat';
 
         // On click.
         this.chatButton.onclick = function() {
-            var chatEvent, allClients;
+            var cl, chatEvent, allClients;
             var title, selectedClients, recipients;
 
+            cl = node.game.clientList;
             selectedClients = cl.getSelectedClients();
             if (!selectedClients.length) return;
 
