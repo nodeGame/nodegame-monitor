@@ -217,15 +217,6 @@
         };
     };
 
-    CustomMsg.prototype.listeners = function() {
-        var that = this;
-        node.on('ROOM_SELECTED', function(room) {
-            debugger
-            if (room && room.type === 'Waiting') that.show();            
-            else if (!that.isHidden()) that.hide();            
-        });
-    };
-
     /**
      * Make a button that sends a given WAITROOMCOMMAND.
      */
