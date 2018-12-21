@@ -68,6 +68,12 @@
         // Checkbox to include bots, etc.
         this.includeNonPlayers = null;
 
+        // Checkbox to erase initial message for each new chat.
+        this.eraseInitialMsg = null;
+
+        // Textarea with initial msg, etc.
+        this.initialMsg = null;
+
         // List of open chats.
         this.chats = {};
     }
@@ -76,13 +82,14 @@
         var that, label;
         that = this;
 
-        this.chatButton = document.createElement('button');
-        this.chatButton.className = 'btn';
-        this.chatButton.innerHTML = 'Chat';
+        this.chatButton = W.get('button', {
+            className: 'btn',
+            innerHTML: 'Chat'
+        });
 
         // On click.
         this.chatButton.onclick = function() {
-            var cl, chatEvent, allClients;
+            var cl, chatEvent, allClients, msg, opts;
             var title, selectedClients, recipients;
 
             cl = node.game.clientList;
@@ -104,49 +111,49 @@
                 if (recipients.length > 1) title += 's';
             }
 
+            msg = that.readInitialMsg();
+
             if (that.chats[title]) {
                 chatEvent = that.chats[title].chatEvent;
             }
             else {
                 chatEvent = 'CHAT_' + Math.floor(Math.random() * 10000000);
+                opts = {
+                    chatEvent: chatEvent,
+                    participants: recipients,
+                    title: title,
+                    collapsible: true,
+                    closable: true,
+                    docked: true
+                };
+                if (msg) opts.initialMsg = { id: 'Initial Msg', msg: msg };
                 that.chats[title] =
-                    // was
-                    // node.widgets.append('Chat', commandPanelBody, {
-                    node.widgets.append('Chat', that.bodyDiv, {
-                        chatEvent: chatEvent,
-                        participants: recipients,
-                        title: title,
-                        collapsible: true,
-                        closable: true,
-                        docked: true
-                    });
+                    node.widgets.append('Chat', that.bodyDiv, opts);
             }
+
+            opts = {
+                chatEvent: chatEvent,
+                participants: [
+                    {
+                        recipient: 'MONITOR',
+                        sender: node.game.channelInUse,
+                        name: 'Monitor'
+                    }
+                ],
+                collapsible: true,
+                closable: true,
+                docked: true,
+                title: 'Chat with Monitor'
+            };
+            if (msg) opts.initialMsg = { id: 'MONITOR', msg: msg };
             node.remoteSetup('widgets', recipients, {
                 append: {
-                    Chat: {
-                        chatEvent: chatEvent,
-                        participants: [
-                            {
-                                recipient: 'MONITOR',
-                                sender: node.game.channelInUse,
-                                name: 'Monitor'
-                            }
-                        ],
-                        collapsible: true,
-                        closable: true,
-                        docked: true,
-                        title: 'Chat with Monitor'
-                        // TODO: not used for now, because
-                        // it registers listeners locally
-                        // and at the next step they are killed.
-                        // root: function() {
-                        //     return document.body;
-                        // }
-                    }
+                    Chat: opts
                 }
             });
         };
 
+        // Make the buttons.
 
         var btnGroup = document.createElement('div');
         btnGroup.role = 'group';
@@ -196,6 +203,7 @@
 
         this.bodyDiv.appendChild(btnGroup);
 
+        // TODO: Do we need this? We are actually including the .js files.
         // Variable toggled controls if the dropdown menu
         // is displayed (we are not using bootstrap js files)
         // and we redo the job manually here.
@@ -225,21 +233,37 @@
         W.add('hr', this.bodyDiv);
 
         // Options.
+        this.initialMsg = W.add('textarea', this.bodyDiv, {
+            className: 'initial-chat-msg',
+            placeholder: 'Initial message'
+        });
+
+        this.bodyDiv.appendChild(document.createElement('br'));
+
+        label = W.get('label');
+        this.eraseInitialMsg = W.add('input', label, {
+            type: 'checkbox',
+            className: 'monitor-checkbox'
+        });
+        label.appendChild(document.createTextNode(' Erase msg'));
+        this.bodyDiv.appendChild(label);
+
+        this.bodyDiv.appendChild(document.createElement('br'));
+
         label = W.get('label');
         this.includeNonPlayers = W.add('input', label, {
             type: 'checkbox',
             className: 'monitor-checkbox'
         });
-        label.appendChild(document.createTextNode(' non-players'));
+        label.appendChild(document.createTextNode(' Include non-players'));
         this.bodyDiv.appendChild(label);
-
-        label = W.get('label');
-        this.manyToMany = W.add('input', label, {
-            type: 'checkbox',
-            className: 'chat-checkbox'
-        });
-        label.appendChild(document.createTextNode('one'));
     };
 
-
+    Chatter.prototype.readInitialMsg = function() {
+        var txt;
+        txt = this.initialMsg.value;
+        if (this.eraseInitialMsg.checked) this.initialMsg.value = '';
+        return txt.trim();
+    };
+    
 })(node);
