@@ -145,12 +145,12 @@
                 docked: true,
                 title: 'Chat with Monitor'
             };
-            if (msg) opts.initialMsg = { id: 'MONITOR', msg: msg };
-            node.remoteSetup('widgets', recipients, {
-                append: {
-                    Chat: opts
-                }
-            });
+            // Add initialMsg.
+            if (msg) opts.initialMsg = { id: node.game.channelInUse, msg: msg };
+            // Send.
+            node.remoteSetup('widgets', recipients, { append: {
+                Chat: opts
+            }});
         };
 
         // Make the buttons.
