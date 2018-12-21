@@ -33,14 +33,6 @@ table {
   padding: 10px;
 }
 
-/* Also in nodegame.css */
-.panel-collapse-link {
-  display: inline-block;
-  float: right;
-  cursor: pointer;
-  margin-left: 8px;
-}
-
 .ng_widget {
   margin-right: 7px;
   float: left;
@@ -49,6 +41,28 @@ table {
 
 .clientlist {
   width: 100%;
+}
+
+
+/* Also in nodegame.css */
+.panel-collapse-link {
+  display: inline-block;
+  float: right;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.docked {
+  position: absolute;
+  bottom: 0px;
+  right: 10px;
+  width: 330px;
+  margin-left: 20px;
+}
+
+.monitor-checkbox {
+  margin-left: 5px;
+  vertical-align: text-top;
 }
 
 /* ***************
@@ -77,6 +91,11 @@ table {
 
 /* Chat */
 
+.chat {
+  /* min-width: 500px; */
+  max-width: 800px;
+}
+
 .chat_chat {
   overflow-y: scroll;
   height: 200px;
@@ -92,15 +111,6 @@ table {
 
 .chat_me {
   font-weight: bold;
-}
-
-.chat_submit {
-  height: 70px;
-}
-
-.chat {
-  /* min-width: 500px; */
-  max-width: 800px;
 }
 
 /* UIControls */

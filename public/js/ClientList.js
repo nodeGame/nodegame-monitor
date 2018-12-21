@@ -151,7 +151,7 @@
         this.roomTable.setHeader(['Room']);
         this.clientTable.setHeader([
             this.selectAll,
-            'ID', 'SID', 'Type', 'Admin', 'Stage', 'Level', 'Paused', 'Last Error'
+            'ID', 'Type', 'Admin', 'Stage', 'Level', 'Paused', 'Last Error'
         ]);
 
         this.clientsField = null;
@@ -439,7 +439,7 @@
             this.clientTable.addRow([
                 {id: clientObj.id, prevSel: prevSel, that: this},
                 clientObj.id || 'N/A',
-                clientObj.sid || 'N/A',
+                // clientObj.sid || 'N/A',
                 {
                     type: 'string' !== typeof clientObj.clientType ?
                         'N/A' : clientObj.clientType,
