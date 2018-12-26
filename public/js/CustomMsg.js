@@ -35,14 +35,13 @@
     }
 
     CustomMsg.prototype.append = function() {        
-        var cl, that;
+        var that;
         var fields, i, field;
         var table, tmpElem;
         var advButton, sendButton;
         var validateTableMsg, parseFunction;
 
         that = this;
-        cl = node.game.clientList;
 
         this.recipient = null;
         this.actionSel = null;
@@ -67,6 +66,7 @@
             table = i < 4 ? this.table : this.tableAdvanced;
 
             table.add(field, i, 0);
+            
             if (field === 'data') {
                 tmpElem = W.get('textarea', {
                     id: this.wid + '_' + field,
@@ -74,6 +74,28 @@
                 });
                 tmpElem.rows = 1;
                 table.add(tmpElem, i, 1);
+            }
+            else if (field === 'action') {
+                this.actionSel = W.getActionSelector(this.wid + '_actions');
+                W.addAttributes(this.actionSel, {
+                    tabindex: fields.length+2
+                });
+                table.add(this.actionSel, i, 1);
+                //this.actionSel.onchange = function() {
+                //    W.getElementById(that.wid + '_action').value =
+                //        that.actionSel.value;
+                //};
+            }
+            else if (field === 'target') {
+                this.targetSel = W.getTargetSelector(this.wid + '_targets');
+                W.addAttributes(this.targetSel, {
+                    tabindex: fields.length+3
+                });
+                table.add(this.targetSel, i, 1);
+                //this.targetSel.onchange = function() {
+                //    W.getElementById(that.wid + '_target').value =
+                //        that.targetSel.value;
+                //};
             }
             else {
                 table.add(W.get('input', {
@@ -83,28 +105,6 @@
                 }), i, 1);
             }
 
-            if (field === 'action') {
-                this.actionSel = W.getActionSelector(this.wid + '_actions');
-                W.addAttributes(this.actionSel, {
-                    tabindex: fields.length+2
-                });
-                table.add(this.actionSel, i, 2);
-                this.actionSel.onchange = function() {
-                    W.getElementById(that.wid + '_action').value =
-                        that.actionSel.value;
-                };
-            }
-            else if (field === 'target') {
-                this.targetSel = W.getTargetSelector(this.wid + '_targets');
-                W.addAttributes(this.targetSel, {
-                    tabindex: fields.length+3
-                });
-                table.add(this.targetSel, i, 2);
-                this.targetSel.onchange = function() {
-                    W.getElementById(that.wid + '_target').value =
-                        that.targetSel.value;
-                };
-            }
         }
 
         this.table.parse();
@@ -162,6 +162,7 @@
             // Assigning the value.
             msg[key] = value;
         };
+
         parseFunction = function() {
             var msg, gameMsg;
 
@@ -172,7 +173,7 @@
             that.tableAdvanced.forEach(validateTableMsg, msg);
 
             // validate 'to' field:
-            msg.to = clgetSelectedClients();
+            msg.to = node.game.clientList.getSelectedClients();
             if ('number' === typeof msg.to) msg.to = '' + msg.to;
 
             if ((!J.isArray(msg.to) && 'string' !== typeof msg.to)) {
@@ -196,25 +197,32 @@
         this.bodyDiv.appendChild(this.tableAdvanced.table);
         this.tableAdvanced.table.style.display = 'none';
 
+        // Show a button that expands the table of advanced fields.
+        advButton = W.add('button', this.bodyDiv, {
+            innerHTML: 'More options',
+            className: 'btn'
+        });
+        advButton.onclick = function() {
+            var st = that.tableAdvanced.table.style;
+            if (st.display === '') {
+                st.display = 'none';
+                advButton.innerHTML = 'More options';
+            }
+            else {
+                st.display = '';
+                advButton.innerHTML = 'Less options';
+            }
+        };
+        
         // Show 'Send' button.
-        sendButton = W.add('button', this.bodyDiv);
-        sendButton.className = 'btn';
-        sendButton.innerHTML = 'Send';
+        sendButton = W.add('button', this.bodyDiv, {
+            className: 'btn',
+            innerHTML: 'Send'
+        });
         sendButton.onclick = function() {
             var msg;
             msg = parseFunction();
             if (msg) node.socket.send(msg);
-        };
-
-        // Show a button that expands the table of advanced fields.
-        advButton = W.add('button', this.bodyDiv, {
-            innerHTML: 'Toggle advanced options'
-        });
-        advButton.className = 'btn';
-        advButton.onclick = function() {
-            that.tableAdvanced.table.style.display =
-                that.tableAdvanced.table.style.display === '' ?
-                'none' : '';
         };
     };
 

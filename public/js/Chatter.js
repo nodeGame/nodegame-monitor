@@ -34,17 +34,17 @@
         {
             id: 'one_to_many',
             name: 'One to many',
-            description: 'Broadcast to all participants, you only see replies'
+            description: 'Broadcast to all participants, replies visible to you only'
         },
         {
             id: 'many_to_many',
             name: 'Many to many',
-            description: 'Broadcast to all participants, everybody sees replies'
+            description: 'Broadcast to all participants, replies visible to all'
         },
         {
             id: 'receivers_only',
             name: 'Receivers only',
-            description: 'Broadcast to all participants, no replies allowed'
+            description: 'Broadcast to all participants, replies not allowed'
         }
     ];
     // Index the modes by id.
