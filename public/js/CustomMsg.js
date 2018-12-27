@@ -77,14 +77,12 @@
             }
             else if (field === 'action') {
                 this.actionSel = W.getActionSelector(this.wid + '_actions');
+                // Index Say.
+                this.actionSel.selectedIndex = 2;
                 W.addAttributes(this.actionSel, {
                     tabindex: fields.length+2
                 });
                 table.add(this.actionSel, i, 1);
-                //this.actionSel.onchange = function() {
-                //    W.getElementById(that.wid + '_action').value =
-                //        that.actionSel.value;
-                //};
             }
             else if (field === 'target') {
                 this.targetSel = W.getTargetSelector(this.wid + '_targets');
@@ -92,10 +90,6 @@
                     tabindex: fields.length+3
                 });
                 table.add(this.targetSel, i, 1);
-                //this.targetSel.onchange = function() {
-                //    W.getElementById(that.wid + '_target').value =
-                //        that.targetSel.value;
-                //};
             }
             else {
                 table.add(W.get('input', {
@@ -197,6 +191,8 @@
         this.bodyDiv.appendChild(this.tableAdvanced.table);
         this.tableAdvanced.table.style.display = 'none';
 
+        W.add('hr', this.bodyDiv);
+        
         // Show a button that expands the table of advanced fields.
         advButton = W.add('button', this.bodyDiv, {
             innerHTML: 'More options',
@@ -217,7 +213,8 @@
         // Show 'Send' button.
         sendButton = W.add('button', this.bodyDiv, {
             className: 'btn',
-            innerHTML: 'Send'
+            innerHTML: 'Send',
+            style: { 'float': 'right' }
         });
         sendButton.onclick = function() {
             var msg;

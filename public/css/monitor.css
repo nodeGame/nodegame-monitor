@@ -70,9 +70,25 @@ table {
  * ***************
  */
 
+/* GameControls */
+
 .gamecontrols {
   max-width: 400px;
   float: left;
+}
+
+/* CustomMsg */
+
+.custommsg table tr td:first-child {
+  width: 60px;
+}
+
+.custommsg table tr td:last-child {
+  width: 250px;
+}
+
+.custommsg input, .custommsg select, .custommsg textarea {
+  width: 100%;
 }
 
 /* Wall */
