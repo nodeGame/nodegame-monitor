@@ -93,16 +93,31 @@ table {
 
 /* Wall */
 
-#wall {
+.wall {
   width: auto;
-  height: 200px;
   /*margin-bottom: 10px;
     border: 1px solid #CCC;*/
-  padding: 5px;
+}
+
+.wall pre {
+  height: 200px;
+  overflow-y: scroll;
   font-family: Verdana;
   font-size: 11px;
-  color: black;
   overflow: auto;
+  padding: 5px;
+}
+
+.wall_in {
+  color: green;
+}
+
+.wall_out {
+  color: blue;
+}
+
+.wall_out {
+  color: orange;
 }
 
 /* Chat */

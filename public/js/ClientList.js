@@ -285,6 +285,11 @@
                 hidden: true
             });
         
+        this.wall = node.widgets.append(
+            'Wall',
+            document.body, {
+                collapsible: true
+            });
 //
 //         // Add bot-start button:
 //         button = document.createElement('button');
