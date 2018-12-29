@@ -99,7 +99,8 @@ table {
     border: 1px solid #CCC;*/
 }
 
-.wall pre {
+.walldiv {
+  resize: both;
   height: 200px;
   overflow-y: scroll;
   font-family: Verdana;
