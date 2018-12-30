@@ -91,15 +91,18 @@ table {
   width: 100%;
 }
 
-/* Wall */
+/* DebugWall */
 
-.wall {
-  width: auto;
-  /*margin-bottom: 10px;
-    border: 1px solid #CCC;*/
+.debugwall {
+  max-width: 96vw;
+}
+
+.wallbuttonsdiv {
+  margin-bottom: 15px;
 }
 
 .walldiv {
+  max-width: 96vw;
   resize: both;
   height: 200px;
   overflow-y: scroll;
@@ -117,8 +120,17 @@ table {
   color: blue;
 }
 
-.wall_out {
-  color: orange;
+.wall_log {
+  color: grey;
+}
+
+.wall_in_click, .wall_out_click, .wall_log_click {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wall_in:hover, .wall_out:hover, .wall_log:hover {
+  background: #f4f5f7;
 }
 
 /* Chat */

@@ -286,7 +286,7 @@
             });
         
         this.wall = node.widgets.append(
-            'Wall',
+            'DebugWall',
             document.body, {
                 collapsible: true
             });
