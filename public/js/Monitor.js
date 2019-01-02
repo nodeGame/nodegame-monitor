@@ -69,6 +69,9 @@ function Monitor(node) {
         this.waitingForRooms = false;
         this.waitingForClients = false;
 
+        // Set footer as default collapseTarget.
+        node.setup('widgets', { collapseTarget: 'docker' });
+        
         /**
          * ## addTab
          *
@@ -83,7 +86,8 @@ function Monitor(node) {
             name = name.toLowerCase();
             title = name.charAt(0).toUpperCase() + name.slice(1);
             tmpElem = document.createElement('li');
-            if (active) tmpElem.className = 'active';
+            tmpElem.className = '';
+            if (active) tmpElem.className += ' active';
             tmpElem.innerHTML =
                 '<a href="#' + name + '" role="tab" data-toggle="tab">' +
                 title + '</a>';
@@ -277,13 +281,14 @@ function Monitor(node) {
         });
 
         // Tabs.
+        tmpElem = document.getElementById('main-container');
         tabList = document.createElement('ul');
         tabList.className = 'nav nav-tabs';
         tabList.setAttribute('role', 'tablist');
-        document.body.appendChild(tabList);
+        tmpElem.appendChild(tabList);
         tabContent = document.createElement('div');
         tabContent.className = 'tab-content';
-        document.body.appendChild(tabContent);
+        tmpElem.appendChild(tabContent);
 
         // Channel and room list.
         tmpElem = this.addTab('channels');

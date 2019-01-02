@@ -18,7 +18,7 @@
 
     // ## Meta-data
 
-    GameControls.version = '0.1.0';
+    GameControls.version = '0.2.0';
     GameControls.description = 'Sends game-related messages to clients';
 
     GameControls.title = 'Game Controls';
@@ -34,32 +34,48 @@
     GameControls.prototype.append = function() {
         var that;
         var tableRow2, tableCell2;
-        var btnDiv, button, forceCheckbox, label, kickBtn;
-        var extraButtonsDiv, buttonTable;
-
+        var btnDiv, button, forceCheckbox, label;
+       
         that = this;
 
         // Add row for buttons:
         btnDiv = document.createElement('div');
         this.bodyDiv.appendChild(btnDiv);
 
-        // Force checkbox:
-        label = document.createElement('label');
-        forceCheckbox = document.createElement('input');
-        forceCheckbox.type = 'checkbox';
-        forceCheckbox.style['margin-left'] = '5px';
-        // Label.
-        label.appendChild(forceCheckbox);
-        label.appendChild(document.createTextNode(' Force'));
+        // Add buttons for pause/resume.
 
-        // Add buttons for setup/start/stop/pause/resume:
-        btnDiv.appendChild(createCmdButton('SETUP', 'Setup', forceCheckbox));
-        btnDiv.appendChild(createCmdButton('START', 'Start', forceCheckbox));
-        btnDiv.appendChild(createCmdButton('STOP', 'Stop', forceCheckbox));
+        // Force checkbox and label.
+        label = document.createElement('label');
+        forceCheckbox = W.add('input', label, {
+            type: 'checkbox',
+            className: 'force-checkbox'
+        });
+        label.appendChild(document.createTextNode(' Force'));
+        
         btnDiv.appendChild(createCmdButton('PAUSE', 'Pause', forceCheckbox));
         btnDiv.appendChild(createCmdButton('RESUME', 'Resume', forceCheckbox));
 
         btnDiv.appendChild(label);
+        btnDiv.appendChild(document.createElement('hr'));
+        
+        // Add buttons for setup/start/stop.
+
+        // Force checkbox and label.
+        label = document.createElement('label');
+        forceCheckbox = W.add('input', label, {
+            type: 'checkbox',
+            className: 'force-checkbox'
+        });
+        label.appendChild(document.createTextNode(' Force'));
+        
+        btnDiv.appendChild(
+            createCmdButton('SETUP', 'Setup', forceCheckbox, 'btn-sm'));
+        btnDiv.appendChild(
+            createCmdButton('START', 'Start', forceCheckbox, 'btn-sm'));
+        btnDiv.appendChild(
+            createCmdButton('STOP', 'Stop', forceCheckbox, 'btn-sm'));
+        
+        btnDiv.appendChild(label);        
         btnDiv.appendChild(document.createElement('hr'));
 
         // Add StateBar.
@@ -79,96 +95,6 @@
             });
 
         this.bodyDiv.appendChild(stageBar);
-
-        // appendStateBar(this.bodyDiv);
-
-        tableCell2 = document.createElement('td');
-        tableRow2 = document.createElement('tr');
-        tableRow2.appendChild(tableCell2);
-
-        kickBtn = document.createElement('button');
-        kickBtn.className = 'btn';
-        kickBtn.innerHTML = 'Kick';
-        kickBtn.onclick = (function() {
-            var selectedClients = that.getSelectedClients();
-            selectedClients.forEach((id) => {
-                if (that.clientMap[id].clientType == 'bot' ||
-                    that.clientMap[id].clientType == 'player') {
-                    node.disconnectClient({
-                        id: id,
-                        sid: that.clientMap[id].sid
-                    });
-                    console.log('Kicked from server: ' + id);
-                }
-
-            });
-        });
-        tableCell2.appendChild(kickBtn);
-
-        this.bodyDiv.appendChild(document.createElement('hr'));
-        this.bodyDiv.appendChild(tableRow2);
-
-        // TODO: see if we need this now.
-
-        this.bodyDiv.appendChild(document.createElement('hr'));
-
-//         var inputGroup = document.createElement('div');
-//         inputGroup.className = 'input-group';
-//
-//         var myInput = document.createElement('input');
-//         myInput.type = "text";
-//         myInput.className ="form-control";
-//         myInput.placeholder = "Full URI or a page within the game";
-//         myInput["aria-label"] = "Full URI or a page within the game";
-//
-//         inputGroup.appendChild(myInput);
-//
-//         var tmp = document.createElement('span');
-//         tmp.className = 'input-group-btn';
-//
-//         button = document.createElement('button');
-//         button.className = 'btn btn-default';
-//         button.innerHTML = 'Redirect';
-//         button.type = 'button';
-//         button.style['padding-bottom'] = '7px';
-//         button.onclick = function() {
-//             var uri, clients;
-//             uri = myInput.value;
-//             if (!uri) {
-//                 node.warn('cannot redirect, empty uri.');
-//                 return false;
-//             }
-//             clients = that.getSelectedClients();
-//             if (!clients || !clients.length) {
-//                 node.warn('cannot redirect, no client selected.');
-//                 return false;
-//             }
-//             node.redirect(uri, clients);
-//         };
-//
-//         tmp.appendChild(button);
-//         inputGroup.appendChild(tmp);
-
-
-        var inputGroup = getInputAndButton(
-            'Full URI or a page within the game',
-            'Redirect',
-            function() {
-                var uri, clients;
-                uri = myInput.value;
-                if (!uri) {
-                    node.warn('cannot redirect, empty uri.');
-                    return false;
-                }
-                clients = that.getSelectedClients();
-                if (!clients || !clients.length) {
-                    node.warn('cannot redirect, no client selected.');
-                                     return false;
-                }
-                node.redirect(uri, clients);
-            });
-
-        this.bodyDiv.appendChild(inputGroup);
     };
 
 
@@ -177,10 +103,10 @@
     /**
      * Make a button that sends a given ROOMCOMMAND.
      */
-    function createCmdButton(cmd, label, forceCheckbox) {
+    function createCmdButton(cmd, label, forceCheckbox, className) {
         var button;
         button = document.createElement('button');
-        button.className = 'btn';
+        button.className = className || 'btn';
         button.innerHTML = label;
         button.onclick = function() {
             var cl;

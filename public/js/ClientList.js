@@ -208,6 +208,7 @@
     ClientList.prototype.append = function() {
         var that;
 
+        var mainContainer;
         var selectionDiv;
         var tableStructure;
         var tableRow, tableCell;
@@ -248,10 +249,13 @@
 
         selectionDiv.appendChild(document.createTextNode('Selected IDs: '));
         selectionDiv.appendChild(this.clientsField);
+
+        // The ClientList tab.
+        mainContainer = document.getElementById('clients')
         
         this.waitroomControls = node.widgets.append(
             'WaitRoomControls',
-            document.body,
+            mainContainer,
             {
                 collapsible: true,
                 hidden: true
@@ -259,35 +263,42 @@
         
         this.gameControls = node.widgets.append(
             'GameControls',
-            document.body, {
+            mainContainer, {
                 collapsible: true,
                 hidden: true
+            });
+
+        this.kicker = node.widgets.append(
+            'Kicker',
+            mainContainer, {
+                collapsible: true,
+                //hidden: true
             });
         
         this.chatter = node.widgets.append(
             'Chatter',
-            document.body, {
+            mainContainer, {
                 collapsible: true,
                 hidden: true
             });
         
         this.uicontrols = node.widgets.append(
             'UIControls',
-            document.body, {
+            mainContainer, {
                 collapsible: true,
                 hidden: true
             });
         
         this.customMsg = node.widgets.append(
             'CustomMsg',
-            document.body, {
+            mainContainer, {
                 collapsible: true,
                 hidden: true
             });
         
         this.wall = node.widgets.append(
             'DebugWall',
-            document.body, {
+            document.getElementById('wall-container'), {
                 collapsible: true
             });
 //

@@ -3,9 +3,19 @@
  * *******************
  */
 
+.clearfix {
+  overflow: auto;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
 body {
   margin: 5px;
-  padding: 5px;
+  padding: 5px 10px;
 }
 
 input, button, select, textarea {
@@ -13,6 +23,15 @@ input, button, select, textarea {
   margin: 2px;
   border: 1px solid #CCC;
   font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+#docker {
+  clear: both;
+  float: right;
+  width: 50%;
+  height: 50px;
+  position: absolute;
+  bottom: 0px;
 }
 
 table {
@@ -65,6 +84,10 @@ table {
   vertical-align: text-top;
 }
 
+.force-checkbox {
+  margin-left: 5px;
+}
+
 /* ***************
  * Monitor widgets
  * ***************
@@ -94,7 +117,7 @@ table {
 /* DebugWall */
 
 .debugwall {
-  max-width: 96vw;
+  width: 100%;
 }
 
 .wallbuttonsdiv {
@@ -102,7 +125,7 @@ table {
 }
 
 .walldiv {
-  max-width: 96vw;
+  /* max-width: 96vw; */
   resize: both;
   height: 200px;
   overflow-y: scroll;
@@ -113,11 +136,11 @@ table {
 }
 
 .wall_in {
-  color: green;
+  color: #60bc67;
 }
 
 .wall_out {
-  color: blue;
+  color: #6083bc;
 }
 
 .wall_log {
