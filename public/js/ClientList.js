@@ -258,7 +258,7 @@
             mainContainer,
             {
                 collapsible: true,
-                // hidden: true
+                hidden: true
             });
         
         this.gameControls = node.widgets.append(

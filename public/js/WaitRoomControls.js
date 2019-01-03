@@ -1,9 +1,9 @@
 /**
  * # WaitRoomControls widget for nodeGame
- * Copyright(c) 2018 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
- * Manage chats with clients.
+ * Manage a waiting room.
  *
  * www.nodegame.org
  * ---
@@ -18,7 +18,7 @@
 
     // ## Meta-data
 
-    WaitRoomControls.version = '0.1.0';
+    WaitRoomControls.version = '0.2.0';
     WaitRoomControls.description = 'Manages a waiting room';
 
     WaitRoomControls.title = 'WaitRoom Controls';
@@ -38,7 +38,6 @@
 
         var waitRoomCommandsDiv, dispatchNGamesInput, dispatchGroupSizeInput;
         var treatmentInput;
-        var labelDNGI, labelDGSI, labelDTI;
 
         
         that = this;
@@ -61,45 +60,159 @@
 
         // Need to create inputs before Dispatch button.
         dispatchNGamesInput = document.createElement('input');
-        dispatchNGamesInput.size = 2;
-
+        //dispatchNGamesInput.size = 2;
+        dispatchNGamesInput.placeholder = '#Size';
+        
         dispatchGroupSizeInput = document.createElement('input');
-        dispatchGroupSizeInput.size = 2;
+        //dispatchGroupSizeInput.size = 2;
+        dispatchGroupSizeInput.placeholder = '#Groups';
 
         treatmentInput = document.createElement('input');
-        treatmentInput.size = 5;
-
-        // Dispatch N Groups label.
-
-        labelDNGI = document.createElement('label');
-        labelDNGI.style['margin-left'] = '5px';
-        labelDNGI.appendChild(document.createTextNode('#Groups'));
-        labelDNGI.appendChild(dispatchNGamesInput);
-        this.waitroomCommandsDiv.appendChild(labelDNGI);
-
-        // Dispatch Group Size label.
-
-        labelDGSI = document.createElement('label');
-        labelDGSI.style['margin-left'] = '5px';
-        labelDGSI.appendChild(document.createTextNode('#Size'));
-        labelDGSI.appendChild(dispatchGroupSizeInput);
-        this.waitroomCommandsDiv.appendChild(labelDGSI);
-
-        // Treatment Label.
-        labelDTI = document.createElement('label');
-        labelDTI.style['margin-left'] = '5px';
-        labelDTI.appendChild(document.createTextNode('Treatment'));
-        labelDTI.appendChild(treatmentInput);
-        this.waitroomCommandsDiv.appendChild(labelDTI);
-
+        //treatmentInput.size = 5;
+        treatmentInput.placeholder = 'Treatment/s';
+        
+        this.waitroomCommandsDiv.appendChild(dispatchGroupSizeInput);
+        this.waitroomCommandsDiv.appendChild(dispatchGroupSizeInput);
+        this.waitroomCommandsDiv.appendChild(treatmentInput);
+        
         // Dispatch Button.
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
             'DISPATCH', 'Dispatch', dispatchNGamesInput,
             dispatchGroupSizeInput, treatmentInput));
 
- 
         // Append.
         this.bodyDiv.appendChild(this.waitroomCommandsDiv);
+
+
+        // Closure to create button group.
+        (function(w) {
+            var btnGroup = document.createElement('div');
+            btnGroup.role = 'group';
+            btnGroup['aria-label'] = 'Play Buttons';
+            btnGroup.className = 'btn-group';
+
+            var playBotBtn = document.createElement('input');
+            playBotBtn.className = 'btn btn-secondary btn';
+            playBotBtn.value = 'Dispatch XX';
+            playBotBtn.id = 'bot_btn';
+            playBotBtn.type = 'button';
+            playBotBtn.onclick = function() {
+                w.playBotBtn.value = 'XX';
+                w.playBotBtn.disabled = true;
+                node.say('PLAYWITHBOT', 'SERVER', w.selectedTreatment);
+                setTimeout(function() {
+                    w.playBotBtn.value = 'Dispatch XX';
+                    w.playBotBtn.disabled = false;
+                }, 5000);
+            };
+
+            btnGroup.appendChild(playBotBtn);
+
+            // Store reference in widget.
+            w.playBotBtn = playBotBtn;
+
+
+            var btnGroupTreatments = document.createElement('div');
+            btnGroupTreatments.role = 'group';
+            btnGroupTreatments['aria-label'] = 'Select Treatment';
+            btnGroupTreatments.className = 'btn-group';
+
+            var btnTreatment = document.createElement('button');
+            btnTreatment.className = 'btn btn-default btn ' +
+                'dropdown-toggle';
+            btnTreatment['data-toggle'] = 'dropdown';
+            btnTreatment['aria-haspopup'] = 'true';
+            btnTreatment['aria-expanded'] = 'false';
+            btnTreatment.innerHTML = 'Treatment';
+
+            var span = document.createElement('span');
+            span.className = 'caret';
+
+            btnTreatment.appendChild(span);
+
+            var ul = document.createElement('ul');
+            ul.className = 'dropdown-menu';
+            ul.style = 'text-align: left';
+
+            var conf = [ 'treatment_random', 'treatment_rotate' ];
+            
+            if (node.game.channelInUse) {
+                conf = conf.concat(node.game.gamesInfo[node.game.channelInUse]);
+            }
+            
+            var li, a, t, liT1, liT2;
+            
+            li = document.createElement('li');
+            li.innerHTML = 'Select Treatment';
+            li.className = 'dropdown-header';
+            ul.appendChild(li);
+            var i;
+            for (i = 0; i < conf.length; i++) {
+                t = conf[i];
+                li = document.createElement('li');
+                li.id = t;
+                a = document.createElement('a');
+                a.href = '#';
+                a.innerHTML = '<strong>' + t + '</strong>';
+                li.appendChild(a);
+                if (t === 'treatment_rotate') liT1 = li;
+                else if (t === 'treatment_random') liT2 = li;
+                else ul.appendChild(li);
+                
+            }
+            li = document.createElement('li');
+            li.role = 'separator';
+            li.className = 'divider';
+            ul.appendChild(li);
+            li = document.createElement('li');
+            li.innerHTML = 'Default treatment';
+            li.className = 'dropdown-header';
+            ul.appendChild(li);
+            ul.appendChild(liT1);
+            ul.appendChild(liT2);
+            
+            btnGroupTreatments.appendChild(btnTreatment);
+            btnGroupTreatments.appendChild(ul);
+
+            btnGroup.appendChild(btnGroupTreatments);
+
+            // Variable toggled controls if the dropdown menu
+            // is displayed (we are not using bootstrap js files)
+            // and we redo the job manually here.
+            var toggled = false;
+            btnTreatment.onclick = function() {
+                if (toggled) {
+                    ul.style = 'display: none';
+                    toggled = false;
+                }
+                else {
+                    ul.style = 'display: block; text-align: left';
+                    toggled = true;
+                }
+            };
+
+            ul.onclick = function(eventData) {
+                var t;
+                ul.style = 'display: none';
+                t = eventData.target.parentNode.id;
+                if (!t) t = eventData.target.parentNode.parentNode.id;
+                console.log(eventData.target.parentNode);
+                console.log(t);
+                btnTreatment.innerHTML = t + ' ';
+                btnTreatment.appendChild(span);
+                w.selectedTreatment = t;
+                toggled = false;
+            };
+
+            // Store Reference in widget.
+            // w.treatmentBtn = btnTreatment;
+
+            // Append button group.
+            w.bodyDiv.appendChild(document.createElement('br'));
+            w.bodyDiv.appendChild(btnGroup);
+
+        })(this);
+        
     };
 
     /**

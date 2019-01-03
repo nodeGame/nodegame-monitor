@@ -1,6 +1,6 @@
 /**
  * # GameControls widget for nodeGame
- * Copyright(c) 2018 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
  * Sends game-related messages to clients
