@@ -1,9 +1,9 @@
 /**
  * # Kicker widget for nodeGame
- * Copyright(c) 2018 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
- * Sends game-related messages to clients
+ * Kicks, moves and redirect players
  *
  * www.nodegame.org
  * ---
@@ -21,7 +21,7 @@
     Kicker.version = '0.1.0';
     Kicker.description = 'Kicks, moves and redirect players';
 
-    Kicker.title = 'Kicker';
+    Kicker.title = 'Kick and Redirect';
     Kicker.className = 'kicker';
 
     // ## Dependencies
