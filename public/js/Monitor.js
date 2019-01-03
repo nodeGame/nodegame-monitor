@@ -92,17 +92,16 @@ function Monitor(node) {
                 '<a href="#' + name + '" role="tab" data-toggle="tab">' +
                 title + '</a>';
             tabList.appendChild(tmpElem);
-
-            tmpElem = document.createElement('div');
-            tmpElem.className = 'tab-pane';
-            if (active) tmpElem.className += ' active';
-            tmpElem.id = name;
-            tabContent.appendChild(tmpElem);
             tmpElem.onclick = function() {
                 that.tabInUse = name;
                 node.game.refresh(name);
                 node.emit('TAB_SELECTED', name);
             };
+            tmpElem = document.createElement('div');
+            tmpElem.className = 'tab-pane';
+            if (active) tmpElem.className += ' active';
+            tmpElem.id = name;
+            tabContent.appendChild(tmpElem);
             return tmpElem;
         };
 

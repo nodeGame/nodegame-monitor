@@ -258,7 +258,7 @@
             mainContainer,
             {
                 collapsible: true,
-                hidden: true
+                // hidden: true
             });
         
         this.gameControls = node.widgets.append(
@@ -439,7 +439,9 @@
             elem.className = 'ng_clickable';
             elem.innerHTML = roomObj.name;
             elem.onclick = (function(o) {
-                return function() { that.setRoom(o.id, false); };
+                return function() {
+                    that.setRoom(o.id, true);
+                };
             })(roomObj);
 
             this.roomTable.addRow(elem);
