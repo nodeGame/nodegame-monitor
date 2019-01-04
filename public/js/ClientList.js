@@ -1,6 +1,6 @@
 /**
  * # ClientList widget for nodeGame
- * Copyright(c) 2018 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
  * Shows list of clients and allows selection.
@@ -31,7 +31,7 @@
 
     // ## Meta-data
 
-    ClientList.version = '0.7.0';
+    ClientList.version = '0.8.0';
     ClientList.description = 'Displays all clients of a room.';
 
     ClientList.title = 'Clients';
@@ -120,9 +120,15 @@
         // Table displaying the channels.
         this.channelTable = new Table();
 
+        // String containing info about the selected channel.
+        this.channelTitle = null;
+
         // Table displaying the rooms.
         this.roomTable = new Table();
 
+        // String containing info about the selected room.
+        this.roomTitle = null;
+        
         this.clientMap = {};
 
         // Table displaying the clients.
@@ -269,6 +275,9 @@
 
 
         this.channelTable.parse();
+        
+        // Add all widgets.
+        that.appendWidgets();
     };
 
     ClientList.prototype.listeners = function() {
@@ -284,25 +293,36 @@
 
         // Listen for server reply:
         node.on('INFO_CHANNELS', function(channels) {
+            var chanInfo;
+            debugger
             // Update the contents:
             that.writeChannels(channels);
+
+            // Make channel title.
+            chanInfo = channels[node.game.channelInUse];
+            that.channelTitle = makeChannelTitle(chanInfo);
             that.updateTitle();
         });
 
         node.on('INFO_ROOMS', function(rooms) {
+            var chanInfo;
+            
             // Update the contents:
-            that.writeRooms(rooms);
+            that.writeRooms(rooms.rooms);
+            
+            // Make channel title.
+            chanInfo = rooms.channel;
+            that.channelTitle = makeChannelTitle(chanInfo);
             that.updateTitle();
-            // Add all widgets, once the info about rooms has arrived.
-            that.appendWidgets();
         });
 
         node.on('INFO_CLIENTS', function(clients) {
             // Update the contents:
             that.roomLogicId = clients.logic ? clients.logic.id : null;
             that.writeClients(clients);
-            //node.game.pl.clear();
-            //node.game.pl.importDB(clients);
+            
+            that.roomTitle = makeRoomTitle(clients);
+            
             that.updateTitle();
         });
 
@@ -347,14 +367,6 @@
         // The ClientList tab.
         mainContainer = document.getElementById('clients');
 
-        this.channelList = node.widgets.append(
-            'ChannelList',
-            mainContainer);
-
-        this.roomList = node.widgets.append(
-            'RoomList',
-            mainContainer);
-
         this.waitroomControls = node.widgets.append(
             'WaitRoomControls',
             mainContainer,
@@ -396,7 +408,7 @@
         
         that = this;
         this.channelTable.clear(true);
-
+        
         // Create a clickable row for each channel:
         for (chanKey in channels) {
             if (channels.hasOwnProperty(chanKey)) {
@@ -415,9 +427,7 @@
                     };
                 }(chanObj, elem);
 
-                if (chanKey === node.game.channelInUse) {
-                    elem.click();
-                }
+                if (chanKey === node.game.channelInUse) elem.click();
                 
                 this.channelTable.addRow(elem);
             }
@@ -569,27 +579,41 @@
 
     ClientList.prototype.updateTitle = function() {
         var ol, li;
-
+        
         // Use breadcrumbs of the form "<channelname> / <roomname> / Clients".
         ol = document.createElement('ol');
         ol.className = 'breadcrumb';
 
         li = document.createElement('li');
-        li.innerHTML = this.channelName || 'No channel selected';
-        li.className = 'active';
+        li.innerHTML = 'Clients';
         ol.appendChild(li);
+        
+        li = document.createElement('li');
+        ol.appendChild(li);
+        li.className = 'active';
+        
+        if (!this.channelName) {
+            li.innerHTML = 'No channel selected';
+        }
+        else {
+            li.innerHTML = this.channelName;
 
-        if (this.roomName) {
+            if (this.roomName) {
+                li.className = 'active';
+                li = document.createElement('li');
+                li.innerHTML = this.roomName;
+                li.className = 'active';
+                ol.appendChild(li);
+            }
+            
             li = document.createElement('li');
-            li.innerHTML = this.roomName;
             li.className = 'active';
-            ol.appendChild(li);
 
-            li = document.createElement('li');
-            li.innerHTML = 'Clients';
+            li.innerHTML = this.roomName ? this.roomTitle : this.channelTitle;
+            
             ol.appendChild(li);
         }
-
+        
         this.setTitle(ol);
     };
 
@@ -651,4 +675,29 @@
         this.clientsField.value = JSON.stringify(recipients);
     };
 
+    function makeChannelTitle(chanInfo) {
+        return chanInfo.nGameRooms + ' rooms, ' + 
+            chanInfo.nConnPlayers +
+            ' (+' + chanInfo.nDisconnPlayers + ') players, ' +
+            chanInfo.nConnAdmins +
+            ' (+' + chanInfo.nDisconnAdmins + ') admins';
+    }
+
+    function makeRoomTitle(clients) {
+        var s;
+        s = '';
+        if (clients.nClients > 0) {
+            if (clients.nPlayers) {
+                s += clients.nPlayers + ' player';
+                if (clients.nPlayers > 1) s += 's';
+            }
+            if (clients.nAdmins) {
+                if (s.length) s += ', ';
+                s += clients.nAdmins + ' admin';
+                if (clients.nAdmins > 1) s += 's';
+            }
+        }
+        return s;
+    }
+    
 })(node);
