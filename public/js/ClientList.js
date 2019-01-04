@@ -249,6 +249,8 @@
 
         this.clientsField = document.createElement('textarea');
         this.clientsField.rows = 1;
+        this.clientsField.placeholder = 'Select a room and ' +
+            'send commands to selected clients.';
 
         selectionDiv.appendChild(document.createTextNode('Selected IDs: '));
         selectionDiv.appendChild(this.clientsField);
