@@ -191,7 +191,9 @@
         this.bodyDiv.appendChild(this.tableAdvanced.table);
         this.tableAdvanced.table.style.display = 'none';
 
-        W.add('hr', this.bodyDiv);
+        W.add('div', this.bodyDiv, {
+            style: { margin: '5px 0 15px 0' }
+        });
         
         // Show a button that expands the table of advanced fields.
         advButton = W.add('button', this.bodyDiv, {

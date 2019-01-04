@@ -353,7 +353,8 @@
         var mainContainer, opts;
         opts = {
             collapsible: true,
-            hidden: true
+            hidden: true,
+            className: ' monitor_tile'
         };
 
         // The ClientList tab.

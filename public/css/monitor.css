@@ -3,6 +3,13 @@
  * *******************
  */
 
+.monitor_tile {
+  height: 300px;
+  width: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .clearfix {
   overflow: auto;
 }
