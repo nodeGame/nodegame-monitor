@@ -666,11 +666,27 @@
     };
 
     function makeChannelTitle(chanInfo) {
-        return chanInfo.nGameRooms + ' rooms, ' +
-            chanInfo.nConnPlayers +
-            ' (+' + chanInfo.nDisconnPlayers + ') players, ' +
-            chanInfo.nConnAdmins +
-            ' (+' + chanInfo.nDisconnAdmins + ') admins';
+        var s;
+        s = chanInfo.nGameRooms + ' rooms';
+        if (chanInfo.nConnClients > 0) {
+            if (chanInfo.nConnPlayers > 0) {
+                s += ', ' + chanInfo.nConnPlayers;
+                if (chanInfo.nDisconnPlayers > 0) {
+                    s += '(+' + chanInfo.nDisconnPlayers + ')';
+                }
+                s += ' players';
+                if (chanInfo.nConnPlayers > 1) s += 's';
+            }
+            if (chanInfo.nConnAdmins > 0) {
+                s += ', ' + chanInfo.nConnAdmins;
+                if (chanInfo.nDisconnAdmins > 1) {
+                    s += '(+' + chanInfo.nDisconnAdmins + ')';
+                }
+                s += ' admin';
+                if (chanInfo.nConnAdmins > 1) s += 's';
+            }
+        }
+        return s;
     }
 
     function makeRoomTitle(clients) {
