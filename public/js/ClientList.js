@@ -102,6 +102,10 @@
 
         that = this;
 
+        // String containing info about the selected room or channel.
+        // @see ClientList.updateTitle
+        this.selectionInfo = null;
+
         // Channel currently selected.
         this.channelName = options.channel || null;
 
@@ -120,15 +124,9 @@
         // Table displaying the channels.
         this.channelTable = new Table();
 
-        // String containing info about the selected channel.
-        this.channelTitle = null;
-
         // Table displaying the rooms.
         this.roomTable = new Table();
 
-        // String containing info about the selected room.
-        this.roomTitle = null;
-        
         this.clientMap = {};
 
         // Table displaying the clients.
@@ -275,7 +273,7 @@
 
 
         this.channelTable.parse();
-        
+
         // Add all widgets.
         that.appendWidgets();
     };
@@ -293,26 +291,17 @@
 
         // Listen for server reply:
         node.on('INFO_CHANNELS', function(channels) {
-            var chanInfo;
-            debugger
             // Update the contents:
             that.writeChannels(channels);
-
-            // Make channel title.
-            chanInfo = channels[node.game.channelInUse];
-            that.channelTitle = makeChannelTitle(chanInfo);
             that.updateTitle();
         });
 
         node.on('INFO_ROOMS', function(rooms) {
-            var chanInfo;
-            
             // Update the contents:
             that.writeRooms(rooms.rooms);
-            
-            // Make channel title.
-            chanInfo = rooms.channel;
-            that.channelTitle = makeChannelTitle(chanInfo);
+
+            // Update selection info.
+            that.selectionInfo = makeChannelTitle(rooms.channel);
             that.updateTitle();
         });
 
@@ -320,9 +309,10 @@
             // Update the contents:
             that.roomLogicId = clients.logic ? clients.logic.id : null;
             that.writeClients(clients);
-            
-            that.roomTitle = makeRoomTitle(clients);
-            
+
+            // Update selection info.
+            that.selectionInfo = makeRoomTitle(clients);
+
             that.updateTitle();
         });
 
@@ -405,10 +395,10 @@
         var chanKey, chanObj;
         var elem, oldSelected;
         var that;
-        
+
         that = this;
         this.channelTable.clear(true);
-        
+
         // Create a clickable row for each channel:
         for (chanKey in channels) {
             if (channels.hasOwnProperty(chanKey)) {
@@ -416,7 +406,7 @@
 
                 elem = document.createElement('a');
                 elem.className = 'ng_clickable';
-                
+
                 elem.innerHTML = chanObj.name;
                 elem.onclick = function(o, elem) {
                     return function() {
@@ -428,21 +418,21 @@
                 }(chanObj, elem);
 
                 if (chanKey === node.game.channelInUse) elem.click();
-                
+
                 this.channelTable.addRow(elem);
             }
         }
 
         this.channelTable.parse();
 
-        
+
         // Make sure content does not shift when selection is bold,
         // but only the first time!
         if (!this.channelTable.table.style.width) {
             this.channelTable.table.style.width =
                 (this.channelTable.table.offsetWidth + 3) + 'px';
         }
-       
+
     };
 
     ClientList.prototype.writeRooms = function(rooms) {
@@ -484,7 +474,7 @@
         }
 
         this.roomTable.parse();
-        
+
         // Make sure content does not shift when selection is bold,
         // but only the first time!
         if (!this.roomTable.table.style.width) {
@@ -579,7 +569,7 @@
 
     ClientList.prototype.updateTitle = function() {
         var ol, li;
-        
+
         // Use breadcrumbs of the form "<channelname> / <roomname> / Clients".
         ol = document.createElement('ol');
         ol.className = 'breadcrumb';
@@ -587,11 +577,11 @@
         li = document.createElement('li');
         li.innerHTML = 'Clients';
         ol.appendChild(li);
-        
+
         li = document.createElement('li');
         ol.appendChild(li);
         li.className = 'active';
-        
+
         if (!this.channelName) {
             li.innerHTML = 'No channel selected';
         }
@@ -605,15 +595,15 @@
                 li.className = 'active';
                 ol.appendChild(li);
             }
-            
+
             li = document.createElement('li');
             li.className = 'active';
 
-            li.innerHTML = this.roomName ? this.roomTitle : this.channelTitle;
-            
+            li.innerHTML = this.selectionInfo;
+
             ol.appendChild(li);
         }
-        
+
         this.setTitle(ol);
     };
 
@@ -676,7 +666,7 @@
     };
 
     function makeChannelTitle(chanInfo) {
-        return chanInfo.nGameRooms + ' rooms, ' + 
+        return chanInfo.nGameRooms + ' rooms, ' +
             chanInfo.nConnPlayers +
             ' (+' + chanInfo.nDisconnPlayers + ') players, ' +
             chanInfo.nConnAdmins +
@@ -699,5 +689,5 @@
         }
         return s;
     }
-    
+
 })(node);
