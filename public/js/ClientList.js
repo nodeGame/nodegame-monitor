@@ -208,11 +208,10 @@
     ClientList.prototype.append = function() {
         var that;
 
-        var mainContainer;
         var selectionDiv;
         var tableStructure;
         var tableRow, tableCell;
-        
+
         that = this;
 
         // Add tables in a 3x1 table element:
@@ -243,59 +242,13 @@
         selectionDiv.id = "selectionDiv";
 
         this.bodyDiv.appendChild(selectionDiv);
-        
+
         this.clientsField = document.createElement('textarea');
         this.clientsField.rows = 1;
 
         selectionDiv.appendChild(document.createTextNode('Selected IDs: '));
         selectionDiv.appendChild(this.clientsField);
 
-        // The ClientList tab.
-        mainContainer = document.getElementById('clients')
-        
-        this.waitroomControls = node.widgets.append(
-            'WaitRoomControls',
-            mainContainer,
-            {
-                collapsible: true,
-                hidden: true
-            });
-        
-        this.gameControls = node.widgets.append(
-            'GameControls',
-            mainContainer, {
-                collapsible: true,
-                hidden: true
-            });
-
-        this.kicker = node.widgets.append(
-            'Kicker',
-            mainContainer, {
-                collapsible: true,
-                //hidden: true
-            });
-        
-        this.chatter = node.widgets.append(
-            'Chatter',
-            mainContainer, {
-                collapsible: true,
-                hidden: true
-            });
-        
-        this.uicontrols = node.widgets.append(
-            'UIControls',
-            mainContainer, {
-                collapsible: true,
-                hidden: true
-            });
-        
-        this.customMsg = node.widgets.append(
-            'CustomMsg',
-            mainContainer, {
-                collapsible: true,
-                hidden: true
-            });
-        
         this.wall = node.widgets.append(
             'DebugWall',
             document.getElementById('wall-container'), {
@@ -340,6 +293,8 @@
             // Update the contents:
             that.writeRooms(rooms);
             that.updateTitle();
+            // Add all widgets, once the info about rooms has arrived.
+            that.appendWidgets();
         });
 
         node.on('INFO_CLIENTS', function(clients) {
@@ -355,7 +310,7 @@
             room = room || {};
             if (room.type === 'Waiting') {
                 that.waitroomControls.show();
-                
+
             }
             else {
                 if (!that.waitroomControls.isHidden()) {
@@ -382,13 +337,64 @@
         //});
     };
 
+    ClientList.prototype.appendWidgets = function() {
+        var mainContainer, opts;
+        opts = {
+            collapsible: true,
+            hidden: true
+        };
+
+        // The ClientList tab.
+        mainContainer = document.getElementById('clients');
+
+        this.channelList = node.widgets.append(
+            'ChannelList',
+            mainContainer);
+
+        this.roomList = node.widgets.append(
+            'RoomList',
+            mainContainer);
+
+        this.waitroomControls = node.widgets.append(
+            'WaitRoomControls',
+            mainContainer,
+            opts
+           );
+
+        this.gameControls = node.widgets.append(
+            'GameControls',
+            mainContainer,
+            opts
+        );
+
+        this.kicker = node.widgets.append(
+            'Kicker',
+            mainContainer,
+            opts
+        );
+
+        this.chatter = node.widgets.append(
+            'Chatter',
+            mainContainer,
+            opts);
+
+        this.uicontrols = node.widgets.append(
+            'UIControls',
+            mainContainer,
+            opts);
+
+        this.customMsg = node.widgets.append(
+            'CustomMsg',
+            mainContainer,
+            opts);
+    };
+
     ClientList.prototype.writeChannels = function(channels) {
         var chanKey, chanObj;
-        var elem;
+        var elem, oldSelected;
         var that;
-
+        
         that = this;
-
         this.channelTable.clear(true);
 
         // Create a clickable row for each channel:
@@ -398,23 +404,40 @@
 
                 elem = document.createElement('a');
                 elem.className = 'ng_clickable';
+                
                 elem.innerHTML = chanObj.name;
-                elem.onclick = function(o) {
+                elem.onclick = function(o, elem) {
                     return function() {
+                        if (oldSelected) oldSelected.className = 'ng_clickable';
+                        oldSelected = elem;
+                        elem.className = 'ng_clickable bold';
                         that.setChannel(o.name);
                     };
-                }(chanObj);
+                }(chanObj, elem);
 
+                if (chanKey === node.game.channelInUse) {
+                    elem.click();
+                }
+                
                 this.channelTable.addRow(elem);
             }
         }
 
         this.channelTable.parse();
+
+        
+        // Make sure content does not shift when selection is bold,
+        // but only the first time!
+        if (!this.channelTable.table.style.width) {
+            this.channelTable.table.style.width =
+                (this.channelTable.table.offsetWidth + 3) + 'px';
+        }
+       
     };
 
     ClientList.prototype.writeRooms = function(rooms) {
         var roomName, roomObj;
-        var elem, i, len;
+        var elem, oldSelected, i, len;
         var that;
 
         that = this;
@@ -438,16 +461,26 @@
             elem = document.createElement('a');
             elem.className = 'ng_clickable';
             elem.innerHTML = roomObj.name;
-            elem.onclick = (function(o) {
+            elem.onclick = (function(o, elem) {
                 return function() {
+                    if (oldSelected) oldSelected.className = 'ng_clickable';
+                    oldSelected = elem;
+                    elem.className = 'ng_clickable bold';
                     that.setRoom(o.id, true);
                 };
-            })(roomObj);
+            })(roomObj, elem);
 
             this.roomTable.addRow(elem);
         }
 
         this.roomTable.parse();
+        
+        // Make sure content does not shift when selection is bold,
+        // but only the first time!
+        if (!this.roomTable.table.style.width) {
+            this.roomTable.table.style.width =
+                (this.roomTable.table.offsetWidth + 7) + 'px';
+        }
     };
 
     ClientList.prototype.writeClients = (function() {

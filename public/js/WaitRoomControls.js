@@ -111,7 +111,6 @@
             // Store reference in widget.
             w.playBotBtn = playBotBtn;
 
-
             var btnGroupTreatments = document.createElement('div');
             btnGroupTreatments.role = 'group';
             btnGroupTreatments['aria-label'] = 'Select Treatment';
@@ -133,22 +132,23 @@
             var ul = document.createElement('ul');
             ul.className = 'dropdown-menu';
             ul.style = 'text-align: left';
-
-            var conf = [ 'treatment_random', 'treatment_rotate' ];
+            
+            var treatments = [ 'treatment_random', 'treatment_rotate' ];
             
             if (node.game.channelInUse) {
-                conf = conf.concat(node.game.gamesInfo[node.game.channelInUse]);
+                treatments = treatments.concat(
+                    node.game.gamesInfo[node.game.channelInUse].treatmentNames);
             }
             
             var li, a, t, liT1, liT2;
             
             li = document.createElement('li');
-            li.innerHTML = 'Select Treatment';
+            li.innerHTML = 'Game Treatments';
             li.className = 'dropdown-header';
             ul.appendChild(li);
             var i;
-            for (i = 0; i < conf.length; i++) {
-                t = conf[i];
+            for (i = 0; i < treatments.length; i++) {
+                t = treatments[i];
                 li = document.createElement('li');
                 li.id = t;
                 a = document.createElement('a');
@@ -165,7 +165,7 @@
             li.className = 'divider';
             ul.appendChild(li);
             li = document.createElement('li');
-            li.innerHTML = 'Default treatment';
+            li.innerHTML = 'Default treatments';
             li.className = 'dropdown-header';
             ul.appendChild(li);
             ul.appendChild(liT1);

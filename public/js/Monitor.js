@@ -24,7 +24,7 @@ function Monitor(node) {
         var refreshButton, autoRefreshLabel;
         var autoRefresh, autoRefreshInterval;
         var tmpElem;
-        var channelList, roomList, clientList;
+        var clientList;
 
         // ## Variables and methods.
 
@@ -288,11 +288,6 @@ function Monitor(node) {
         tabContent = document.createElement('div');
         tabContent.className = 'tab-content';
         tmpElem.appendChild(tabContent);
-
-        // Channel and room list.
-        tmpElem = this.addTab('channels');
-        channelList = node.widgets.append('ChannelList', tmpElem);
-        roomList = node.widgets.append('RoomList', tmpElem);
 
         // Client list and controls.
         tmpElem = this.addTab('clients', true);

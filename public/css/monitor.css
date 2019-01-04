@@ -176,6 +176,10 @@ table {
   resize: none;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .chat_me {
   font-weight: bold;
 }
