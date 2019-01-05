@@ -1,6 +1,6 @@
 /**
  * # MemoryView widget for nodeGame
- * Copyright(c) 2017 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
  * Shows items stored in the memory database of the logic of each game rooms.
@@ -18,12 +18,12 @@
 
     // ## Meta-data
 
-    MemoryView.version = '0.1.0';
+    MemoryView.version = '0.1.1';
     MemoryView.description = 'Shows items stored in the memory database ' +
         'of the logic of each game room.';
 
     MemoryView.title = 'Memory Database';
-    MemoryView.className = 'memoryView';
+    MemoryView.className = 'memoryview';
 
     // ## Dependencies
     MemoryView.dependencies = {
@@ -71,8 +71,8 @@
         this.header.appendChild(this.downloadAllLink);
         this.header.appendChild(document.createElement('br'));
         this.header.appendChild(document.createTextNode(
-            'Warning! If the total number of items in database is very high, ' +
-                'and you know that items might contain cycles (under normal ' +
+            'Warning! If the total number of items in database is very high ' +
+                'and if items contain cycles (under normal' +
                 'conditions they do not), this operation might affect the ' +
                 'server\'s performance.'
         ));

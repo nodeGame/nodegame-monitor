@@ -1,6 +1,6 @@
 /**
  * # ResultsView widget for nodeGame
- * Copyright(c) 2017 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
  * Shows files available in data/ dir.
@@ -18,11 +18,11 @@
 
     // ## Meta-data
 
-    ResultsView.version = '0.9.0';
+    ResultsView.version = '0.9.1';
     ResultsView.description = 'Displays the results of games in data/ folder.';
 
     ResultsView.title = 'Data Folder';
-    ResultsView.className = 'resultsView';
+    ResultsView.className = 'resultsview';
 
     // ## Dependencies
     ResultsView.dependencies = {
@@ -128,24 +128,29 @@
     ResultsView.prototype.append = function() {
         var b;
         this.bodyDiv.appendChild(this.header);
+        this.lastModifiedSpan = W.add('span', this.header, {
+            style: { 'font-size': '13px' }
+        });
+        this.header.appendChild(document.createElement('br'));
+        
+        b = document.createElement('button');
+        b.innerHTML = 'Refresh';
+        b.className = 'btn-sm';
+        b.onclick = this.refresh;
+        this.header.appendChild(b);
+
         
         this.zipLink = document.createElement('a');
         this.zipLink.setAttribute('target', '_blank');
         this.zipLink.href = this.prefixLink + '*';
-        this.zipLink.innerHTML = '<em>Download all in a ' +
+        this.zipLink.innerHTML = '<em>&nbsp;&nbsp;Download all in a ' +
             'zip archive</em>';
         this.zipLink.style.display = 'none';
 
         this.header.appendChild(this.zipLink);
         this.header.appendChild(document.createElement('br'));
 
-        b = document.createElement('button');
-        b.innerHTML = 'Refresh';
-        b.onclick = this.refresh;
-        this.header.appendChild(b);
-
-        this.lastModifiedSpan = document.createElement('span');
-        this.header.appendChild(this.lastModifiedSpan);
+      
 
         this.bodyDiv.appendChild(document.createElement('br'));
         this.bodyDiv.appendChild(this.table.table);

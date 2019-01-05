@@ -3,11 +3,9 @@
  * *******************
  */
 
-.monitor_tile {
-  height: 300px;
+.monitor_tile .panel-body {
+  height: 260px;
   width: 300px;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .clearfix {
@@ -33,12 +31,20 @@ input, button, select, textarea {
 }
 
 #docker {
-  clear: both;
-  float: right;
   width: 50%;
-  height: 50px;
-  position: absolute;
-  bottom: 0px;
+  height: auto;
+}
+
+#docker .ng_widget {
+  font-size: 11px;
+  margin: 2px;
+}
+#docker .ng_widget .panel-heading {
+  padding: 5px;
+}
+
+#docker .debugwall {
+  width: auto;
 }
 
 table {
@@ -79,7 +85,7 @@ table {
 }
 
 .docked {
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   right: 10px;
   width: 330px;
@@ -108,6 +114,11 @@ table {
 }
 
 /* CustomMsg */
+
+.custommsg .panel-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 .custommsg table tr td:first-child {
   width: 60px;
@@ -257,14 +268,14 @@ ul.nav-tabs {
 
 /* Results View */
 
-.resultsView {
+.resultsview {
   max-width: 500px;
   margin-right: 50px;
 }
 
 /* Memory View */
 
-.memoryView {
+.memoryview {
   max-width: 450px;
 }
 
@@ -299,4 +310,19 @@ table.auth tr td {
   display: inline-block;
   text-align: right;
   font-weight: bold;
+}
+
+
+/* Log Files */
+/* Server View */
+
+.serverview .panel-body,.logfiles .panel-body {
+  min-width: 200px;
+  max-width: 300px;
+}
+
+
+.logfiles .panel-body {
+  max-height: 400px;
+  overflow-y: scroll;
 }
