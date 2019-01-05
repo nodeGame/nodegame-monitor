@@ -1,6 +1,6 @@
 /**
  * # GameDetails widget for nodeGame
- * Copyright(c) 2018 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
  * Shows information about a game's configuration.
@@ -19,7 +19,7 @@
 
     // ## Meta-data
 
-    GameDetails.version = '0.5.1';
+    GameDetails.version = '0.6.0';
     GameDetails.description = 'Displays info about a game\'s configuration.';
 
     GameDetails.title = 'Game Details';
@@ -43,12 +43,12 @@
             'Aliases:',
             'Description:',
             'Treatments:',
-            'Channel:',
-            'Setup:',
-            'Sequence:',
-            'Wait Room:',
-            'Requirements:',
-            'Authentication:',
+            'Client Types:',
+            'Languanges:',
+            // 'Channel:',
+            // 'Setup:',
+            // 'Sequence:',
+            // 'Wait Room:',
             'Levels:',            
         ]);
 
@@ -123,6 +123,7 @@
         var aliases;
         var that;
         var selectedGame;
+        var tmp;
 
         that = this;
         this.detailTable.clear(true);
@@ -183,6 +184,7 @@
                     return function() {
                         that.selectedTreatment = t;
                         that.writeTreatmentInfo();
+                        
                     };
                 })(treatment);
                 treatmentList.appendChild(elem);
@@ -190,7 +192,42 @@
         }
         this.detailTable.addRow([treatmentList]);
 
-        // Channel.
+        // Client Types.
+
+        this.detailTable.addRow(selGame.clientTypes.join(', '));
+        
+        // Languages.
+
+        tmp = (function(selGame) {
+            var l, res;
+            if (J.isEmpty(selGame.languages)) return ' - ';
+            res = ''
+            for (l in selGame.languages) {
+                if (selGame.languages.hasOwnProperty(l)) {
+                    if (res) res += ', ';
+                    res += selGame.languages[l].name + '(' + l + ')';
+                }
+            }
+            return res;
+        })(selGame);
+        
+        this.detailTable.addRow(tmp);
+        
+        // Levels.
+
+        tmp = (function(selGame) {
+            var l, res;
+            if (J.isEmpty(selGame.levels)) return 'main';
+            res = 'main'
+            for (l in selGame.levels) {
+                if (selGame.levels.hasOwnProperty(l)) {
+                    res += ', ' + l;
+                }
+            }
+            return res;
+        })(selGame);
+        
+        this.detailTable.addRow(tmp);
 
         this.detailTable.parse();
     };
