@@ -184,6 +184,8 @@
             if (this.clientTable && this.clientTable.table.parentNode) {
                 this.clientTable.table.parentNode.style.display = 'none';
             }
+            // Clear current selection of clients.
+            this.clearSelectedClients();
         }
         else {
             roomObj = this.availableRooms[roomId];
@@ -249,7 +251,7 @@
 
         this.clientsField = document.createElement('textarea');
         this.clientsField.rows = 1;
-        this.clientsField.placeholder = 'Select a room and ' +
+        this.clientsField.placeholder = 'Choose a room and ' +
             'send commands to selected clients.';
 
         selectionDiv.appendChild(document.createTextNode('Selected IDs: '));
@@ -473,6 +475,9 @@
                 };
             })(roomObj, elem);
 
+            // Needed when the refresh button is pressed.
+            if (roomObj.id === node.game.roomInUse) elem.click();
+            
             this.roomTable.addRow(elem);
         }
 
@@ -570,6 +575,10 @@
         }
     };
 
+    ClientList.prototype.clearSelectedClients = function() {
+        this.clientsField.value = '';
+    };
+    
     ClientList.prototype.updateTitle = function() {
         var ol, li;
 
