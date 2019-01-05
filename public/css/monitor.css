@@ -2,6 +2,13 @@
  * Monitor Default CSS
  * *******************
  */
+.ng_widget {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.panel-heading {
+  font-weight: 500;
+}
 
 .monitor_tile .panel-body {
   height: 260px;
@@ -34,6 +41,7 @@ input, button, select, textarea {
   width: 50%;
   height: auto;
 }
+
 
 #docker .ng_widget {
   font-size: 11px;
@@ -88,7 +96,6 @@ table {
   position: fixed;
   bottom: 0px;
   right: 10px;
-  width: 330px;
   margin-left: 20px;
 }
 
@@ -183,7 +190,7 @@ table {
 
 .chat_chat {
   overflow-y: scroll;
-  height: 200px;
+  height: 150px;
   width: 100%;
   padding: 5px;
 }
