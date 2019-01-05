@@ -260,7 +260,7 @@ ul.nav-tabs {
 /* Game Details */
 
 .details {
-  max-width: 500px;
+  max-width: 100%;
 }
 
 .details td {
@@ -269,8 +269,7 @@ ul.nav-tabs {
 }
 
 .details tr td:first-child {
-  font-weight: bold;
-  text-align: right;
+  font-weight: 600;
 }
 
 /* Results View */

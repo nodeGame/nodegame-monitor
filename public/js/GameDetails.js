@@ -14,8 +14,7 @@
 
     node.widgets.register('GameDetails', GameDetails);
 
-    var J = node.JSUS,
-        Table = node.window.Table;
+    var Table = node.window.Table;
 
     // ## Meta-data
 
@@ -44,19 +43,13 @@
             'Description:',
             'Treatments:',
             'Client Types:',
-            'Languanges:',
-            // 'Channel:',
-            // 'Setup:',
-            // 'Sequence:',
-            // 'Wait Room:',
+            'Languages:',
             'Levels:',            
         ]);
 
         this.gameDetailDiv = document.createElement('div');
-        // J.style(this.gameDetailDiv, {float: 'left'});
         this.gameDetailDiv.appendChild(this.detailTable.table);
-
-        this.gameDetailDiv.appendChild(document.createElement('br'));
+        W.add('br', this.gameDetailDiv);
         
         this.treatmentTable = new Table({
             className: 'table table-striped details',
@@ -235,7 +228,7 @@
     GameDetails.prototype.writeTreatmentInfo = function() {
         var selGame;
         var selTreatment;
-        var prop, keys;
+        var prop, keys, value;
         var i, len;
         var selectedGame;
         selectedGame = node.game.clientList.channelName;
@@ -254,27 +247,23 @@
         // this.treatmentTable.addRow(['name', this.selectedTreatment]);
 
         keys = J.keys(selTreatment);
-        keys.sort(function(a, b) {
-            if (a === 'name') return -1;
-            if (a === 'description') return -1;
-            if (a === 'fullDescription') return -1;
-            if (a.toLowerCase() < b.toLowerCase()) return -1;
-            if (a.toLowerCase() >= b.toLowerCase()) return 1;
-        });
+        keys.sort();
 
+        this.treatmentTable.addRow([ 'Treatment', selTreatment.name ]);
+        this.treatmentTable.addRow([ 'Description', selTreatment.description ]);
+        
         i = -1, len = keys.length;
         for ( ; ++i < len ; ) {
             prop = keys[i];
-            if (prop === 'treatmentName') continue;
-            if (J.isArray(selTreatment[prop])) {
-                this.treatmentTable.addRow([
-                    prop,
-                    selTreatment[prop].join(', ')
-                ]);
+            if (prop === 'treatmentName' || prop === 'description' ||
+                prop === 'name') {
+
+                continue;
             }
-            else {
-                this.treatmentTable.addRow([prop, selTreatment[prop]]);
-            }
+            value = selTreatment[prop];
+            if (J.isArray(value)) value = value.join(', ');
+            
+            this.treatmentTable.addRow([prop, value]);
         }
 
         this.treatmentTable.parse();
