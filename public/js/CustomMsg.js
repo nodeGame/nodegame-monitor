@@ -1,6 +1,6 @@
 /**
  * # CustomMsg widget for nodeGame
- * Copyright(c) 2018 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
  * Manage chats with clients.
@@ -19,7 +19,7 @@
 
     // ## Meta-data
 
-    CustomMsg.version = '0.1.0';
+    CustomMsg.version = '0.2.0';
     CustomMsg.description = 'Sends a custom message';
 
     CustomMsg.title = 'Custom Message';
@@ -191,14 +191,15 @@
         this.bodyDiv.appendChild(this.tableAdvanced.table);
         this.tableAdvanced.table.style.display = 'none';
 
-        W.add('div', this.bodyDiv, {
-            style: { margin: '5px 0 15px 0' }
+        // Containers for buttons..
+        tmpElem = W.add('div', this.bodyDiv, {
+            style: { margin: '10px 0 15px 0' }
         });
         
         // Show a button that expands the table of advanced fields.
-        advButton = W.add('button', this.bodyDiv, {
+        advButton = W.add('button', tmpElem, {
             innerHTML: 'More options',
-            className: 'btn'
+            className: 'btn-sm'
         });
         advButton.onclick = function() {
             var st = that.tableAdvanced.table.style;
@@ -213,7 +214,7 @@
         };
         
         // Show 'Send' button.
-        sendButton = W.add('button', this.bodyDiv, {
+        sendButton = W.add('button', tmpElem, {
             className: 'btn',
             innerHTML: 'Send',
             style: { 'float': 'right' }
