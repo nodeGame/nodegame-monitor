@@ -1,6 +1,6 @@
 /**
  * # Monitor for nodeGame
- * Copyright(c) 2018 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
  * Creates interface with tabs showing the status of game and server
@@ -301,6 +301,10 @@ function Monitor(node) {
         // Auth view.
         tmpElem = this.addTab('auth');
         node.widgets.append('AuthView', tmpElem);
+
+        // Auth view.
+        tmpElem = this.addTab('requirements');
+        node.widgets.append('RequirementsView', tmpElem);
 
         // Results view.
         tmpElem = this.addTab('results');
