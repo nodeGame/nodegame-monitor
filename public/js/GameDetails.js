@@ -249,8 +249,12 @@
         keys = J.keys(selTreatment);
         keys.sort();
 
-        this.treatmentTable.addRow([ 'Treatment', selTreatment.name ]);
-        this.treatmentTable.addRow([ 'Description', selTreatment.description ]);
+        this.treatmentTable.addRow([ { className: 'bold',
+                                       content: 'Treatment'
+                                     }, selTreatment.name ]);
+        this.treatmentTable.addRow([ { className: 'bold',
+                                       content: 'Description',
+                                     }, selTreatment.description ]);
         
         i = -1, len = keys.length;
         for ( ; ++i < len ; ) {

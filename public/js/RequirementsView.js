@@ -1,9 +1,9 @@
 /**
  * # RequirementsView widget for nodeGame
- * Copyright(c) 2018 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
- * Shows files available in data/ dir.
+ * Shows requirements settings
  *
  * www.nodegame.org
  * ---
@@ -22,7 +22,7 @@
     RequirementsView.description = 'Displays the current requirements settings.';
 
     RequirementsView.title = 'Requirements Settings';
-    RequirementsView.className = 'requirementsview';
+    RequirementsView.className = 'reqview';
 
     // ## Dependencies
     RequirementsView.dependencies = {
@@ -31,22 +31,6 @@
     };
 
     function RequirementsView(options) {
-        var that;
-        that = this;
-
-        this.prefixLink = null;
-        this.downloadLinks = [];
-
-        node.once('MONITOR_URI', function(uri) {
-            var i, len, obj;
-            that.prefixLink = uri + 'authsettings/';
-            i = -1, len = that.downloadLinks.length;
-            for ( ; ++i < len ; ) {
-                obj = that.downloadLinks[i];
-                makeLink(that, obj.name, obj.anchor, obj.link);
-            }
-        });
-
         this.table = new W.Table({
             className: 'table table-striped requirements',
             render: { pipeline : function(item) {
@@ -61,92 +45,44 @@
         this.table.parse();
     }
 
-    RequirementsView.prototype.refresh = function() {
-        // TODO: here.
-        return;
-        // Ask server for games:
-        node.socket.send(node.msg.create({
-            target: 'SERVERCOMMAND',
-            text:   'INFO',
-            data: { type: 'AUTH' }
-        }));
-
-    };
-
     RequirementsView.prototype.append = function() {
         this.bodyDiv.appendChild(this.table.table);
-        // Query server:
-        this.refresh();
     };
 
     RequirementsView.prototype.listeners = function() {
         var that;
         that = this;
-
-        // Listen for server reply.
-        node.on.data('INFO_AUTH', function(msg) {
-            console.log(msg.data);
-            that.auth = msg.data;
+        node.on('CHANNEL_SELECTED', function() {
             that.displayData();
         });
     };
-
+    
     RequirementsView.prototype.displayData = function() {
-        var i, t, s, l;
-        s = this.auth.settings;
+        var i, t, s, tmp;
+        // Not ready yet.
+        if (!node.game.gamesInfo) return;
+        s = node.game.gamesInfo[node.game.channelInUse].requirements;
         t = this.table;
         t.clear();
         t.addRow(['enabled',  s.enabled ]);
         if (s.enabled) {
-            t.addRow([ 'mode', s.mode ]);
             for (i in s) {
                 if (s.hasOwnProperty(i)) {
-                    if (i === 'codes') {
-                        if (s.defaultCodes) {
-                            t.addRow([ 'generator', 'default' ]);
-                        }
-                        else {
-                            t.addRow([ 'generator', s[i] ]);
-                        }
+                    if (i === 'browserDetect') {
+                        // TODO: It is not sent by JSON.stringify
+                        // if (s[i].cb) tmp = 'cb(' + typeof s[i].cb + ')';
+                        // if (s[i].parser) {
+                        //     tmp += ', parser(' + typeof s[i].parser + ')';
+                        // }
+                        t.addRow([i, 'on']);
                     }
-                    else if (i === 'outFile' || i === 'inFile') {
-                        l = document.createElement('a');
-                        l.target = '_blank';
-                        makeLink(this, i, l, s[i]);
-                        l.innerHTML = s[i];
-                        t.addRow([ i, l]);
-                    }
-                    else if (i !== 'enabled' && i !== 'mode' &&
-                             i !== 'defaultCodes') {
-
-                        t.addRow([ i, s[i] ]);
+                    else if (i !== 'enabled' && i !== 'requirements') {
+                        t.addRow([i, s[i]]);
                     }
                 }
-            }
-            t.addRow(['Total Player IDs', this.auth.totalPlayerIds]);
-            if (this.auth.claimedIds) {
-                t.addRow(['Claimed IDs', this.auth.claimedIds]);
-            }
+            };
         }
         t.parse();        
     };
-
-    function makeLink(that, name, anchor, file) {
-        if (!that.downloadLinks[name]) {
-            that.downloadLinks[name] = {};
-            that.downloadLinks[name].name = name;
-            that.downloadLinks[name].anchor = anchor;
-            that.downloadLinks[name].file = file;
-        }
-        else {
-            anchor = that.downloadLinks[name].anchor;
-        }
-        if (that.prefixLink) {
-            anchor.href = that.prefixLink + name + '/' + file;
-        }
-        else {
-            anchor.href = '#';
-        }
-    }
 
 })(node);
