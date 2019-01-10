@@ -95,37 +95,35 @@
         t = this.table;
         t.clear();
         t.addRow(['enabled',  s.enabled ]);
-        if (s.enabled) {
-            t.addRow([ 'mode', s.mode ]);
-            for (i in s) {
-                if (s.hasOwnProperty(i)) {
-                    if (i === 'codes') {
-                        if (s.defaultCodes) {
-                            t.addRow([ 'generator', 'default' ]);
-                        }
-                        else {
-                            t.addRow([ 'generator', s[i] ]);
-                        }
+        t.addRow([ 'mode', s.mode ]);
+        for (i in s) {
+            if (s.hasOwnProperty(i)) {
+                if (i === 'codes') {
+                    if (s.defaultCodes) {
+                        t.addRow([ 'generator', 'default' ]);
                     }
-                    else if (i === 'outFile' || i === 'inFile') {
-                        l = document.createElement('a');
-                        l.target = '_blank';
-                        makeLink(this, i, l, s[i]);
-                        l.innerHTML = s[i];
-                        t.addRow([ i, l]);
-                    }
-                    else if (i !== 'enabled' && i !== 'mode' &&
-                             i !== 'defaultCodes') {
-
-                        t.addRow([ i, s[i] ]);
+                    else {
+                        t.addRow([ 'generator', s[i] ]);
                     }
                 }
-            }
-            t.addRow(['Total Player IDs', this.auth.totalPlayerIds]);
-            if (this.auth.claimedIds) {
-                t.addRow(['Claimed IDs', this.auth.claimedIds]);
+                else if (i === 'outFile' || i === 'inFile') {
+                    l = document.createElement('a');
+                    l.target = '_blank';
+                    makeLink(this, i, l, s[i]);
+                    l.innerHTML = s[i];
+                    t.addRow([ i, l]);
+                }
+                else if (i !== 'enabled' && i !== 'mode' &&
+                         i !== 'defaultCodes') {
+
+                    t.addRow([ i, s[i] ]);
+                }
             }
         }
+        t.addRow(['Total Player IDs', this.auth.totalPlayerIds]);
+        if (this.auth.claimedIds) {
+            t.addRow(['Claimed IDs', this.auth.claimedIds]);
+        }        
         t.parse();        
     };
 

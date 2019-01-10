@@ -330,6 +330,10 @@ function Monitor(node) {
         tmpElem = this.addTab('requirements');
         node.widgets.append('RequirementsView', tmpElem);
 
+        // WaitRoom view.
+        tmpElem = this.addTab('waitroom');
+        node.widgets.append('WaitRoomView', tmpElem);
+        
         // Results view.
         tmpElem = this.addTab('results');
         node.widgets.append('ResultsView', tmpElem);
