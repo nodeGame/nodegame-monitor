@@ -68,15 +68,7 @@
         if (s.enabled) {
             for (i in s) {
                 if (s.hasOwnProperty(i)) {
-                    if (i === 'browserDetect') {
-                        // TODO: It is not sent by JSON.stringify
-                        // if (s[i].cb) tmp = 'cb(' + typeof s[i].cb + ')';
-                        // if (s[i].parser) {
-                        //     tmp += ', parser(' + typeof s[i].parser + ')';
-                        // }
-                        t.addRow([i, 'on']);
-                    }
-                    else if (i !== 'enabled' && i !== 'requirements') {
+                    if (i !== 'enabled' && i !== 'requirements') {
                         t.addRow([i, s[i]]);
                     }
                 }

@@ -220,9 +220,33 @@ function Monitor(node) {
 
         // Listen for server reply:
         node.on.data('INFO_GAMES', function(msg) {
-            // Store reference to games data.
-            node.game.gamesInfo = msg.data;
-            node.emit('INFO_GAMES', msg.data);
+            var g, p, v;
+            // Clear games.
+            node.game.gamesInfo = {};
+            // Store games data.
+            for (g in msg.data) {
+                if (msg.data.hasOwnProperty(g)) {
+                    node.game.gamesInfo[g] = {};
+                    for (p in msg.data[g]) {
+                        if (msg.data[g].hasOwnProperty(p)) {
+                            // Functions are skipped by JSON.stringify,
+                            // so server uses J.stringifyAll.
+                            if (p === 'setup' ||
+                                p === 'requirements' ||
+                                p === 'waitroom' ||
+                                p === 'settings') {
+
+                                v = J.parse(msg.data[g][p]);
+                            }
+                            else {
+                                v = msg.data[g][p];
+                            }
+                            node.game.gamesInfo[g][p] = v;
+                        }
+                    }
+                }
+            }
+            node.emit('INFO_GAMES', node.game.gamesInfo);
         });
 
         node.on('SOCKET_DISCONNECT', function() {
