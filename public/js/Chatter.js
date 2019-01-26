@@ -1,6 +1,6 @@
 /**
  * # Chatter widget for nodeGame
- * Copyright(c) 2018 Stefano Balietti
+ * Copyright(c) 2019 Stefano Balietti
  * MIT Licensed
  *
  * Manage chats with clients.
@@ -18,7 +18,7 @@
 
     // ## Meta-data
 
-    Chatter.version = '0.2.0';
+    Chatter.version = '0.2.1';
     Chatter.description = 'Manage chats with the clients.';
 
     Chatter.title = 'Chat';
@@ -234,7 +234,7 @@
 
         // Options.
         this.initialMsg = W.add('textarea', this.bodyDiv, {
-            className: 'initial-chat-msg',
+            className: 'form-control initial-chat-msg',
             placeholder: 'Initial message'
         });
 

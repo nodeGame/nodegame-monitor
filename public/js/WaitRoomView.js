@@ -59,7 +59,6 @@
     
     WaitRoomView.prototype.displayData = function() {
         var i, t, s, tmp;
-        debugger
         // Not ready yet.
         if (!node.game.gamesInfo) return;
         s = node.game.gamesInfo[node.game.channelInUse].waitroom;

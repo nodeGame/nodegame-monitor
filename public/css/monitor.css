@@ -278,7 +278,12 @@ ul.nav-tabs {
 
 .resultsview {
   max-width: 500px;
-  margin-right: 50px;
+  margin-right: 50px;;
+}
+
+.resultsview .panel-body {
+  max-height: 500px;
+  overflow-y: scroll;
 }
 
 /* Memory View */

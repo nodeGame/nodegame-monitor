@@ -70,7 +70,8 @@
             if (field === 'data') {
                 tmpElem = W.get('textarea', {
                     id: this.wid + '_' + field,
-                    tabindex: i+1
+                    tabindex: i+1,
+                    className: 'form-control'
                 });
                 tmpElem.rows = 1;
                 table.add(tmpElem, i, 1);
@@ -82,6 +83,7 @@
                 W.addAttributes(this.actionSel, {
                     tabindex: fields.length+2
                 });
+                this.actionSel.className = 'form-control';
                 table.add(this.actionSel, i, 1);
             }
             else if (field === 'target') {
@@ -89,6 +91,7 @@
                 W.addAttributes(this.targetSel, {
                     tabindex: fields.length+3
                 });
+                this.targetSel.className = 'form-control';
                 table.add(this.targetSel, i, 1);
             }
             else {
@@ -96,6 +99,7 @@
                     id: this.wid + '_' + field,
                     tabindex: i+1,
                     type: 'text',
+                    className: 'form-control'
                 }), i, 1);
             }
 
