@@ -211,6 +211,11 @@ table {
   max-width: 300px;
 }
 
+.chat_inputgroup {
+  display: inline-flex;
+  width: 100%;
+}
+
 .bold {
   font-weight: bold;
 }
