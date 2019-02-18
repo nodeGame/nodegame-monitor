@@ -80,7 +80,7 @@
                 tableCell.appendChild(button);
 
                 button = document.createElement('button');
-                button.className = 'btn';
+                button.className = 'btn btn-secondary';
                 button.innerHTML = 'Off';
                 button.onclick = (function(optName) {
                     return function() {

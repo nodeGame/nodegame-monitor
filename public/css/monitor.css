@@ -196,9 +196,19 @@ table {
 }
 
 .chat_textarea {
-  height: 50px;
-  width: 100%;
   resize: none;
+  width: 100%;  
+}
+
+.chat_textarea_btn {
+  width: 70%;
+  display: inline;
+}
+
+.chat_submit {
+  height: auto;
+  width: 20%;
+  max-width: 300px;
 }
 
 .bold {

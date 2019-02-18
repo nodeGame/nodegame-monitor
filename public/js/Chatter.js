@@ -83,7 +83,7 @@
         that = this;
 
         this.chatButton = W.get('button', {
-            className: 'btn',
+            className: 'btn btn-primary',
             innerHTML: 'Chat'
         });
 
@@ -157,7 +157,7 @@
 
         var btnGroup = document.createElement('div');
         btnGroup.role = 'group';
-        btnGroup['aria-label'] = 'Play Buttons';
+        btnGroup['aria-label'] = 'Chat Buttons';
         btnGroup.className = 'btn-group';
 
         var btnGroupModes = document.createElement('div');
@@ -166,7 +166,7 @@
         btnGroupModes.className = 'btn-group';
 
         var btnMode = document.createElement('button');
-        btnMode.className = 'btn dropdown-toggle';
+        btnMode.className = 'btn btn-secondary dropdown-toggle';
         btnMode['data-toggle'] = 'dropdown';
         btnMode['aria-haspopup'] = 'true';
         btnMode['aria-expanded'] = 'false';

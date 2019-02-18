@@ -219,7 +219,7 @@
         
         // Show 'Send' button.
         sendButton = W.add('button', tmpElem, {
-            className: 'btn',
+            className: 'btn btn-primary',
             innerHTML: 'Send',
             style: { 'float': 'right' }
         });

@@ -39,19 +39,17 @@
         var waitRoomCommandsDiv, dispatchNGamesInput, dispatchGroupSizeInput;
         var treatmentInput;
 
-        
         that = this;
-
 
         // Add buttons to control waiting room (displayed only when needed).
         this.waitroomCommandsDiv = document.createElement('div');
 
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-                    'OPEN', 'Open'));
+            'OPEN', 'Open'));
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-                    'CLOSE', 'Close'));
+            'CLOSE', 'Close'));
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-                    'PLAYWITHBOTS', 'Connects Bots'));
+            'PLAYWITHBOTS', 'Connect Bots'));
 
 
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
@@ -62,7 +60,7 @@
         dispatchNGamesInput = document.createElement('input');
         //dispatchNGamesInput.size = 2;
         dispatchNGamesInput.placeholder = '#Size';
-        
+
         dispatchGroupSizeInput = document.createElement('input');
         //dispatchGroupSizeInput.size = 2;
         dispatchGroupSizeInput.placeholder = '#Groups';
@@ -70,11 +68,11 @@
         treatmentInput = document.createElement('input');
         //treatmentInput.size = 5;
         treatmentInput.placeholder = 'Treatment/s';
-        
+
         this.waitroomCommandsDiv.appendChild(dispatchGroupSizeInput);
         this.waitroomCommandsDiv.appendChild(dispatchGroupSizeInput);
         this.waitroomCommandsDiv.appendChild(treatmentInput);
-        
+
         // Dispatch Button.
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
             'DISPATCH', 'Dispatch', dispatchNGamesInput,
@@ -132,16 +130,16 @@
             var ul = document.createElement('ul');
             ul.className = 'dropdown-menu';
             ul.style = 'text-align: left';
-            
+
             var treatments = [ 'treatment_random', 'treatment_rotate' ];
-            
+
             if (node.game.channelInUse) {
                 treatments = treatments.concat(
                     node.game.gamesInfo[node.game.channelInUse].treatmentNames);
             }
-            
+
             var li, a, t, liT1, liT2;
-            
+
             li = document.createElement('li');
             li.innerHTML = 'Game Treatments';
             li.className = 'dropdown-header';
@@ -158,7 +156,7 @@
                 if (t === 'treatment_rotate') liT1 = li;
                 else if (t === 'treatment_random') liT2 = li;
                 else ul.appendChild(li);
-                
+
             }
             li = document.createElement('li');
             li.role = 'separator';
@@ -170,7 +168,7 @@
             ul.appendChild(li);
             ul.appendChild(liT1);
             ul.appendChild(liT2);
-            
+
             btnGroupTreatments.appendChild(btnTreatment);
             btnGroupTreatments.appendChild(ul);
 
@@ -212,7 +210,7 @@
             w.bodyDiv.appendChild(btnGroup);
 
         })(this);
-        
+
     };
 
     /**
@@ -225,6 +223,9 @@
             button = document.createElement('button');
             button.className = 'btn';
             button.innerHTML = label;
+            if (command === 'OPEN') button.className += ' btn-success';
+            else if (command === 'CLOSE') button.className += ' btn-danger';
+
             button.onclick = function() {
                 var data, value;
                 data = {
