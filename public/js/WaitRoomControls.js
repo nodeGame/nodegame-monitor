@@ -230,7 +230,7 @@
                 var data, value;
                 data = {
                     type: command,
-                    roomId: that.roomId,
+                    roomId: node.game.roomInUse
                 };
                 if (command === 'DISPATCH') {
                     value = J.isInt(inputNGames.value, 1);
