@@ -37,7 +37,7 @@
         var kickBtn;
         var elems, inputGroup, redirectInput;
 
-        str = document.createTextNode('Note! Actions here cannot be undone.');
+        str = document.createTextNode('Actions here cannot be undone.');
         this.bodyDiv.appendChild(str);
         this.bodyDiv.appendChild(document.createElement('br'));
         this.bodyDiv.appendChild(document.createElement('br'));

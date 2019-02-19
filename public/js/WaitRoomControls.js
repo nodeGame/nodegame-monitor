@@ -24,7 +24,7 @@
     WaitRoomControls.title = 'WaitRoom Controls';
     WaitRoomControls.className = 'waitroomcontrols';
 
-    WaitRoomControls.customCbName = 'Custom cb in settings';
+    WaitRoomControls.customCbName = '__Custom cb__';
     
     // ## Dependencies
     WaitRoomControls.dependencies = {
@@ -57,15 +57,15 @@
         // Add buttons to control waiting room (displayed only when needed).
         this.waitroomCommandsDiv = document.createElement('div');
 
-        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-            'OPEN', 'Open'));
-        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-            'CLOSE', 'Close'));
+        this.waitroomCommandsDiv.appendChild(
+            this.getWaitRoomCmdBtn('OPEN', 'Open'));
+        this.waitroomCommandsDiv.appendChild(
+            this.getWaitRoomCmdBtn('CLOSE', 'Close'));
 
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
         
-        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-            'PLAYWITHBOTS', 'Connect Bots'));
+        this.waitroomCommandsDiv.appendChild(
+            this.getWaitRoomCmdBtn('PLAYWITHBOTS', 'Connect Bots'));
 
 
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
@@ -92,7 +92,7 @@
         // this.waitroomCommandsDiv.appendChild(treatmentInput);
 
         // Dispatch Button.
-        //this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
+        //this.waitroomCommandsDiv.appendChild(this.getWaitRoomCmdBtn(
         //     'DISPATCH', 'Dispatch', dispatchNGamesInput,
         //    dispatchGroupSizeInput, treatmentInput));
 
@@ -109,22 +109,26 @@
             btnGroup['aria-label'] = 'Play Buttons';
             btnGroup.className = 'btn-group';
 
-            var dispatchBtn = W.get('input', {
-                className: 'btn btn-secondary',
-                value: 'Dispatch',
-                id: 'bot_btn',
-                type: 'button'
-            });
+           //  var dispatchBtn = W.get('input', {
+           //      className: 'btn btn-secondary',
+           //      value: 'Dispatch',
+           //      id: 'bot_btn',
+           //      type: 'button'
+           //  });
 
-            dispatchBtn.onclick = function() {
-                w.dispatchBtn.value = 'XX';
-                w.dispatchBtn.disabled = true;
-                node.say('PLAYWITHBOT', 'SERVER', w.selectedTreatment);
-                setTimeout(function() {
-                    w.dispatchBtn.value = 'Dispatch XX';
-                    w.dispatchBtn.disabled = false;
-                }, 5000);
-            };
+            var dispatchBtn = w.getWaitRoomCmdBtn('DISPATCH', 'Dispatch now');
+            dispatchBtn.className = 'btn btn-secondary';
+
+            
+            // dispatchBtn.onclick = function() {
+            //     w.dispatchBtn.value = 'XX';
+            //     w.dispatchBtn.disabled = true;
+            //     node.say('PLAYWITHBOT', 'SERVER', w.selectedTreatment);
+            //     setTimeout(function() {
+            //         w.dispatchBtn.value = 'Dispatch XX';
+            //         w.dispatchBtn.disabled = false;
+            //     }, 5000);
+            // };
 
             btnGroup.appendChild(dispatchBtn);
 
@@ -193,7 +197,8 @@
             // w.bodyDiv.appendChild(document.createElement('br'));
 
             var str;
-            str = document.createTextNode('Dispatch current players.');
+            str = document.createTextNode('Won\'t dispatch if not ' +
+                                          'enough players.');
             w.bodyDiv.appendChild(str);
             w.bodyDiv.appendChild(document.createElement('br'));
             w.bodyDiv.appendChild(document.createElement('br'));
@@ -279,7 +284,7 @@
     /**
      * Make a button that sends a given WAITROOMCOMMAND.
      */
-    WaitRoomControls.prototype.createWaitRoomCommandButton =
+    WaitRoomControls.prototype.getWaitRoomCmdBtn =
         function(command, label, inputNGames, inputGroupSize, treatmentInput) {
             var that, button;
             that = this;
@@ -291,12 +296,16 @@
 
             button.onclick = function() {
                 var data, value;
+                button.disabled = true;
+                setTimeout(function() {                    
+                    button.disabled = false;
+                }, 1000);                
+
                 data = {
                     type: command,
                     roomId: node.game.roomInUse
                 };
-
-                if (command === 'DISPATCH') {
+                if (command === 'DISPATCH' && that.selectedTreatment) {
                     // Old code to pass more options to DISPATCH.
                     // value = J.isInt(inputNGames.value, 1);
                     // if (value !== false) data.numberOfGames = value;
