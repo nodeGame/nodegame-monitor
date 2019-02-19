@@ -61,6 +61,9 @@
             'OPEN', 'Open'));
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
             'CLOSE', 'Close'));
+
+        this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
+        
         this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
             'PLAYWITHBOTS', 'Connect Bots'));
 

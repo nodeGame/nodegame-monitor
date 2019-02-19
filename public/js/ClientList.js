@@ -345,6 +345,9 @@
                         that.waitroomControls.refreshTreatments();
                         that.waitroomControls.show();
                     }
+                    else {
+                        that.waitroomControls.hide();
+                    }
                 }
             }
         });

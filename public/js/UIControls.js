@@ -40,7 +40,14 @@
         var buttonTable;
         var tableRow2, tableCell2;
         var buttonTable, tableRow, tableCell;
+        var str;
+        
+        str = document.createTextNode('Modify browser behavior.');
+        this.bodyDiv.appendChild(str);
+        this.bodyDiv.appendChild(document.createElement('br'));
+        this.bodyDiv.appendChild(document.createElement('br'));
 
+        
         // Add a table for buttons:
         buttonTable = document.createElement('table');
 
