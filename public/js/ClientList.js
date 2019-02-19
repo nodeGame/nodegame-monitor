@@ -341,7 +341,8 @@
                 }
                 else {
                     that.gameControls.hide();
-                    if (room.type === 'Waiting') {
+                    if (room.type === 'Waiting') {                        
+                        that.waitroomControls.refreshTreatments();
                         that.waitroomControls.show();
                     }
                 }

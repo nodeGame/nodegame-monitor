@@ -21,7 +21,7 @@
     Kicker.version = '0.1.0';
     Kicker.description = 'Kicks, moves and redirect players';
 
-    Kicker.title = 'Kick and Redirect';
+    Kicker.title = 'Redirect or Kick Out';
     Kicker.className = 'kicker';
 
     // ## Dependencies
@@ -33,34 +33,19 @@
 
     Kicker.prototype.append = function() {
         var that;
+        var str;
         var kickBtn;
         var elems, inputGroup, redirectInput;
+
+        str = document.createTextNode('Note! Actions here cannot be undone.');
+        this.bodyDiv.appendChild(str);
+        this.bodyDiv.appendChild(document.createElement('br'));
+        this.bodyDiv.appendChild(document.createElement('br'));
         
         that = this;
 
-        kickBtn = document.createElement('button');
-        kickBtn.className = 'btn';
-        kickBtn.innerHTML = 'Kick';
-        kickBtn.onclick = (function() {
-            var cl = node.game.clientList;
-            var selectedClients = cl.getSelectedClients();
-            selectedClients.forEach((id) => {
-                if (cl.clientMap[id].clientType === 'bot' ||
-                    cl.clientMap[id].clientType === 'player') {
-                    node.disconnectClient({
-                        id: id,
-                        sid: cl.clientMap[id].sid
-                    });
-                    console.log('Kicked from server: ' + id);
-                }
-            });
-        });
-        this.bodyDiv.appendChild(kickBtn);
-
-        this.bodyDiv.appendChild(document.createElement('hr'));
-
         elems = getInputAndButton(
-            'Full URI or a page within the game',
+            'Full URI or page in game',
             'Redirect',
             function() {
                 var uri, clients;
@@ -80,6 +65,27 @@
         redirectInput = elems[1];
         
         this.bodyDiv.appendChild(inputGroup);
+
+        this.bodyDiv.appendChild(document.createElement('hr'));
+        
+        kickBtn = document.createElement('button');
+        kickBtn.className = 'btn btn-danger';
+        kickBtn.innerHTML = 'Kick Out';
+        kickBtn.onclick = (function() {
+            var cl = node.game.clientList;
+            var selectedClients = cl.getSelectedClients();
+            selectedClients.forEach((id) => {
+                if (cl.clientMap[id].clientType === 'bot' ||
+                    cl.clientMap[id].clientType === 'player') {
+                    node.disconnectClient({
+                        id: id,
+                        sid: cl.clientMap[id].sid
+                    });
+                    console.log('Kicked from server: ' + id);
+                }
+            });
+        });
+        this.bodyDiv.appendChild(kickBtn);
     };
 
 

@@ -18,12 +18,14 @@
 
     // ## Meta-data
 
-    WaitRoomControls.version = '0.2.0';
+    WaitRoomControls.version = '0.3.0';
     WaitRoomControls.description = 'Manages a waiting room';
 
     WaitRoomControls.title = 'WaitRoom Controls';
     WaitRoomControls.className = 'waitroomcontrols';
 
+    WaitRoomControls.customCbName = 'Custom cb in settings';
+    
     // ## Dependencies
     WaitRoomControls.dependencies = {
         JSUS: {}
@@ -31,13 +33,24 @@
 
     function WaitRoomControls(options) {
         this.waitroomCommandsDiv = null;
+
+        // ## The UL element containing the available treatments.
+        this.treatmentsList = null;
+        
+        // ## The INPUT element containing the chosen treatment.
+        this.treatmentChosenBtn = null;
+
+        // ## The name of chosen treatment.
+        this.selectedTreatment = null;        
     }
 
     WaitRoomControls.prototype.append = function() {
         var that;
 
-        var waitRoomCommandsDiv, dispatchNGamesInput, dispatchGroupSizeInput;
-        var treatmentInput;
+        var waitRoomCommandsDiv;
+
+        // var dispatchNGamesInput, dispatchGroupSizeInput;
+        // var treatmentInput;
 
         that = this;
 
@@ -54,30 +67,34 @@
 
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
 
-        //this.waitroomCommandsDiv.appendChild(document.createElement('br'));
+        ////////////////////////////////////////////////////////////////////////
 
+        // This was old code to select how many players to dispatch.
+        
         // Need to create inputs before Dispatch button.
-        dispatchNGamesInput = document.createElement('input');
+        // dispatchNGamesInput = document.createElement('input');
         //dispatchNGamesInput.size = 2;
-        dispatchNGamesInput.placeholder = '#Size';
+        // dispatchNGamesInput.placeholder = '#Size';
 
-        dispatchGroupSizeInput = document.createElement('input');
+        // dispatchGroupSizeInput = document.createElement('input');
         //dispatchGroupSizeInput.size = 2;
-        dispatchGroupSizeInput.placeholder = '#Groups';
+        // dispatchGroupSizeInput.placeholder = '#Groups';
 
-        treatmentInput = document.createElement('input');
+        // treatmentInput = document.createElement('input');
         //treatmentInput.size = 5;
-        treatmentInput.placeholder = 'Treatment/s';
+        // treatmentInput.placeholder = 'Treatment/s';
 
-        this.waitroomCommandsDiv.appendChild(dispatchGroupSizeInput);
-        this.waitroomCommandsDiv.appendChild(dispatchGroupSizeInput);
-        this.waitroomCommandsDiv.appendChild(treatmentInput);
+        // this.waitroomCommandsDiv.appendChild(dispatchGroupSizeInput);
+        // this.waitroomCommandsDiv.appendChild(dispatchGroupSizeInput);
+        // this.waitroomCommandsDiv.appendChild(treatmentInput);
 
         // Dispatch Button.
-        this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
-            'DISPATCH', 'Dispatch', dispatchNGamesInput,
-            dispatchGroupSizeInput, treatmentInput));
+        //this.waitroomCommandsDiv.appendChild(this.createWaitRoomCommandButton(
+        //     'DISPATCH', 'Dispatch', dispatchNGamesInput,
+        //    dispatchGroupSizeInput, treatmentInput));
 
+        ////////////////////////////////////////////////////////////////////////
+        
         // Append.
         this.bodyDiv.appendChild(this.waitroomCommandsDiv);
 
@@ -89,86 +106,49 @@
             btnGroup['aria-label'] = 'Play Buttons';
             btnGroup.className = 'btn-group';
 
-            var playBotBtn = document.createElement('input');
-            playBotBtn.className = 'btn btn-secondary btn';
-            playBotBtn.value = 'Dispatch XX';
-            playBotBtn.id = 'bot_btn';
-            playBotBtn.type = 'button';
-            playBotBtn.onclick = function() {
-                w.playBotBtn.value = 'XX';
-                w.playBotBtn.disabled = true;
+            var dispatchBtn = W.get('input', {
+                className: 'btn btn-secondary',
+                value: 'Dispatch',
+                id: 'bot_btn',
+                type: 'button'
+            });
+
+            dispatchBtn.onclick = function() {
+                w.dispatchBtn.value = 'XX';
+                w.dispatchBtn.disabled = true;
                 node.say('PLAYWITHBOT', 'SERVER', w.selectedTreatment);
                 setTimeout(function() {
-                    w.playBotBtn.value = 'Dispatch XX';
-                    w.playBotBtn.disabled = false;
+                    w.dispatchBtn.value = 'Dispatch XX';
+                    w.dispatchBtn.disabled = false;
                 }, 5000);
             };
 
-            btnGroup.appendChild(playBotBtn);
+            btnGroup.appendChild(dispatchBtn);
 
             // Store reference in widget.
-            w.playBotBtn = playBotBtn;
+            w.dispatchBtn = dispatchBtn;
 
             var btnGroupTreatments = document.createElement('div');
             btnGroupTreatments.role = 'group';
-            btnGroupTreatments['aria-label'] = 'Select Treatment';
+            btnGroupTreatments['aria-label'] = 'Select Treatment Group';
             btnGroupTreatments.className = 'btn-group';
 
+            // Here we create the Button holding the treatment.
             var btnTreatment = document.createElement('button');
             btnTreatment.className = 'btn btn-default btn ' +
                 'dropdown-toggle';
             btnTreatment['data-toggle'] = 'dropdown';
             btnTreatment['aria-haspopup'] = 'true';
             btnTreatment['aria-expanded'] = 'false';
-            btnTreatment.innerHTML = 'Treatment';
-
-            var span = document.createElement('span');
-            span.className = 'caret';
-
-            btnTreatment.appendChild(span);
-
-            var ul = document.createElement('ul');
+            btnTreatment.innerHTML = 'Select Treatment';
+            w.treatmentChosenBtn = btnTreatment;
+                        
+            // Here the create the UL of treatments.
+            // It will be populated when a waiting room is selected.
+            var ul = w.treatmentsList = document.createElement('ul');
             ul.className = 'dropdown-menu';
-            ul.style = 'text-align: left';
-
-            var treatments = [ 'treatment_random', 'treatment_rotate' ];
-
-            if (node.game.channelInUse) {
-                treatments = treatments.concat(
-                    node.game.gamesInfo[node.game.channelInUse].treatmentNames);
-            }
-
-            var li, a, t, liT1, liT2;
-
-            li = document.createElement('li');
-            li.innerHTML = 'Game Treatments';
-            li.className = 'dropdown-header';
-            ul.appendChild(li);
-            var i;
-            for (i = 0; i < treatments.length; i++) {
-                t = treatments[i];
-                li = document.createElement('li');
-                li.id = t;
-                a = document.createElement('a');
-                a.href = '#';
-                a.innerHTML = '<strong>' + t + '</strong>';
-                li.appendChild(a);
-                if (t === 'treatment_rotate') liT1 = li;
-                else if (t === 'treatment_random') liT2 = li;
-                else ul.appendChild(li);
-
-            }
-            li = document.createElement('li');
-            li.role = 'separator';
-            li.className = 'divider';
-            ul.appendChild(li);
-            li = document.createElement('li');
-            li.innerHTML = 'Default treatments';
-            li.className = 'dropdown-header';
-            ul.appendChild(li);
-            ul.appendChild(liT1);
-            ul.appendChild(liT2);
-
+            ul.style = 'text-align: left';            
+            
             btnGroupTreatments.appendChild(btnTreatment);
             btnGroupTreatments.appendChild(ul);
 
@@ -180,39 +160,119 @@
             var toggled = false;
             btnTreatment.onclick = function() {
                 if (toggled) {
-                    ul.style = 'display: none';
+                    ul.style.display = 'none';
                     toggled = false;
                 }
                 else {
-                    ul.style = 'display: block; text-align: left';
+                    ul.style.display = 'block';
                     toggled = true;
                 }
             };
 
             ul.onclick = function(eventData) {
                 var t;
-                ul.style = 'display: none';
-                t = eventData.target.parentNode.id;
-                if (!t) t = eventData.target.parentNode.parentNode.id;
-                console.log(eventData.target.parentNode);
-                console.log(t);
-                btnTreatment.innerHTML = t + ' ';
-                btnTreatment.appendChild(span);
-                w.selectedTreatment = t;
+                t = eventData.target;
+                // When '' is hidden by bootstrap class.
+                ul.style.display = '';
                 toggled = false;
+                t = t.parentNode.id;
+                // Clicked on description?
+                if (!t) t = eventData.target.parentNode.parentNode.id;
+                // Nothing relevant clicked (e.g., header).
+                if (!t) return;
+                w.setTreatment(t);
             };
 
             // Store Reference in widget.
             // w.treatmentBtn = btnTreatment;
 
             // Append button group.
-            w.bodyDiv.appendChild(document.createElement('br'));
-            w.bodyDiv.appendChild(btnGroup);
+            // w.bodyDiv.appendChild(document.createElement('br'));
 
+            var str;
+            str = document.createTextNode('Dispatch current players.');
+            w.bodyDiv.appendChild(str);
+            w.bodyDiv.appendChild(document.createElement('br'));
+            w.bodyDiv.appendChild(document.createElement('br'));
+            
+            w.bodyDiv.appendChild(btnGroup);
+            
         })(this);
 
     };
 
+    WaitRoomControls.prototype.setTreatment = function(t) {
+        var span = document.createElement('span');
+        span.className = 'caret';
+        this.treatmentChosenBtn.innerHTML = t + ' ';
+        this.treatmentChosenBtn.appendChild(span);
+        // Don't set the custom cb.
+        if (t !== WaitRoomControls.customCbName) this.selectedTreatment = t;
+    };
+
+    WaitRoomControls.prototype.refreshTreatments = function() {
+        var treatments, ul;
+        var li, a, t, liT1, liT2;
+        var i, chosenTreatment;
+        
+        ul = this.treatmentsList;
+
+        // Clear the list.
+        ul.innerHTML = '';
+        
+        treatments = [ 'treatment_random', 'treatment_rotate' ];
+
+        if (node.game.channelInUse) {
+            // Reusing t.
+            t = node.game.gamesInfo[node.game.channelInUse];
+
+            if (t.treatmentNames) {                            
+                treatments = treatments.concat(t.treatmentNames);
+            }            
+            
+            chosenTreatment = t.waitroom.CHOSEN_TREATMENT;
+            if ('function' === typeof chosenTreatment) {
+                chosenTreatment = WaitRoomControls.customCbName;
+                treatments.push(chosenTreatment);
+            }
+            
+        }
+
+        // Make custom 
+        li = document.createElement('li');
+        li.innerHTML = 'Game Treatments';
+        li.className = 'dropdown-header';
+        ul.appendChild(li);
+        
+        for (i = 0; i < treatments.length; i++) {
+            t = treatments[i];
+            li = document.createElement('li');
+            li.id = t;
+            a = document.createElement('a');
+            a.href = '#';
+            a.innerHTML = '<strong>' + t + '</strong>';
+            li.appendChild(a);
+            if (t === 'treatment_rotate') liT1 = li;
+            else if (t === 'treatment_random') liT2 = li;
+            else ul.appendChild(li);
+            
+            // Set chosen treatment.
+            if (li.id === chosenTreatment) {             
+                this.setTreatment(t);
+            }
+        }
+        li = document.createElement('li');
+        li.role = 'separator';
+        li.className = 'divider';
+        ul.appendChild(li);
+        li = document.createElement('li');
+        li.innerHTML = 'Default treatments';
+        li.className = 'dropdown-header';
+        ul.appendChild(li);
+        ul.appendChild(liT1);
+        ul.appendChild(liT2);        
+    };
+    
     /**
      * Make a button that sends a given WAITROOMCOMMAND.
      */
@@ -232,15 +292,18 @@
                     type: command,
                     roomId: node.game.roomInUse
                 };
+
                 if (command === 'DISPATCH') {
-                    value = J.isInt(inputNGames.value, 1);
-                    if (value !== false) data.numberOfGames = value;
-                    value = J.isInt(inputGroupSize.value, 1);
-                    if (value !== false) data.groupSize = value;
-                    value = treatmentInput.value;
-                    if (value && value.trim() !== '') {
-                        data.chosenTreatment = value;
-                    }
+                    // Old code to pass more options to DISPATCH.
+                    // value = J.isInt(inputNGames.value, 1);
+                    // if (value !== false) data.numberOfGames = value;
+                    // value = J.isInt(inputGroupSize.value, 1);
+                    // if (value !== false) data.groupSize = value;
+                    // value = treatmentInput.value;
+                    // if (value && value.trim() !== '') {
+                    //     data.chosenTreatment = value;
+                    // }
+                    data.chosenTreatment = that.selectedTreatment;
                 }
                 node.socket.send(node.msg.create({
                     target: 'SERVERCOMMAND',
