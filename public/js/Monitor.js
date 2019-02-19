@@ -356,9 +356,9 @@ function Monitor(node) {
             type: 'SocketIo',
             reconnection: false
         },
-        events: {
-            dumpEvents: true
-        },
+        // events: {
+        //     dumpEvents: true
+        // },
         metadata: {
             name: 'Monitor Screen',
             description: 'No Description',

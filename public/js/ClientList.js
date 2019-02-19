@@ -322,25 +322,41 @@
 
         node.on('ROOM_SELECTED', function(room) {
             room = room || {};
-            if (room.type === 'Waiting') {
-                that.waitroomControls.show();
-
+            that.customMsg.show();
+            if (room.type === 'Garage') {                
+                that.chatter.hide();
+                that.kicker.hide();
+                that.uicontrols.hide();
+                that.gameControls.hide();
+                that.waitroomControls.hide();
             }
             else {
-                if (!that.waitroomControls.isHidden()) {
-                    that.waitroomControls.hide();
-                }
-                that.gameControls.show();
                 that.chatter.show();
+                that.kicker.show();
                 that.uicontrols.show();
-                that.customMsg.show();
+
+                if (room.type === 'Game') {                    
+                    that.waitroomControls.hide();
+                    that.gameControls.show();
+                }
+                else {
+                    that.gameControls.hide();
+                    if (room.type === 'Waiting') {
+                        that.waitroomControls.show();
+                    }
+                }
             }
         });
 
         // Listen for events from ChannelList saying to switch channels:
-        //node.on('CHANNEL_SELECTED', function(channel) {
-        //    that.setChannel(channel);
-        //});
+        node.on('CHANNEL_SELECTED', function(channel) {
+            that.chatter.hide();
+            that.kicker.hide();
+            that.uicontrols.hide();
+            that.gameControls.hide();
+            that.waitroomControls.hide();
+            that.customMsg.hide();
+        });
 
         // Listen for events from RoomList saying to switch rooms:
         //node.on('USEROOM', function(roomInfo) {
@@ -374,19 +390,8 @@
             opts
         );
 
-        this.kicker = node.widgets.append(
-            'Kicker',
-            mainContainer,
-            opts
-        );
-
         this.chatter = node.widgets.append(
             'Chatter',
-            mainContainer,
-            opts);
-
-        this.uicontrols = node.widgets.append(
-            'UIControls',
             mainContainer,
             opts);
 
@@ -394,6 +399,17 @@
             'CustomMsg',
             mainContainer,
             opts);
+        
+        this.uicontrols = node.widgets.append(
+            'UIControls',
+            mainContainer,
+            opts);
+
+        this.kicker = node.widgets.append(
+            'Kicker',
+            mainContainer,
+            opts
+        );
     };
 
     ClientList.prototype.writeChannels = function(channels) {
@@ -477,7 +493,7 @@
 
             // Needed when the refresh button is pressed.
             if (roomObj.id === node.game.roomInUse) elem.click();
-            
+
             this.roomTable.addRow(elem);
         }
 
@@ -578,7 +594,7 @@
     ClientList.prototype.clearSelectedClients = function() {
         this.clientsField.value = '';
     };
-    
+
     ClientList.prototype.updateTitle = function() {
         var ol, li;
 
