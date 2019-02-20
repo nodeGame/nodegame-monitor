@@ -244,37 +244,22 @@
         tableCell.appendChild(this.clientTable.table);
 
         // Add client selection field:
-        selectionDiv = document.createElement('div');
-        selectionDiv.id = "selectionDiv";
+        selectionDiv = W.add('div', this.bodyDiv, {
+            id: 'selectionDiv',
+            innerHTML: 'Selected IDs: '
+        });            
 
-        this.bodyDiv.appendChild(selectionDiv);
-
-        this.clientsField = document.createElement('textarea');
-        this.clientsField.rows = 1;
-        this.clientsField.placeholder = 'Choose a room and ' +
-            'send commands to selected clients.';
-
-        selectionDiv.appendChild(document.createTextNode('Selected IDs: '));
-        selectionDiv.appendChild(this.clientsField);
+        this.clientsField = W.add('textarea', selectionDiv, {
+            rows: 1,
+            placeholder: 'Choose a room and send commands to selected clients.',
+            className: 'form-control',
+        });
 
         this.wall = node.widgets.append(
             'DebugWall',
             document.getElementById('wall-container'), {
                 collapsible: true
             });
-//
-//         // Add bot-start button:
-//         button = document.createElement('button');
-//         button.innerHTML = 'Start bot';
-//         button.className = 'btn';
-//         button.onclick = function() {
-//             node.socket.send(node.msg.create({
-//                 target: 'SERVERCOMMAND',
-//                 text:   'STARTBOT'
-//             }));
-//         };
-//         commandPanelBody.appendChild(button);
-
 
         this.channelTable.parse();
 

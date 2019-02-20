@@ -81,7 +81,16 @@
     Chatter.prototype.append = function() {
         var that, label;
         that = this;
+        
+        // Initial msg.
+        this.initialMsg = W.add('textarea', this.bodyDiv, {
+            className: 'form-control initial-chat-msg',
+            placeholder: 'Initial message (optional)'
+        });
 
+        this.bodyDiv.appendChild(document.createElement('br'));
+
+        // Buttons.
         this.chatButton = W.get('button', {
             className: 'btn btn-primary',
             innerHTML: 'Chat'
@@ -233,19 +242,13 @@
         W.add('hr', this.bodyDiv);
 
         // Options.
-        this.initialMsg = W.add('textarea', this.bodyDiv, {
-            className: 'form-control initial-chat-msg',
-            placeholder: 'Initial message'
-        });
-
-        this.bodyDiv.appendChild(document.createElement('br'));
 
         label = W.get('label');
         this.eraseInitialMsg = W.add('input', label, {
             type: 'checkbox',
             className: 'monitor-checkbox'
         });
-        label.appendChild(document.createTextNode(' Erase msg'));
+        label.appendChild(document.createTextNode(' Erase initial msg'));
         this.bodyDiv.appendChild(label);
 
         this.bodyDiv.appendChild(document.createElement('br'));
