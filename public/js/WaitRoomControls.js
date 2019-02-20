@@ -18,7 +18,7 @@
 
     // ## Meta-data
 
-    WaitRoomControls.version = '0.3.0';
+    WaitRoomControls.version = '0.3.1';
     WaitRoomControls.description = 'Manages a waiting room';
 
     WaitRoomControls.title = 'WaitRoom Controls';
