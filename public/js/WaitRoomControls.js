@@ -24,7 +24,7 @@
     WaitRoomControls.title = 'WaitRoom Controls';
     WaitRoomControls.className = 'waitroomcontrols';
 
-    WaitRoomControls.customCbName = '__Custom cb__';
+    WaitRoomControls.customCbName = '_custom cb_';
     
     // ## Dependencies
     WaitRoomControls.dependencies = {
@@ -109,26 +109,8 @@
             btnGroup['aria-label'] = 'Play Buttons';
             btnGroup.className = 'btn-group';
 
-           //  var dispatchBtn = W.get('input', {
-           //      className: 'btn btn-secondary',
-           //      value: 'Dispatch',
-           //      id: 'bot_btn',
-           //      type: 'button'
-           //  });
-
             var dispatchBtn = w.getWaitRoomCmdBtn('DISPATCH', 'Dispatch now');
             dispatchBtn.className = 'btn btn-secondary';
-
-            
-            // dispatchBtn.onclick = function() {
-            //     w.dispatchBtn.value = 'XX';
-            //     w.dispatchBtn.disabled = true;
-            //     node.say('PLAYWITHBOT', 'SERVER', w.selectedTreatment);
-            //     setTimeout(function() {
-            //         w.dispatchBtn.value = 'Dispatch XX';
-            //         w.dispatchBtn.disabled = false;
-            //     }, 5000);
-            // };
 
             btnGroup.appendChild(dispatchBtn);
 
@@ -220,7 +202,7 @@
 
     WaitRoomControls.prototype.refreshTreatments = function() {
         var treatments, ul;
-        var li, a, t, liT1, liT2;
+        var li, a, t, liT1, liT2, liT3;
         var i, chosenTreatment;
         
         ul = this.treatmentsList;
@@ -262,6 +244,7 @@
             li.appendChild(a);
             if (t === 'treatment_rotate') liT1 = li;
             else if (t === 'treatment_random') liT2 = li;
+            else if (t === WaitRoomControls.customCbName) liT3 = li;
             else ul.appendChild(li);
             
             // Set chosen treatment.
@@ -274,11 +257,12 @@
         li.className = 'divider';
         ul.appendChild(li);
         li = document.createElement('li');
-        li.innerHTML = 'Default treatments';
+        li.innerHTML = 'Callbacks';
         li.className = 'dropdown-header';
         ul.appendChild(li);
         ul.appendChild(liT1);
-        ul.appendChild(liT2);        
+        ul.appendChild(liT2);
+        ul.appendChild(liT3);
     };
     
     /**
