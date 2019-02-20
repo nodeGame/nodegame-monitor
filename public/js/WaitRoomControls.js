@@ -25,7 +25,7 @@
     WaitRoomControls.className = 'waitroomcontrols';
 
     WaitRoomControls.customCbName = '_custom cb_';
-    
+
     // ## Dependencies
     WaitRoomControls.dependencies = {
         JSUS: {}
@@ -36,12 +36,12 @@
 
         // ## The UL element containing the available treatments.
         this.treatmentsList = null;
-        
+
         // ## The INPUT element containing the chosen treatment.
         this.treatmentChosenBtn = null;
 
         // ## The name of chosen treatment.
-        this.selectedTreatment = null;        
+        this.selectedTreatment = null;
     }
 
     WaitRoomControls.prototype.append = function() {
@@ -63,7 +63,7 @@
             this.getWaitRoomCmdBtn('CLOSE', 'Close'));
 
         this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
-        
+
         this.waitroomCommandsDiv.appendChild(
             this.getWaitRoomCmdBtn('PLAYWITHBOTS', 'Connect Bots'));
 
@@ -73,7 +73,7 @@
         ////////////////////////////////////////////////////////////////////////
 
         // This was old code to select how many players to dispatch.
-        
+
         // Need to create inputs before Dispatch button.
         // dispatchNGamesInput = document.createElement('input');
         //dispatchNGamesInput.size = 2;
@@ -97,7 +97,7 @@
         //    dispatchGroupSizeInput, treatmentInput));
 
         ////////////////////////////////////////////////////////////////////////
-        
+
         // Append.
         this.bodyDiv.appendChild(this.waitroomCommandsDiv);
 
@@ -131,13 +131,13 @@
             btnTreatment['aria-expanded'] = 'false';
             btnTreatment.innerHTML = 'Select Treatment';
             w.treatmentChosenBtn = btnTreatment;
-                        
+
             // Here the create the UL of treatments.
             // It will be populated when a waiting room is selected.
             var ul = w.treatmentsList = document.createElement('ul');
             ul.className = 'dropdown-menu';
-            ul.style = 'text-align: left';            
-            
+            ul.style = 'text-align: left';
+
             btnGroupTreatments.appendChild(btnTreatment);
             btnGroupTreatments.appendChild(ul);
 
@@ -184,9 +184,9 @@
             w.bodyDiv.appendChild(str);
             w.bodyDiv.appendChild(document.createElement('br'));
             w.bodyDiv.appendChild(document.createElement('br'));
-            
+
             w.bodyDiv.appendChild(btnGroup);
-            
+
         })(this);
 
     };
@@ -204,36 +204,36 @@
         var treatments, ul;
         var li, a, t, liT1, liT2, liT3;
         var i, chosenTreatment;
-        
+
         ul = this.treatmentsList;
 
         // Clear the list.
         ul.innerHTML = '';
-        
+
         treatments = [ 'treatment_random', 'treatment_rotate' ];
 
         if (node.game.channelInUse) {
             // Reusing t.
             t = node.game.gamesInfo[node.game.channelInUse];
 
-            if (t.treatmentNames) {                            
+            if (t.treatmentNames) {
                 treatments = treatments.concat(t.treatmentNames);
-            }            
-            
+            }
+
             chosenTreatment = t.waitroom.CHOSEN_TREATMENT;
             if ('function' === typeof chosenTreatment) {
                 chosenTreatment = WaitRoomControls.customCbName;
                 treatments.push(chosenTreatment);
             }
-            
+
         }
 
-        // Make custom 
+        // Make custom
         li = document.createElement('li');
         li.innerHTML = 'Game Treatments';
         li.className = 'dropdown-header';
         ul.appendChild(li);
-        
+
         for (i = 0; i < treatments.length; i++) {
             t = treatments[i];
             li = document.createElement('li');
@@ -246,9 +246,9 @@
             else if (t === 'treatment_random') liT2 = li;
             else if (t === WaitRoomControls.customCbName) liT3 = li;
             else ul.appendChild(li);
-            
+
             // Set chosen treatment.
-            if (li.id === chosenTreatment) {             
+            if (li.id === chosenTreatment) {
                 this.setTreatment(t);
             }
         }
@@ -264,7 +264,7 @@
         ul.appendChild(liT2);
         ul.appendChild(liT3);
     };
-    
+
     /**
      * Make a button that sends a given WAITROOMCOMMAND.
      */
@@ -281,9 +281,9 @@
             button.onclick = function() {
                 var data, value;
                 button.disabled = true;
-                setTimeout(function() {                    
+                setTimeout(function() {
                     button.disabled = false;
-                }, 1000);                
+                }, 1000);
 
                 data = {
                     type: command,
