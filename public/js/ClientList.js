@@ -71,7 +71,7 @@
                 content.that.checkboxes[content.id] = elem;
                 break;
 
-            case 3:
+            case 2:
                 // Type
                 if (content.thisMonitor) {
                     elem = document.createElement('em');
@@ -311,6 +311,7 @@
 
         node.on('INFO_CLIENTS', function(clients) {
             // Update the contents:
+
             that.roomLogicId = clients.logic ? clients.logic.id : null;
             that.writeClients(clients);
 
