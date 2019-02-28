@@ -185,13 +185,17 @@ table {
 /* Chat */
 
 .chat {
-  min-width: 300px;
-  max-width: 800px;
+  width: 350px;
+  height: 425px;
+}
+
+.chat .panel-body {
+  width: 100%;
 }
 
 .chat_chat {
   overflow-y: scroll;
-  height: 150px;
+  height: 280px;
   width: 100%;
   padding: 5px;
 }
@@ -221,22 +225,34 @@ table {
   font-weight: bold;
 }
 
+.chat_time,
+.chat_msg_collapse,
 .chat_msg_outgoing,
 .chat_msg_incoming {
   clear: both;
-  float: right;
-  padding: 5px;
+  float: left;
+  padding: 5px 10px;
   margin: 1px;
 }
 
 .chat_msg_outgoing {
   float: right;
+  max-width: 150px;
   background: #f2f7ff;
+  border-radius: 5px;
 }
 
 .chat_msg_incoming {
-  float: left;
+  max-width: 150px;
   background: #f4f4f4;
+  border-radius: 5px;
+}
+
+.chat_time,
+.chat_msg_quit,
+.chat_msg_collapse {
+  font-style: oblique;
+  font-size: 13px;
 }
 
 /* UIControls */

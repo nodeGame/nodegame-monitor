@@ -22,7 +22,7 @@
     Chatter.description = 'Manage chats with the clients.';
 
     Chatter.title = 'Chat';
-    Chatter.className = 'chat';
+    Chatter.className = 'chatter';
 
     // ## Dependencies
     Chatter.dependencies = {
@@ -78,8 +78,10 @@
         // List of open chats.
         this.chats = {};
 
+        // TODO.
         // List of visible chats.
-        this.visibleChats = [];
+        // this.visibleChats = [];
+
     }
 
     Chatter.prototype.append = function() {
@@ -150,7 +152,7 @@
                     closable: true,
                     docked: true
                 };
-                if (msg) opts.initialMsg = { id: 'Initial Msg', msg: msg };
+                if (msg) opts.initialMsg = { msg: msg };
 
                 // Register the new Chat widget.
                 that.chats[title] =
