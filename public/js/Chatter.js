@@ -18,7 +18,7 @@
 
     // ## Meta-data
 
-    Chatter.version = '0.2.1';
+    Chatter.version = '0.3.0';
     Chatter.description = 'Manage chats with the clients.';
 
     Chatter.title = 'Chat';
@@ -34,7 +34,8 @@
         {
             id: 'one_to_many',
             name: 'One to many',
-            description: 'Broadcast to all participants, replies visible to you only'
+            description: 'Broadcast to all participants, replies ' +
+                'visible to you only'
         },
         {
             id: 'many_to_many',
@@ -76,6 +77,9 @@
 
         // List of open chats.
         this.chats = {};
+
+        // List of visible chats.
+        this.visibleChats = [];
     }
 
     Chatter.prototype.append = function() {
@@ -99,8 +103,10 @@
         // On click.
         this.chatButton.onclick = function() {
             var cl, chatEvent, allClients, msg, opts;
-            var title, selectedClients, recipients;
+            var title, visibleTitle, selectedClients, recipients;
 
+            // Collect recipients list.
+            
             cl = node.game.clientList;
             selectedClients = cl.getSelectedClients();
             if (!selectedClients.length) return;
@@ -115,14 +121,22 @@
                 }
             });
             if (!recipients.length) return;
-            // TODO: title here can clash with duplicates. Makes a diplay title.
+            
+            // Creates a diplay title (might be same as title).
             if (title.length > 40) {
-                title = cl.roomName + ': ' + recipients.length + ' participant';
-                if (recipients.length > 1) title += 's';
+                visibleTitle = cl.roomName + ': ' + recipients.length +
+                    ' participant';
+                if (recipients.length > 1) visibleTitle += 's';
+            }
+            else {
+                visibleTitle = title;
             }
 
+            // Read msg.
             msg = that.readInitialMsg();
 
+            // Open a chat window locally.
+            
             if (that.chats[title]) {
                 chatEvent = that.chats[title].chatEvent;
             }
@@ -131,12 +145,14 @@
                 opts = {
                     chatEvent: chatEvent,
                     participants: recipients,
-                    title: title,
+                    title: visibleTitle,
                     collapsible: true,
                     closable: true,
                     docked: true
                 };
                 if (msg) opts.initialMsg = { id: 'Initial Msg', msg: msg };
+
+                // Register the new Chat widget.
                 that.chats[title] =
                     node.widgets.append('Chat', that.bodyDiv, opts);
                 that.chats[title].on('destroyed', function() {
@@ -144,6 +160,8 @@
                 });
             }
 
+            // Open a chat window remotely.
+            
             opts = {
                 chatEvent: chatEvent,
                 participants: [

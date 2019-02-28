@@ -221,8 +221,22 @@ table {
   font-weight: bold;
 }
 
-.chat_me {
-  font-weight: bold;
+.chat_msg_outgoing,
+.chat_msg_incoming {
+  clear: both;
+  float: right;
+  padding: 5px;
+  margin: 1px;
+}
+
+.chat_msg_outgoing {
+  float: right;
+  background: #f2f7ff;
+}
+
+.chat_msg_incoming {
+  float: left;
+  background: #f4f4f4;
 }
 
 /* UIControls */
