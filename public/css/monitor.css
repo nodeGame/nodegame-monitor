@@ -276,10 +276,15 @@ ul.nav-tabs {
 /* Game Details */
 
 .details {
-  max-width: 100%;
+  font-size: 16px;
 }
 
-.details td {
+.details-treatment {
+  max-width: 100%;
+  margin-top: 20px;
+}
+
+.details-treatment td {
   padding: 10px;
   vertical-align: text-top;
 }

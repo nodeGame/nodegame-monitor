@@ -36,7 +36,7 @@
 
         that = this;
 
-        this.detailTable = new Table();
+        this.detailTable = new Table({ className: 'viewer details' });
         this.detailTable.setLeft([
             'Name:',
             'Aliases:',
@@ -52,7 +52,7 @@
         W.add('br', this.gameDetailDiv);
         
         this.treatmentTable = new Table({
-            className: 'table table-striped details',
+            className: 'table table-striped viewer details-treatment',
             render: { pipeline : function(item) {
                 if (item.y % 2 === 0) {
                     return document.createTextNode(item.content + ': ');
@@ -249,6 +249,8 @@
         keys = J.keys(selTreatment);
         keys.sort();
 
+        // Now everything is bold, but we keep this in case we want
+        // to modify it in the future.
         this.treatmentTable.addRow([ { className: 'bold',
                                        content: 'Treatment'
                                      }, selTreatment.name ]);
