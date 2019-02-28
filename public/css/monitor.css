@@ -308,6 +308,18 @@ ul.nav-tabs {
   max-width: 450px;
 }
 
+/* For generic settings-viewers: auth, waitroom, requirements, etc. */
+
+table.viewer tr td:first-child,
+table.viewer tr th:first-child {
+  font-weight: bold;
+  text-align: right;
+}
+
+table.viewer tr td {
+  font-weight: normal;
+}
+
 /* Auth Details */
 
 table.auth {
@@ -318,16 +330,6 @@ table.auth {
 table.auth td {
   padding: 10px;
   vertical-align: text-top;
-}
-
-table.auth tr td:first-child,
-table.auth tr th:first-child {
-  font-weight: bold;
-  text-align: right;
-}
-
-table.auth tr td {
-  font-weight: normal;
 }
 
 .version-module-list {

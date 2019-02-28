@@ -48,7 +48,7 @@
         });
 
         this.table = new W.Table({
-            className: 'table table-striped auth',
+            className: 'table table-striped viewer',
             render: { pipeline : function(item) {
                 if (item.y % 2 === 0) {
                     return document.createTextNode(item.content + ': ');
