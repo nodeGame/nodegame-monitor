@@ -43,7 +43,6 @@ input, button, select, textarea {
   height: auto;
 }
 
-
 #docker .ng_widget {
   font-size: 11px;
   margin: 2px;
@@ -84,22 +83,6 @@ table {
   width: 100%;
 }
 
-
-/* Also in nodegame.css */
-.panel-collapse-link {
-  display: inline-block;
-  float: right;
-  cursor: pointer;
-  margin-left: 8px;
-}
-
-.docked {
-  position: fixed;
-  bottom: 0px;
-  right: 10px;
-  margin-left: 20px;
-}
-
 .monitor-checkbox {
   margin-left: 5px;
   vertical-align: text-top;
@@ -109,10 +92,27 @@ table {
   margin-left: 5px;
 }
 
+/* Also in nodegame.css */
+.panel-collapse-link {
+  display: inline-block;
+  float: right;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+/* Also in nodegame.css */
+.docked {
+  position: fixed;
+  bottom: 0px;
+  right: 10px;
+  margin-left: 20px;
+}
+
 /* ***************
  * Monitor widgets
  * ***************
  */
+
 
 /* GameControls */
 
@@ -184,13 +184,11 @@ table {
 
 /* Chat */
 
-.chat {
-  width: 350px;
-  height: 425px;
-}
+/* .chat {} */
 
 .chat .panel-body {
-  width: 100%;
+  width: 330px;
+  height: 380px;
 }
 
 .chat_chat {

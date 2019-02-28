@@ -21,7 +21,7 @@
     Chatter.version = '0.3.0';
     Chatter.description = 'Manage chats with the clients.';
 
-    Chatter.title = 'Chat';
+    Chatter.title = 'Start a Chat';
     Chatter.className = 'chatter';
 
     // ## Dependencies
@@ -105,7 +105,7 @@
         // On click.
         this.chatButton.onclick = function() {
             var cl, chatEvent, allClients, msg, opts;
-            var title, visibleTitle, selectedClients, recipients;
+            var title, visibleTitle, selectedClients, recipients, w;
 
             // Collect recipients list.
             
@@ -155,11 +155,17 @@
                 if (msg) opts.initialMsg = { msg: msg };
 
                 // Register the new Chat widget.
-                that.chats[title] =
-                    node.widgets.append('Chat', that.bodyDiv, opts);
-                that.chats[title].on('destroyed', function() {
+                w = node.widgets.append('Chat', that.bodyDiv, opts);
+                w.on('destroyed', function() {
                     that.chats[title] = null;
                 });
+                w.on('collapsed', function() {
+                    // J.removeClass(w.panelDiv, 'docked');
+                });
+                w.on('uncollapsed', function() {
+                    // w.panelDiv.className += ' docked';
+                });
+                that.chats[title] = w;
             }
 
             // Open a chat window remotely.
