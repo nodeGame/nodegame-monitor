@@ -1,3 +1,4 @@
+
 /* *******************
  * Monitor Default CSS
  * *******************
@@ -184,7 +185,7 @@ table {
 /* Chat */
 
 .chat {
-  /* min-width: 500px; */
+  min-width: 300px;
   max-width: 800px;
 }
 

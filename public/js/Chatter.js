@@ -115,6 +115,7 @@
                 }
             });
             if (!recipients.length) return;
+            // TODO: title here can clash with duplicates. Makes a diplay title.
             if (title.length > 40) {
                 title = cl.roomName + ': ' + recipients.length + ' participant';
                 if (recipients.length > 1) title += 's';
@@ -138,6 +139,9 @@
                 if (msg) opts.initialMsg = { id: 'Initial Msg', msg: msg };
                 that.chats[title] =
                     node.widgets.append('Chat', that.bodyDiv, opts);
+                that.chats[title].on('destroyed', function() {
+                    that.chats[title] = null;
+                });
             }
 
             opts = {
