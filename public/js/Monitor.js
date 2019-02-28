@@ -322,6 +322,10 @@ function Monitor(node) {
         tmpElem = this.addTab('settings');
         node.widgets.append('GameDetails', tmpElem);
 
+        // WaitRoom view.
+        tmpElem = this.addTab('waitroom');
+        node.widgets.append('WaitRoomView', tmpElem);
+
         // Auth view.
         tmpElem = this.addTab('auth');
         node.widgets.append('AuthView', tmpElem);
@@ -330,10 +334,6 @@ function Monitor(node) {
         tmpElem = this.addTab('requirements');
         node.widgets.append('RequirementsView', tmpElem);
 
-        // WaitRoom view.
-        tmpElem = this.addTab('waitroom');
-        node.widgets.append('WaitRoomView', tmpElem);
-        
         // Results view.
         tmpElem = this.addTab('results');
         node.widgets.append('ResultsView', tmpElem);

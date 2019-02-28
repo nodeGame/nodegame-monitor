@@ -32,8 +32,15 @@
     };
 
     function WaitRoomControls(options) {
+        // ## The execution mode of the waiting room
+        this.execMode = null;
+        
+        // ## Div with Open/Close.
         this.waitroomCommandsDiv = null;
 
+        // ## Div with dispatch now.
+        this.dispatchNowDiv = null;
+        
         // ## The UL element containing the available treatments.
         this.treatmentsList = null;
 
@@ -46,8 +53,6 @@
 
     WaitRoomControls.prototype.append = function() {
         var that;
-
-        var waitRoomCommandsDiv;
 
         // var dispatchNGamesInput, dispatchGroupSizeInput;
         // var treatmentInput;
@@ -66,9 +71,6 @@
 
         this.waitroomCommandsDiv.appendChild(
             this.getWaitRoomCmdBtn('PLAYWITHBOTS', 'Connect Bots'));
-
-
-        this.waitroomCommandsDiv.appendChild(document.createElement('hr'));
 
         ////////////////////////////////////////////////////////////////////////
 
@@ -104,6 +106,10 @@
 
         // Closure to create button group.
         (function(w) {
+            // Store reference dispatchNowDiv.
+            w.dispatchNowDiv = W.add('div', w.bodyDiv);            
+            w.dispatchNowDiv.appendChild(document.createElement('hr'));
+
             var btnGroup = document.createElement('div');
             btnGroup.role = 'group';
             btnGroup['aria-label'] = 'Play Buttons';
@@ -116,7 +122,7 @@
 
             // Store reference in widget.
             w.dispatchBtn = dispatchBtn;
-
+            
             var btnGroupTreatments = document.createElement('div');
             btnGroupTreatments.role = 'group';
             btnGroupTreatments['aria-label'] = 'Select Treatment Group';
@@ -131,7 +137,7 @@
             btnTreatment['aria-expanded'] = 'false';
             btnTreatment.innerHTML = 'Select Treatment';
             w.treatmentChosenBtn = btnTreatment;
-
+            
             // Here the create the UL of treatments.
             // It will be populated when a waiting room is selected.
             var ul = w.treatmentsList = document.createElement('ul');
@@ -172,20 +178,14 @@
                 w.setTreatment(t);
             };
 
-            // Store Reference in widget.
-            // w.treatmentBtn = btnTreatment;
-
-            // Append button group.
-            // w.bodyDiv.appendChild(document.createElement('br'));
-
             var str;
-            str = document.createTextNode('Won\'t dispatch if not ' +
+            str = document.createTextNode('Dipatch may fail if not ' +
                                           'enough players.');
-            w.bodyDiv.appendChild(str);
-            w.bodyDiv.appendChild(document.createElement('br'));
-            w.bodyDiv.appendChild(document.createElement('br'));
+            w.dispatchNowDiv.appendChild(str);
+            w.dispatchNowDiv.appendChild(document.createElement('br'));
+            w.dispatchNowDiv.appendChild(document.createElement('br'));
 
-            w.bodyDiv.appendChild(btnGroup);
+            w.dispatchNowDiv.appendChild(btnGroup);
 
         })(this);
 
@@ -216,6 +216,20 @@
             // Reusing t.
             t = node.game.gamesInfo[node.game.channelInUse];
 
+            // Storing the wait room execution mode.
+            this.execMode = t.waitroom.EXECUTION_MODE;
+
+            // Hide Dispatch Now for mode 'WAIT_FOR_N_PLAYERS',
+            // only Connects Bots should be used.
+            if (this.execMode === 'WAIT_FOR_N_PLAYERS') {
+                
+                this.dispatchNowDiv.style.display = 'none';
+            }
+            else {
+                this.dispatchNowDiv.style.display = '';
+            }
+            
+            
             if (t.treatmentNames) {
                 treatments = treatments.concat(t.treatmentNames);
             }
@@ -300,6 +314,11 @@
                     //     data.chosenTreatment = value;
                     // }
                     data.chosenTreatment = that.selectedTreatment;
+                }
+                if (command === 'PLAYWITHBOTS' &&
+                    that.execMode !== 'WAIT_FOR_N_PLAYERS') {
+                    
+                    data.justConnect = true;
                 }
                 node.socket.send(node.msg.create({
                     target: 'SERVERCOMMAND',
