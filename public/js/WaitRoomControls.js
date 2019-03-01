@@ -276,7 +276,7 @@
         ul.appendChild(li);
         ul.appendChild(liT1);
         ul.appendChild(liT2);
-        ul.appendChild(liT3);
+        if (liT3) ul.appendChild(liT3);
     };
 
     /**
