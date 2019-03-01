@@ -108,6 +108,15 @@ table {
   margin-left: 20px;
 }
 
+
+/* Also in nodegame.css */
+.docked-left {
+  position: fixed;
+  bottom: 0px;
+  left: 10px;
+  margin-right: 20px;
+}
+
 /* ***************
  * Monitor widgets
  * ***************
@@ -223,8 +232,7 @@ table {
   font-weight: bold;
 }
 
-.chat_time,
-.chat_msg_collapse,
+.chat_msg_event,
 .chat_msg_outgoing,
 .chat_msg_incoming {
   clear: both;
@@ -246,9 +254,7 @@ table {
   border-radius: 5px;
 }
 
-.chat_time,
-.chat_msg_quit,
-.chat_msg_collapse {
+.chat_msg_event {
   font-style: oblique;
   font-size: 13px;
 }

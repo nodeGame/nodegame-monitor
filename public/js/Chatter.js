@@ -125,7 +125,7 @@
             if (!recipients.length) return;
             
             // Creates a diplay title (might be same as title).
-            if (title.length > 40) {
+            if (title.length > 35) {
                 visibleTitle = cl.roomName + ': ' + recipients.length +
                     ' participant';
                 if (recipients.length > 1) visibleTitle += 's';
@@ -150,20 +150,16 @@
                     title: visibleTitle,
                     collapsible: true,
                     closable: true,
-                    docked: true
+                    docked: true,
+                    printNames: visibleTitle !== title,
+                    printStartTime: true
                 };
                 if (msg) opts.initialMsg = { msg: msg };
 
                 // Register the new Chat widget.
-                w = node.widgets.append('Chat', that.bodyDiv, opts);
+                w = node.widgets.append('Chat', document.body, opts);
                 w.on('destroyed', function() {
                     that.chats[title] = null;
-                });
-                w.on('collapsed', function() {
-                    // J.removeClass(w.panelDiv, 'docked');
-                });
-                w.on('uncollapsed', function() {
-                    // w.panelDiv.className += ' docked';
                 });
                 that.chats[title] = w;
             }
@@ -182,7 +178,8 @@
                 collapsible: true,
                 closable: true,
                 docked: true,
-                title: 'Chat with Monitor'
+                title: 'Chat with Monitor',
+                printStartTime: true
             };
             // Add initialMsg.
             if (msg) opts.initialMsg = { id: node.game.channelInUse, msg: msg };
