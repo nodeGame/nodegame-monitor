@@ -212,10 +212,8 @@
             var l, res;
             if (J.isEmpty(selGame.levels)) return 'main';
             res = 'main'
-            for (l in selGame.levels) {
-                if (selGame.levels.hasOwnProperty(l)) {
-                    res += ', ' + l;
-                }
+            for (l = 0 ; l < selGame.levels.length ; l++) {
+                res += ', ' + selGame.levels[l];
             }
             return res;
         })(selGame);
@@ -257,7 +255,7 @@
         this.treatmentTable.addRow([ { className: 'bold',
                                        content: 'Description',
                                      }, selTreatment.description ]);
-        
+
         i = -1, len = keys.length;
         for ( ; ++i < len ; ) {
             prop = keys[i];
@@ -267,9 +265,25 @@
                 continue;
             }
             value = selTreatment[prop];
-            if (J.isArray(value)) value = value.join(', ');
-            
-            this.treatmentTable.addRow([prop, value]);
+
+            // Stupid Table thinks we are adding multiple elements
+            // when adding an array as value. We do the manual adding.
+            if (J.isArray(value)) {
+                this.treatmentTable.add(
+                    prop,
+                    this.treatmentTable.getNextPointer('x'),
+                    0
+                );
+                this.treatmentTable.add(
+                    value,
+                    this.treatmentTable.getCurrPointer('x'),
+                    this.treatmentTable.getCurrPointer('y')
+                );
+            }
+            else {
+                this.treatmentTable.addRow([prop, value]);
+            }
+            // if (prop === 'tutorial') debugger
         }
 
         this.treatmentTable.parse();
