@@ -286,7 +286,7 @@
         });
 
         node.on('INFO_ROOMS', function(rooms) {
-            // Update the contents:
+            // Update the contents.
             that.writeRooms(rooms.rooms);
 
             // Update selection info.
@@ -295,13 +295,16 @@
         });
 
         node.on('INFO_CLIENTS', function(clients) {
-            // Update the contents:
-
+            var t;
+            
+            // Update the contents.
             that.roomLogicId = clients.logic ? clients.logic.id : null;
             that.writeClients(clients);
 
+            
             // Update selection info.
-            that.selectionInfo = makeRoomTitle(clients);
+            t = that.availableRooms[node.game.roomInUse].treatmentName;
+            that.selectionInfo = makeRoomTitle(clients, t);
 
             that.updateTitle();
         });
@@ -708,7 +711,7 @@
         return s;
     }
 
-    function makeRoomTitle(clients) {
+    function makeRoomTitle(clients, treatmentName) {
         var s;
         s = '';
         if (clients.nClients > 0) {
@@ -722,6 +725,7 @@
                 if (clients.nAdmins > 1) s += 's';
             }
         }
+        if (treatmentName) s += ' &nbsp;:&nbsp; ' + treatmentName;
         return s;
     }
 
