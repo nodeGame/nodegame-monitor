@@ -18,7 +18,7 @@
 
     // ## Meta-data
 
-    GameControls.version = '0.2.0';
+    GameControls.version = '0.3.0';
     GameControls.description = 'Sends game-related messages to clients';
 
     GameControls.title = 'Game Controls';
@@ -29,7 +29,19 @@
         JSUS: {}
     };
 
-    function GameControls() {}
+    function GameControls() {
+        // Current game room.
+        this.room = null;
+
+        // The selector for stage.step.
+        this.selectStage = null;
+
+        // The input where the stage.step are translated numerically.
+        this.input = null;
+
+        // The submit button.
+        this.setBtn = null;
+    }
 
     GameControls.prototype.append = function() {
         var that;
@@ -77,10 +89,14 @@
         
         btnDiv.appendChild(label);        
         btnDiv.appendChild(document.createElement('hr'));
-
+        
+        this.selectStage = W.add('select', this.bodyDiv);
+        
         // Add StateBar.
-        var stageBar = getInputAndButton(
-            'Change stage to', 'Set',
+        createInputAndButton(
+            this,
+            'Change stage to',
+            'Set',
             function(stageField) {
                 
                 var to, stage;
@@ -93,11 +109,25 @@
                     node.err('Invalid stage, not sent: ' + e);
                 }
             });
+        
 
-        this.bodyDiv.appendChild(stageBar);
+
+        this.selectStage.onchange = function() {
+            var opt;
+            // TODO: check can I use selectedOptions ?
+            opt = this.selectedOptions[0];
+            if (opt && opt.value !== '-1') that.input.value = opt.value;
+        };
+
     };
 
-
+    GameControls.prototype.setRoom = function(room) {
+        if (this.room && (this.room.id === room.id)) return;
+        this.room = room;
+        populateSelectStage(this.selectStage, room.sequence);
+    };
+ 
+    
     // Helper functions.
 
     /**
@@ -136,37 +166,31 @@
         return button;
     };
 
-    function appendStateBar(root) {
-        var div;
-        var sendButton, stageField;
-
-        div = document.createElement('div');
-        root.appendChild(div);
-
-        div.appendChild(document.createTextNode('Change stage to: '));
-        stageField = W.get('input', { type: 'text' });
-        div.appendChild(stageField);
-
-        sendButton = W.add('button', div);
-        sendButton.className = 'btn';
-        sendButton.innerHTML = 'Send';
-
-        cl = node.game.clientList;
-        sendButton.onclick = function(stageField) {
-            var to, stage;
-            to = node.game.clientList.getSelectedClients();
-            try {
-                stage = new node.GameStage(stageField.value);
-                node.remoteCommand('goto_step', to, stage);
+    function populateSelectStage(select, seq) {
+        var i, j, value, text, ss, opt;
+        // Clear.
+        select.innerHTML = '';
+        // Select from list option.
+        opt = document.createElement('option');
+        opt.text = '- Select from list or type below -';
+        opt.value = -1;
+        select.appendChild(opt);
+        // Sequence.
+        for ( i = 0 ; i < seq.length ; i++) {
+            value = (i+1);
+            text = seq[i].id;
+            for ( j = 0 ; j < seq[i].steps.length ; j++) {
+                opt = document.createElement('option');
+                ss = seq[i].steps.length === 1;
+                opt.value = ss ? value : value + '.' + (j+1);
+                opt.text = ss ? text : text + '.' + seq[i].steps[j];
+                select.appendChild(opt);
             }
-            catch (e) {
-                node.err('Invalid stage, not sent: ' + e);
-            }
-        };
+        }
     };
 
 
-    function getInputAndButton(placeHolder, text, onclick) {
+    function createInputAndButton(w, placeHolder, text, onclick) {
         var inputGroup = document.createElement('div');
         inputGroup.className = 'input-group';
 
@@ -192,7 +216,13 @@
         tmp.appendChild(button);
         inputGroup.appendChild(tmp);
 
-        return inputGroup;
+        // Store references.
+        w.input = myInput;
+        w.setBtn = button;
+
+        // Append.
+
+        w.bodyDiv.appendChild(inputGroup);
     }
 
 })(node);

@@ -323,6 +323,7 @@
 
                 if (room.type === 'Game') {                    
                     that.waitroomControls.hide();
+                    that.gameControls.setRoom(room);
                     that.gameControls.show();
                 }
                 else {

@@ -348,7 +348,7 @@ function Monitor(node) {
         this.refresh();
 
     });
-
+    
     // Return configuration.
 
     return {
