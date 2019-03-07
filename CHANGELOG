@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 5.0.0
+- Reorganization of the interface: removed channels view, added waitroom, requirements views, server views.
+- Chatter widget added to control new chats with players
+- Client list shows total number of connected clients and treatment name
+- Several CSS improvements
+- Performance improvements, removed unnecessary messages with server
+
 ## 4.1.0
 - Added Redirect Bar in Commands.
 - Added Kick Button (just disconnect).
@@ -13,7 +20,7 @@
 - ClientList improved.
 - Kick button.
 - Connect Bots button.
-	
+
 ## 3.5.4
 - Added Auth View.
 
