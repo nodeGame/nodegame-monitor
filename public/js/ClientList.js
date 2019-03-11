@@ -696,7 +696,7 @@
                 if (chanInfo.nDisconnPlayers > 0) {
                     s += '(+' + chanInfo.nDisconnPlayers + ')';
                 }
-                s += ' players';
+                s += ' player';
                 if (chanInfo.nConnPlayers > 1) s += 's';
             }
             if (chanInfo.nConnAdmins > 0) {
