@@ -115,7 +115,7 @@
     delete s.TEXTS;
     delete s.SOUND;
 
-    var combinedSettings = { ...s, ...mySettings };
+    var combinedSettings = mergeObjects(s, mySettings);
 
     console.log("WAITROOM S: " + JSON.stringify(s));
     console.log("MY SETTINGS: " + JSON.stringify(mySettings));
@@ -242,6 +242,20 @@
 
   //check if object is empty or not (utility function)
   function isEmptyObject(obj) {
-    return !Object.keys(obj).length;
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
+  function mergeObjects(obj1, obj2) {
+    var obj3 = {};
+    for (var attrname in obj1) {
+      obj3[attrname] = obj1[attrname];
+    }
+    for (var attrname in obj2) {
+      obj3[attrname] = obj2[attrname];
+    }
+    return obj3;
   }
 })(node);
