@@ -175,22 +175,32 @@
             //SAVE IN A OBJECT AS STATED
 
             //waitroom s settings
-            if (
-              currentContent == "GROUP_SIZE" ||
-              currentContent == "ALLOW_PLAY_WITH_BOTS"
-            ) {
-              changes["s"][currentContent] = currentValue;
-            }
-            //mySettings
-            else {
+            if (currentContent == "GROUP_SIZE") {
+              changes["s"][currentContent] = parseInt(currentValue);
+              changes["s"]["POOL_SIZE"] = parseInt(currentValue);
+            } else if (currentContent == "ALLOW_PLAY_WITH_BOTS") {
+              changes["s"][currentContent] = currentValue == "true";
+            } else if (currentContent == "REPEAT") {
+              changes["mySettings"][currentContent] = parseInt(currentValue);
+            } else if (currentContent == "IMG_DIR") {
+              changes["mySettings"][currentContent] = currentValue;
+            } else if (currentContent == "N_OF_NEIGHBORS") {
+              changes["mySettings"][currentContent] = parseInt(currentValue);
+            } else if (currentContent == "MALE_NAMES_FILE") {
+              changes["mySettings"][currentContent] = currentValue;
+            } else if (currentContent == "FEMALE_NAMES_FILE") {
               changes["mySettings"][currentContent] = currentValue;
             }
+            //mySettings
+
             //update original table if any of the inputs is not empty
             originalTable[x + 1].value = currentValue;
           }
 
           currentSetting.disabled = true;
         }
+
+        console.log("CHANGES: " + JSON.stringify(changes));
 
         //send changes in waitingroom
         if (!isEmptyObject(changes.s)) {
@@ -199,7 +209,7 @@
               target: "SERVERCOMMAND",
               text: "UPDATE_SETTINGS",
               data: {
-                type: "waitingroom", // or requirements or settings, etc.
+                type: "waitroom", // or requirements or settings, etc.
                 update: changes.s
               }
             })
