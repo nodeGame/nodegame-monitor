@@ -126,6 +126,8 @@
         (repeat = W.gid("REPEAT")),
         (imageDir = W.gid("IMG_DIR")),
         (nOfNeighbors = W.gid("N_OF_NEIGHBORS")),
+        (userDataFolder = W.gid("USER_DATA_FOLDER")),
+        (botDataFolder = W.gid("BOT_DATA_FOLDER")),
         (maleNamesPath = W.gid("MALE_NAMES_FILE")),
         (femaleNamesPath = W.gid("FEMALE_NAMES_FILE")),
         (group_size = W.gid("GROUP_SIZE")),
@@ -189,6 +191,10 @@
             } else if (currentContent == "MALE_NAMES_FILE") {
               changes["mySettings"][currentContent] = currentValue;
             } else if (currentContent == "FEMALE_NAMES_FILE") {
+              changes["mySettings"][currentContent] = currentValue;
+            } else if (currentContent == "USER_DATA_FOLDER") {
+              changes["mySettings"][currentContent] = currentValue;
+            } else if (currentContent == "BOT_DATA_FOLDER") {
               changes["mySettings"][currentContent] = currentValue;
             }
             //mySettings
