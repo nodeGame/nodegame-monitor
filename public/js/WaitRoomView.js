@@ -216,9 +216,9 @@
               text: "UPDATE_SETTINGS",
               data: {
                 type: "waitroom", // or requirements or settings, etc.
-                update: changes.s
-              },
-              levels: true
+                update: changes.s,
+                levels: true
+              }
             })
           );
         }
@@ -231,9 +231,9 @@
               text: "UPDATE_SETTINGS",
               data: {
                 type: "settings", // or requirements or settings, etc.
-                update: changes.mySettings
-              },
-              levels: true
+                update: changes.mySettings,
+                levels: true
+              }
             })
           );
         }
