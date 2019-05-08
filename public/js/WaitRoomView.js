@@ -217,7 +217,8 @@
               data: {
                 type: "waitroom", // or requirements or settings, etc.
                 update: changes.s
-              }
+              },
+              levels: true
             })
           );
         }
@@ -231,7 +232,8 @@
               data: {
                 type: "settings", // or requirements or settings, etc.
                 update: changes.mySettings
-              }
+              },
+              levels: true
             })
           );
         }
