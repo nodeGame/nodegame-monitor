@@ -145,6 +145,7 @@
             else {
                 chatEvent = 'CHAT_' + Math.floor(Math.random() * 10000000);
                 opts = {
+                    panel: true, // Otherwise chat background is transparent.
                     chatEvent: chatEvent,
                     participants: recipients,
                     title: visibleTitle,
