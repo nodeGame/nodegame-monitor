@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 5.0.1
+- Fixed transparent background chats.
+
 ## 5.0.0
 - Reorganization of the interface: removed channels view, added waitroom, requirements views, server views.
 - Chatter widget added to control new chats with players
