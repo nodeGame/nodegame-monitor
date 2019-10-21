@@ -168,6 +168,7 @@
             // Open a chat window remotely.
             
             opts = {
+                panel: true, // Otherwise chat is not well formatted.
                 chatEvent: chatEvent,
                 participants: [
                     {
