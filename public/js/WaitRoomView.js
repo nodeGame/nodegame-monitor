@@ -28,7 +28,7 @@
     WaitRoomView.dependencies = {
         JSUS: {},
         Table: {}
-    };    
+    };
 
     function WaitRoomView(options) {
         var that = this;
@@ -38,27 +38,46 @@
 
         // Contains current values to compare changes.
         var orig = this.originalTable = {};
-        
+
         this.table = new W.Table({
             className: "table table-striped viewer",
             id: "settingsTable",
             render: {
                 pipeline: function(item) {
-                    var res;
+                    var res, txt, br;
 
                     // This is the header.
                     if ('undefined' === typeof item.x) return;
 
                     // x = 0 y = 0 first row first column.
                     // x = 0 y = 1 first row second column.
-                    
+
                     if (item.y % 2 === 0) {
-                        res = document.createTextNode(item.content + ": ");
+                        res = document.createElement('span');
+                        res.innerHTML = item.content + ": ";
+                        // res.title = "123";
+                        // res.style.cursor = 'help';
                     }
                     else {
-                        debugger
                         res = document.createElement("input");
-                        res.value = item.content;
+                        if ('object' === typeof item.content) {
+                            // br = '<br class="viewer_br" />';
+                            // txt = ''
+                            // for (key in item.content) {
+                            //     if (item.content.hasOwnProperty(key)) {
+                            //         txt += (key + ': ' +
+                            //                 item.content[key] + br);
+                            //     }
+                            // }
+                            // // If at least one property.
+                            // if (txt) txt = '{' + br + txt + br + '}';
+                            // else txt = '{}';
+                            txt = JSON.stringify(item.content);
+                            res.value = txt;
+                        }
+                        else {
+                            res.value = item.content;
+                        }
                         res.disabled = true;
                         res.id = getId(item.id);
                         // res.style.background = 'white';
@@ -68,7 +87,7 @@
             }
         });
 
-        
+
         this.table.setHeader(["Setting", "Value"]);
 
         // Creates table.table.
@@ -81,43 +100,103 @@
         edit.style['float'] = 'right';
         // Disabled until data is received.
         edit.disabled = true;
-        
-        edit.onclick = function() {
-            var key, changes, input;
 
-            debugger
-            
+        edit.onclick = function() {
+            var key, changes, input, info, value, err, oldValue, changed;
+
             if (edit.innerHTML === "Save") {
-                edit.innerHTML = "Edit";
+                err = [];
                 changes = {};
+                info = node.game.gamesInfo[node.game.channelInUse].waitroom;
+
                 for (key in orig) {
                     if (orig.hasOwnProperty(key)) {
                         input = document.getElementById(getId(key));
 
+                        oldValue = orig[key];
+                        value = input.value;
+                        changed = false;
+
+                        // Check type. Only same type allowed for now.
+                        if ('number' === typeof oldValue) {
+                            value = J.isNumber(value);
+                            if (value === false) err.push(key);
+                            if (value !== oldValue) changed = true;
+                        }
+                        else if ('string' === typeof oldValue) {
+                            if (value !== oldValue) changed = true;
+                        }
+                        else if ('object' === typeof oldValue) {
+                            try {
+                                value = JSON.parse(value);
+                                if (!J.equals(oldValue, value)) changed = true;
+                            }
+                            catch(e) {
+                                err.push(key);
+                            };
+
+                        }
+                        else if ('function' === typeof oldValue) {
+                            if (oldValue.toString() !== value) changed = true;
+                            if (changed) {
+                                try {
+                                    value = J.eval(value);
+                                }
+                                catch(e) {
+                                    err.push(key);
+                                }
+                            }
+                        }
+                        if (changed) changes[key] = value;
+                    }
+                }
+
+                // We first validate everything, then update.
+                if (err.length) {
+                    alert('Invalid updates: ' + err.join(', '));
+                    return;
+                }
+
+                // No errors (but also maybe no changes).
+                edit.innerHTML = "Edit";
+                
+                // console.log(changes);
+                
+                // Update visuals and local info.
+                for (key in orig) {
+                    if (orig.hasOwnProperty(key)) {
+
+                        input = document.getElementById(getId(key));
                         input.disabled = true;
-                        if (input.value !== orig[key]) {
-                            // Update original value, keep reference to changes.
-                            orig[key] = changes[key] = input.value;
+
+                        if (changes.hasOwnProperty(key)) {
+
+                            // Update original value.
+                            orig[key] = changes[key];
+
+                            // Used by monitor.
+                            info[key] = changes[key];
                         }
                     }
                 }
 
-                // Send changes in waitingroom.
+                // Send to server any change.
                 if (!J.isEmpty(changes)) {
+
                     node.socket.send(
                         node.msg.create({
                             target: "SERVERCOMMAND",
                             text: "UPDATE_SETTINGS",
                             data: {
-                                type: "waitroom", // or requirements or settings, etc.
+                                // or requirements or settings, etc.
+                                type: "waitroom",
                                 update: changes,
                                 levels: true
                             }
                         })
                     );
                 }
-                console.log("CHANGES: " + JSON.stringify(changes));
-            }            
+            }
             else {
                 edit.innerHTML = "Save";
 
@@ -125,10 +204,10 @@
                     if (orig.hasOwnProperty(key)) {
                         input = document.getElementById(getId(key));
                         input.disabled = false;
-                    }                
+                    }
                 }
             }
-                
+
             //     //send changes in settings
             //     if (!J.isEmpty(changes.mySettings)) {
             //         node.socket.send(
@@ -136,7 +215,8 @@
             //                 target: "SERVERCOMMAND",
             //                 text: "UPDATE_SETTINGS",
             //                 data: {
-            //                     type: "settings", // or requirements or settings, etc.
+            //                     // or requirements or settings, etc.
+            //                     type: "settings",
             //                     update: changes.mySettings,
             //                     levels: true
             //                 }
@@ -144,10 +224,9 @@
             //         );
             //     }
 
-                //send the new data back to server
-            
+
         };
-        
+
     }
 
     WaitRoomView.prototype.append = function() {
@@ -172,7 +251,7 @@
 
         // Disable temporarily the button.
         this.editSaveButton.disabled = true;
-        
+
         s = node.game.gamesInfo[node.game.channelInUse].waitroom;
         t = this.table;
         t.clear();
@@ -191,7 +270,7 @@
                 // fetch it more easily.
                 t.addRow([i, { id: i, content: s[i]} ]);
             }
-        };                
+        };
 
         t.parse();
 
