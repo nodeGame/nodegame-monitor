@@ -21,7 +21,8 @@
     WaitRoomView.version = "0.1.0";
     WaitRoomView.description = "Displays/Edits waitroom settings";
 
-    WaitRoomView.title = "WaitRoom Settings";
+    WaitRoomView.title = "WaitRoom Settings " +
+        "<em>(Warning! Edit feature experimental, only same type allowed)</em>";
     WaitRoomView.className = "waitroomview";
 
     // ## Dependencies
@@ -137,7 +138,13 @@
 
                         }
                         else if ('function' === typeof oldValue) {
-                            if (oldValue.toString() !== value) changed = true;
+                            // We need to remove all extra lines to make
+                            // the comparison.
+                            oldValue = oldValue.toString()
+                                .replace(/(\r\n|\n|\r)/gm,"");
+                            changed = oldValue !==
+                                value.replace(/(\r\n|\n|\r)/gm,"");
+                            
                             if (changed) {
                                 try {
                                     value = J.eval(value);
@@ -147,6 +154,8 @@
                                 }
                             }
                         }
+
+                        // Save changes.
                         if (changed) changes[key] = value;
                     }
                 }
@@ -159,9 +168,9 @@
 
                 // No errors (but also maybe no changes).
                 edit.innerHTML = "Edit";
-                
+
                 // console.log(changes);
-                
+
                 // Update visuals and local info.
                 for (key in orig) {
                     if (orig.hasOwnProperty(key)) {

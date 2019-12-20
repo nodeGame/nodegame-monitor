@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Current
+- Parameters of Waiting Room can be modified from interface (more changes in progress)
+
 ## 5.0.3
 - Fixed transparent background chats for players.
 - Fixed missing standard treatment.
