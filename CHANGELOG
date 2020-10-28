@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 6.0.0
+- Version bump, no changes.
+
 ## 5.1.0
 - Parameters of Waiting Room can be modified from interface (more changes in
 progress' this also fixed previous changes only partially implemented)
