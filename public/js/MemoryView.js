@@ -72,7 +72,7 @@
         this.header.appendChild(document.createElement('br'));
         this.header.appendChild(document.createTextNode(
             'Warning! If the total number of items in database is very high ' +
-                'and if items contain cycles (under normal' +
+                'and if items contain cycles (under normal ' +
                 'conditions they do not), this operation might affect the ' +
                 'server\'s performance.'
         ));
