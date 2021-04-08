@@ -1,6 +1,6 @@
 /**
  * # Chatter widget for nodeGame
- * Copyright(c) 2019 Stefano Balietti
+ * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
  * Manage chats with clients.
@@ -87,7 +87,7 @@
     Chatter.prototype.append = function() {
         var that, label;
         that = this;
-        
+
         // Initial msg.
         this.initialMsg = W.add('textarea', this.bodyDiv, {
             className: 'form-control initial-chat-msg',
@@ -108,7 +108,7 @@
             var title, visibleTitle, selectedClients, recipients, w;
 
             // Collect recipients list.
-            
+
             cl = node.game.clientList;
             selectedClients = cl.getSelectedClients();
             if (!selectedClients.length) return;
@@ -123,7 +123,7 @@
                 }
             });
             if (!recipients.length) return;
-            
+
             // Creates a diplay title (might be same as title).
             if (title.length > 35) {
                 visibleTitle = cl.roomName + ': ' + recipients.length +
@@ -138,7 +138,7 @@
             msg = that.readInitialMsg();
 
             // Open a chat window locally.
-            
+
             if (that.chats[title]) {
                 chatEvent = that.chats[title].chatEvent;
             }
@@ -166,7 +166,7 @@
             }
 
             // Open a chat window remotely.
-            
+
             opts = {
                 panel: true, // Otherwise chat is not well formatted.
                 chatEvent: chatEvent,
@@ -185,6 +185,13 @@
             };
             // Add initialMsg.
             if (msg) opts.initialMsg = { id: node.game.channelInUse, msg: msg };
+            // Set mode.
+            if (that.chatMode === 'receivers_only') {
+                opts.receiverOnly = true;
+            }
+            else if (that.chatMode === 'many_to_many') {
+                opts.participants = opts.participants.concat(recipients);
+            }
             // Send.
             node.remoteSetup('widgets', recipients, { append: {
                 Chat: opts
@@ -297,5 +304,5 @@
         if (this.eraseInitialMsg.checked) this.initialMsg.value = '';
         return txt.trim();
     };
-    
+
 })(node);
