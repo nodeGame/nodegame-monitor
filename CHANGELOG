@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## current
+- Screen is locked upon disconnection.
+
 ## 6.0.1
 - Fixed chat modes.
 
