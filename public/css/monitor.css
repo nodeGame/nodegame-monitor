@@ -331,7 +331,7 @@ ul.nav-tabs {
 
 /* Results View */
 
-.resultsview {
+.resultsview, .exportview {
   max-width: 500px;
   margin-right: 50px;;
 }
@@ -343,7 +343,7 @@ ul.nav-tabs {
 
 /* Memory View */
 
-.memoryview {
+.memoryview, .exportview {
   max-width: 450px;
 }
 

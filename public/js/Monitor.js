@@ -33,7 +33,7 @@ function Monitor(node) {
         // The name of the tab currently visibile.
         this.tabInUse = null;
 
-        // ## The name of the selected channel 
+        // ## The name of the selected channel
         this.channelInUse = null;
 
         // ## The id of the selected room.
@@ -71,7 +71,7 @@ function Monitor(node) {
 
         // Set footer as default collapseTarget.
         node.setup('widgets', { collapseTarget: 'docker' });
-        
+
         /**
          * ## addTab
          *
@@ -179,7 +179,7 @@ function Monitor(node) {
         this.alert = function(msg, type) {
             var alertDiv, a;
             that.alertDiv.className = 'alert alert-' + (type || 'success');
-            that.alertContent.innerHTML = '<span class="small">' + 
+            that.alertContent.innerHTML = '<span class="small">' +
                 JSUS.getTime() + '</span>&nbsp-&nbsp;' + msg + '&nbsp;&nbsp;';
             that.alertDiv.style.display = '';
         };
@@ -276,7 +276,7 @@ function Monitor(node) {
             // TODO: refresh only node.game.tabInUse.
             node.game.refresh();
         };
-        
+
         this.refreshDropDown = document.getElementById('refreshDropDown');
         this.refreshDropDown.onclick = function(event) {
             var target, interval;
@@ -291,7 +291,7 @@ function Monitor(node) {
                 }, interval);
             }
         };
-        
+
         // The monitor uri (differs if there is default channel or not).
         this.monitorUri = null;
 
@@ -337,7 +337,8 @@ function Monitor(node) {
         // Results view.
         tmpElem = this.addTab('results');
         node.widgets.append('ResultsView', tmpElem);
-        node.widgets.append('MemoryView', tmpElem);
+        // node.widgets.append('MemoryView', tmpElem);
+        // node.widgets.append('ExportView', tmpElem);
 
         // Server view.
         tmpElem = this.addTab('server');
@@ -348,7 +349,7 @@ function Monitor(node) {
         this.refresh();
 
     });
-    
+
     // Return configuration.
 
     return {
