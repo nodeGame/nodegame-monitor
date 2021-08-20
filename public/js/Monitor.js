@@ -182,6 +182,9 @@ function Monitor(node) {
             that.alertContent.innerHTML = '<span class="small">' +
                 JSUS.getTime() + '</span>&nbsp-&nbsp;' + msg + '&nbsp;&nbsp;';
             that.alertDiv.style.display = '';
+            setTimeout(() => {
+                that.alertDiv.style.display = 'none';
+            }, 3000);
         };
 
         // ## Listeners (must be added before the widgets).

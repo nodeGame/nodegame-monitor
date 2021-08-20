@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="350"
+   height="350"
+   viewBox="0 0 350 350"
+   xml:space="preserve"
+   id="svg915"
+   sodipodi:docname="csv.svg"
+   inkscape:export-filename="C:\Users\balistef\www\nodegame-v6.0.3-dev\node_modules\nodegame-monitor\public\resources\jstree\csv.png"
+   inkscape:export-xdpi="5.54"
+   inkscape:export-ydpi="5.54"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"><metadata
+   id="metadata919"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1920"
+   inkscape:window-height="1017"
+   id="namedview917"
+   showgrid="false"
+   inkscape:zoom="1.7082044"
+   inkscape:cx="250.40224"
+   inkscape:cy="216.6476"
+   inkscape:window-x="-8"
+   inkscape:window-y="-8"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="svg915" />
+<desc
+   id="desc898">Created with Fabric.js 1.7.22</desc>
+<defs
+   id="defs900">
+
+	
+	
+	
+	
+	
+	
+</defs>
+
+<g
+   id="g2113"
+   inkscape:export-xdpi="5.54"
+   inkscape:export-ydpi="5.54"><path
+     d="M 303.10936,235.05478 V 125.70724 C 267.9671,111.68003 243.64293,93.57964 231.74731,70.804517 H 55.366926 c -6.77249,0 -12.26517,4.225818 -12.26517,9.436265 V 235.05478 Z"
+     style="fill:#e9e9e0;fill-rule:nonzero;stroke:none;stroke-width:3.41203;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none"
+     stroke-linecap="round"
+     id="path904" /><path
+     d="m 303.10936,125.70724 h -60.18608 c -6.17343,0 -11.17597,-3.84873 -11.17597,-8.59829 V 70.804517 Z"
+     style="fill:#d9d7ca;fill-rule:nonzero;stroke:none;stroke-width:3.41203;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none"
+     stroke-linecap="round"
+     id="path906" /><path
+     d="m 43.101756,220.65603 v 116.05223 c 0,6.32089 5.49268,11.44729 12.26517,11.44729 H 290.84419 c 6.77249,0 12.26517,-5.1264 12.26517,-11.44729 V 220.65603 c -86.92983,-25.41785 -173.60292,-25.57397 -260.007604,0 z"
+     style="fill:#b83535;fill-rule:nonzero;stroke:none;stroke-width:3.75806;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none"
+     stroke-linecap="round"
+     id="path902" /><text
+     xml:space="preserve"
+     style="font-size:133.333px;line-height:1.85;font-family:sans-serif;letter-spacing:0.05px;word-spacing:0.05px"
+     x="65.726959"
+     y="318.76599"
+     id="text870"
+     inkscape:export-xdpi="6.6500001"
+     inkscape:export-ydpi="6.6500001"><tspan
+       sodipodi:role="line"
+       id="tspan868"
+       x="65.726959"
+       y="318.76599"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:133.333px;font-family:Calibri;-inkscape-font-specification:'Calibri Light';fill:#ffffff"
+       rotate="0 0 0 0">CSV</tspan></text></g></svg>

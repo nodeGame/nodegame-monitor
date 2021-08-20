@@ -67,6 +67,9 @@
             if (that.zipLink) that.zipLink.href = that.prefixLink + '*';
         });
 
+        // The JS tree, once loaded.
+        this.tree = null;
+
         // this.table = new W.Table({
         //     render: {
         //         pipeline: function(item) {
@@ -134,14 +137,13 @@
     };
 
     ResultsView.prototype.append = function() {
-        var b;
         this.bodyDiv.appendChild(this.header);
         this.lastModifiedSpan = W.add('span', this.header, {
             style: { 'font-size': '13px' }
         });
         this.header.appendChild(document.createElement('br'));
 
-        b = document.createElement('button');
+        let b = document.createElement('button');
         b.innerHTML = 'Refresh';
         b.className = 'btn-sm';
         b.onclick = this.refresh;
@@ -151,9 +153,14 @@
         this.zipLink = document.createElement('a');
         this.zipLink.setAttribute('target', '_blank');
         this.zipLink.href = this.prefixLink + '*';
-        this.zipLink.innerHTML = '<em>&nbsp;&nbsp;Download all in a ' +
+        this.zipLink.innerHTML = '<em>&nbsp;&nbsp;Download selected in ' +
             'zip archive</em>';
         this.zipLink.style.display = 'none';
+
+        this.zipLink.onclick = () => {
+            let sel = this.tree.jstree().get_bottom_selected(false);
+            if (!sel) node.game.alert('no item selected');
+        };
 
         this.header.appendChild(this.zipLink);
         this.header.appendChild(document.createElement('br'));
@@ -162,7 +169,7 @@
 
         this.bodyDiv.appendChild(document.createElement('br'));
 
-        this.tree = W.add('div', this.bodyDiv);
+        this.treeDiv = W.add('div', this.bodyDiv);
 
         // Query server:
         this.refresh();
@@ -195,7 +202,9 @@
             //     this.table.addRow(files[i]);
             // }
             let nodes = [];
-            let curDir = { text: files[0].dir, children: [], id: files[0].dir };
+            let curDir = {
+                text: files[0].dir, children: [], id: files[0].dir
+            };
             for (i = 0; i < files.length; ++i) {
                 let f = files[i];
                 if (curDir.text !== f.dir) {
@@ -204,23 +213,30 @@
                 }
                 curDir.children.push({
                     text: f.file,
-                    type: 'demo',
+                    type: getType(f.file),
                     data: { size: f.size, mtime: f.mtime },
-                    id: f.dir + '/' + f.file
+                    id: f.dir + '/' + f.file,
+                    a_attr: {
+                        href: this.prefixLink + f.dir + '/' + f.file,
+                        target: '_blank'
+                    }
                 });
             }
 
             // var t = this.table.table;
             // debugger
-            let tree = $(this.tree);
-            tree.jstree({
-                plugins: ["checkbox", "sort", "search" ],
+            this.tree = $(this.treeDiv);
+            this.tree.jstree({
+                plugins: ["checkbox", "types" ],
                 types: {
-                    "default" : {
-                        "icon" : "glyphicon glyphicon-flash"
+                    "file" : {
+                        "icon" : "./resources/jstree/file.png"
                     },
-                    "demo" : {
-                        "icon" : "glyphicon glyphicon-ok"
+                    "csv": {
+                        "icon" : "./resources/jstree/csv4.png"
+                    },
+                    "json": {
+                        "icon" : "./resources/jstree/json3.png"
                     }
                 },
                 core: {
@@ -238,13 +254,11 @@
                 }
             });
 
-            tree.on("changed.jstree", function(e, data) {
+            this.tree.on("changed.jstree", function(e, data) {
                 console.log("The selected nodes are:");
                 console.log(data.selected);
-                console.log(tree);
                 debugger
-                console.log(data.instance.get_selected(true)[0].text);
-                console.log(data.instance.get_node(data.selected[0]).text);
+                console.log(data.instance.get_bottom_selected(false));
             });
 
         }
@@ -253,5 +267,25 @@
         }
         // this.table.parse();
     };
+
+    /**
+     * ### getExtension
+     *
+     * Returns the type of file based on extension
+     *
+     * @param {string} file The filename
+     *
+     * @return {string} The type of file ('csv', 'json', 'file')
+     */
+    function getType(file) {
+        debugger
+        let format = file.lastIndexOf('.');
+        if (format > 0) {
+            let res = file.substr(format+1);
+            if (res === 'json' || res === 'ndjson') return 'json';
+            if (res === 'csv') return 'csv';
+        }
+        return 'file';
+    }
 
 })(node);
