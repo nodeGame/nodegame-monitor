@@ -1,5 +1,5 @@
 /**
- * # ResultsView widget for nodeGame
+ * # FileViewer widget for nodeGame
  * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
@@ -12,26 +12,23 @@
 
     "use strict";
 
-    node.widgets.register('ResultsView', ResultsView);
-
-    var JSUS = node.JSUS;
+    node.widgets.register('FileViewer', FileViewer);
 
     // ## Meta-data
 
-    ResultsView.version = '0.9.1';
-    ResultsView.description = 'Displays the results of games in data/ folder.';
+    FileViewer.version = '0.1.0';
+    FileViewer.description = 'Displays the results files in a folder.';
 
-    ResultsView.title = 'Data Folder';
-    ResultsView.className = 'resultsview';
+    FileViewer.title = 'File Viewer';
+    FileViewer.className = 'resultsview';
 
     // ## Dependencies
-    ResultsView.dependencies = {
-        JSUS: {},
-        Table: {},
+    FileViewer.dependencies = {
+        // jstree: {},
         jQuery: {}
     };
 
-    function ResultsView(options) {
+    function FileViewer(options) {
 
         this.sortBy = {
             name: function(a, b) {
@@ -54,7 +51,10 @@
         this.currentSort = 'name';
 
         this.lastModified = null;
+
+        this.infoSpan = null;
         this.lastModifiedSpan = null;
+        this.nSelectedSpan = null;
 
         this.prefixLink = null;
 
@@ -66,20 +66,32 @@
         this.tree = null;
 
         this.header = null;
+
+
+
+        this.selected = [];
+
+        this.type = 'RESULTS';
     }
 
-    ResultsView.prototype.refresh = function() {
+    FileViewer.prototype.init = function(opts) {
+        // if (opts.title) this.title = title;
+        this.type = opts.type;
+        if (opts.sort) this.currentSort = opts.sort;
+    };
+
+    FileViewer.prototype.refresh = function() {
         // Ask server for games:
         node.socket.send(node.msg.create({
             target: 'SERVERCOMMAND',
             text:   'INFO',
-            data: { type: 'RESULTS' }
+            data: { type: this.type }
         }));
 
     };
 
-    ResultsView.prototype.append = function() {
-        this.header = W.add('div', this.header);
+    FileViewer.prototype.append = function() {
+        this.header = W.add('div', this.bodyDiv);
 
         let group = W.add('div', this.header, {
             role: 'group',
@@ -143,11 +155,9 @@
               return res.json();
             })
             .then(json => {
-                let el = W.get('a', {
+                let el = W.add('a', document.body, {
                     href: link + json.idx
                 });
-                console.log(el);
-                document.body.appendChild(el);
                 el.click();
                 document.body.removeChild(el);
             })
@@ -155,13 +165,15 @@
               console.error(err);
             });
         };
-        this.header.appendChild(document.createElement('br'));
+        W.add('br', this.header);
 
-        this.lastModifiedSpan = W.add('span', this.header, {
+        this.infoSpan = W.add('span', this.header, {
             style: { 'font-size': '13px' }
         });
+        this.lastModifiedSpan = W.add('span', this.infoSpan);
+        this.nSelectedSpan = W.add('span', this.infoSpan);
 
-        this.bodyDiv.appendChild(document.createElement('br'));
+        W.add('br', this.bodyDiv);
 
         this.treeDiv = W.add('div', this.bodyDiv);
 
@@ -169,22 +181,20 @@
         this.refresh();
     };
 
-    ResultsView.prototype.listeners = function() {
-        var that;
-        that = this;
-
+    FileViewer.prototype.listeners = function() {
         // Listen for server reply.
-        node.on.data('INFO_RESULTS', function(msg) {
+        node.on.data(`INFO_${this.type}`, msg => {
             console.log(msg.data);
-            if (that.lastModified === msg.data.lastModified) return;
-            that.lastModified = msg.data.lastModified;
-            that.receivedFiles = msg.data.files;
-            that.receivedFiles.sort(that.sortBy[that.currentSort]);
-            that.displayData();
+            if (this.lastModified === msg.data.lastModified) return;
+
+            this.lastModified = msg.data.lastModified;
+            this.receivedFiles = msg.data.files;
+            this.receivedFiles.sort(this.sortBy[this.currentSort]);
+            this.displayData();
         });
     };
 
-    ResultsView.prototype.displayData = function() {
+    FileViewer.prototype.displayData = function() {
         let files = this.receivedFiles;
 
         this.totalFiles = 0;
@@ -241,19 +251,24 @@
                     (!data.selected || !data.selected.length);
 
                 this.selected = this.tree.jstree().get_bottom_selected(false);
-                W.setInnerHTML('jstree-tot-files-selected',
-                               this.selected.length);
+                this.updateMetadata();
             });
 
         }
 
         // Update metadata.
+        this.updateMetadata();
+    };
+
+
+    FileViewer.prototype.updateMetadata = function() {
+        let d = new Date(this.lastModified);
         this.lastModifiedSpan.innerHTML = `
-<strong>Last modified</strong>:
-<span style="font-size: smaller"> ${Date(this.lastModified)}</span>
-<strong>Selected files</strong>:
-<span id="jstree-tot-files-selected">0</span>/${this.totalFiles}<br/>
-`;
+        <strong>Last modified</strong>:
+        <span style="font-size: smaller"> ${d}</span><br/>`;
+        let sel = this.selected.length;
+        this.nSelectedSpan.innerHTML = `<strong>Selected files</strong>:
+        <span>${sel}</span>/${this.totalFiles}<br/>`;
     };
 
     /**

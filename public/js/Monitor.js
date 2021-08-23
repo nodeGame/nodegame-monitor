@@ -339,14 +339,22 @@ function Monitor(node) {
 
         // Results view.
         tmpElem = this.addTab('results');
-        node.widgets.append('ResultsView', tmpElem);
-        // node.widgets.append('MemoryView', tmpElem);
+        node.widgets.append('FileViewer', tmpElem, {
+            type: 'RESULTS',
+            title: 'Data Folder'
+        });
+        node.widgets.append('MemoryView', tmpElem);
         // node.widgets.append('ExportView', tmpElem);
 
         // Server view.
         tmpElem = this.addTab('server');
         node.widgets.append('ServerView', tmpElem);
-        node.widgets.append('LogFiles', tmpElem);
+        node.widgets.append('FileViewer', tmpElem, {
+            type: 'LOGS',
+            title: 'Logs Folder',
+            sort: 'date'
+        });
+        // node.widgets.append('LogFiles', tmpElem);
 
         // Refresh.
         this.refresh();

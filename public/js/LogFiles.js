@@ -1,6 +1,6 @@
 /**
  * # LogFiles widget for nodeGame
- * Copyright(c) 2019 Stefano Balietti <ste@nodegame.org>
+ * Copyright(c) 2021 Stefano Balietti <ste@nodegame.org>
  * MIT Licensed
  *
  * Shows files available in log/ dir.
@@ -18,7 +18,7 @@
 
     // ## Meta-data
 
-    LogFiles.version = '0.1.0';
+    LogFiles.version = '0.2.0';
     LogFiles.description = 'Displays the log files in the log/ folder.';
 
     LogFiles.title = 'Log Files';
@@ -65,11 +65,12 @@
         prefixLink += W.uriChannel ? W.uriChannel : '/';
         prefixLink += 'monitor/servernode/logs/';
         for (i = 0; i < files.length; ++i) {
-            element = document.createElement('a');
-            element.setAttribute('target', '_blank');
-            element.href = prefixLink + files[i];
-            element.innerHTML = files[i];
-            this.links.appendChild(element);
+            W.add('a', this.links, {
+                target: '_blank',
+                href: prefixLink + files[i],
+                innerHTML: files[i],
+                download: files[i]
+            });
             this.links.appendChild(document.createElement('br'));
         }
     };
