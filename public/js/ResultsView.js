@@ -64,7 +64,7 @@
         node.once('MONITOR_URI', function(uri) {
             that.prefixLink = uri + 'data/';
             // Update the zipLink href, if it was already created.
-            if (that.zipLink) that.zipLink.href = that.prefixLink + '*';
+            // if (that.zipLink) that.zipLink.href = that.prefixLink + '*';
         });
 
         // The JS tree, once loaded.
@@ -138,34 +138,88 @@
 
     ResultsView.prototype.append = function() {
         this.bodyDiv.appendChild(this.header);
+
+
+        let group = W.add('div', this.header, {
+            role: 'group',
+            className: 'btn-group'
+        });
+
+        W.add('button', group, {
+            innerHTML: 'Refresh',
+            className: 'btn btn-sm'
+        })
+        .onclick = this.refresh;
+
+        W.add('button', group, {
+            innerHTML: 'Select All',
+            className: 'btn btn-sm'
+        })
+        .onclick = () => {
+            this.tree.jstree().select_all();
+        };
+
+        W.add('button', group, {
+            innerHTML: 'Select None',
+            className: 'btn btn-sm'
+        })
+        .onclick = () => {
+            this.tree.jstree().deselect_all();
+        };
+
+        this.zipLink = W.add('button', group, {
+            innerHTML: 'Download Selected',
+            className: 'btn btn-sm',
+            disabled: true
+        });
+        this.zipLink.onclick = () => {
+            let sel = this.selected;
+            if (!sel || !sel.length) node.game.alert('no items selected.');
+
+            // TODO: server does not handle it well and creates wrong file name
+            // if (sel.length === this.totalFiles) sel =  [ '*' ];
+
+            let link = this.prefixLink;
+
+            fetch(link, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(sel)
+            })
+            .then(res => {
+              // Why 400 ?
+              // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+              if (res.status >= 400) {
+                throw new Error("Bad response from server");
+              }
+
+              // Fetches gets the headers first, then it process
+              // the body asynchronously.
+
+              // It also returns a promise.
+              return res.json();
+            })
+            .then(json => {
+                let el = W.get('a', {
+                    href: link + json.idx,
+                    download: true
+                });
+                console.log(el);
+                document.body.appendChild(el);
+                el.click();
+                document.body.removeChild(el);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        };
+        this.header.appendChild(document.createElement('br'));
+
         this.lastModifiedSpan = W.add('span', this.header, {
             style: { 'font-size': '13px' }
         });
-        this.header.appendChild(document.createElement('br'));
-
-        let b = document.createElement('button');
-        b.innerHTML = 'Refresh';
-        b.className = 'btn-sm';
-        b.onclick = this.refresh;
-        this.header.appendChild(b);
-
-
-        this.zipLink = document.createElement('a');
-        this.zipLink.setAttribute('target', '_blank');
-        this.zipLink.href = this.prefixLink + '*';
-        this.zipLink.innerHTML = '<em>&nbsp;&nbsp;Download selected in ' +
-            'zip archive</em>';
-        this.zipLink.style.display = 'none';
-
-        this.zipLink.onclick = () => {
-            let sel = this.tree.jstree().get_bottom_selected(false);
-            if (!sel) node.game.alert('no item selected');
-        };
-
-        this.header.appendChild(this.zipLink);
-        this.header.appendChild(document.createElement('br'));
-
-
 
         this.bodyDiv.appendChild(document.createElement('br'));
 
@@ -191,22 +245,17 @@
     };
 
     ResultsView.prototype.displayData = function() {
-        var i, files;
-        files = this.receivedFiles;
-        this.lastModifiedSpan.innerHTML = 'Last modified: ' +
-            Date(this.lastModified);
-        // this.table.clear();
+        let files = this.receivedFiles;
+
+        this.totalFiles = 0;
         if (files.length) {
-            this.zipLink.style.display = '';
-            // for (i = 0; i < files.length; ++i) {
-            //     this.table.addRow(files[i]);
-            // }
             let nodes = [];
             let curDir = {
                 text: files[0].dir, children: [], id: files[0].dir
             };
-            for (i = 0; i < files.length; ++i) {
-                let f = files[i];
+            let f;
+            for (let i = 0; i < files.length; ++i) {
+                f = files[i];
                 if (curDir.text !== f.dir) {
                     nodes.push(curDir);
                     curDir = { text: f.dir, children: [], id: f.dir };
@@ -221,7 +270,11 @@
                         target: '_blank'
                     }
                 });
+                this.totalFiles++;
             }
+            // Add last dir.
+            nodes.push(curDir);
+
 
             // var t = this.table.table;
             // debugger
@@ -239,33 +292,26 @@
                         "icon" : "./resources/jstree/json3.png"
                     }
                 },
-                core: {
-                    data: nodes
-                    // [
-                    //     {
-                    //         text: "Data",
-                    //         children: nodes
-                    //         // [
-                    //         //     { "text" : "Child node 1" },
-                    //         //     { "text" : "Child node 2" }
-                    //         // ]
-                    //     }
-                    // ]
-                }
+                core: { data: nodes }
             });
 
-            this.tree.on("changed.jstree", function(e, data) {
-                console.log("The selected nodes are:");
-                console.log(data.selected);
-                debugger
-                console.log(data.instance.get_bottom_selected(false));
+            this.tree.on("changed.jstree", (e, data) => {
+                this.zipLink.disabled =
+                    (!data.selected || !data.selected.length);
+
+                this.selected = this.tree.jstree().get_bottom_selected(false);
+                W.setInnerHTML('jstree-tot-files-selected',
+                               this.selected.length);
             });
 
         }
-        else {
-            this.zipLink.style.display = 'none';
-        }
-        // this.table.parse();
+
+        this.lastModifiedSpan.innerHTML = `
+<strong>Last modified</strong>:
+<span style="font-size: smaller"> ${Date(this.lastModified)}</span>
+<strong>Selected files</strong>:
+<span id="jstree-tot-files-selected">0</span>/${this.totalFiles}<br/>
+`;
     };
 
     /**
@@ -278,7 +324,6 @@
      * @return {string} The type of file ('csv', 'json', 'file')
      */
     function getType(file) {
-        debugger
         let format = file.lastIndexOf('.');
         if (format > 0) {
             let res = file.substr(format+1);
