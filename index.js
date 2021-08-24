@@ -8,6 +8,6 @@
  * http://www.nodegame.org
  */
 
-var path = require('path');
+const path = require('path');
 
 exports.publicDirPath = path.resolve(__dirname, 'public') + '/';

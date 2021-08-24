@@ -29,10 +29,10 @@
 <script src="resources/jquery-1.11.1.min.js" charset="utf-8"></script>
 
 <!-- bootstrap -->
-<script src="resources/bootstrap.js" charset="utf-8"></script>
-<link rel="stylesheet" href="./resources/bootstrap.css"></link>
-<!-- <script src="/lib/bootstrap5/js/bootstrap.bundle.js" charset="utf-8"></script>
-<link rel="stylesheet" href="/lib/bootstrap5/css/bootstrap.css"></link> -->
+<!-- <script src="resources/bootstrap.js" charset="utf-8"></script>
+<link rel="stylesheet" href="./resources/bootstrap.css"></link> -->
+<script src="/lib/bootstrap5/js/bootstrap.bundle.js" charset="utf-8"></script>
+<link rel="stylesheet" href="/lib/bootstrap5/css/bootstrap.css"></link>
 
 
 <!-- jstree -->
@@ -50,17 +50,17 @@
 <div id="header">
   <div id="refresh-container" style="float: left; padding: 0; margin: 0">
     <!-- Split button -->
-    <div class="btn-group">
-      <button type="button" class="btn btn-default" id="refresh">Refresh</button>
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="caret"></span>
-        <span class="sr-only">Toggle Dropdown</span>
+    <div class="btn-group" role="group">
+      <button type="button" id="refresh"  class="btn btn-primary">Refresh</button>
+      <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="visually-hidden">Toggle Dropdown</span>
       </button>
       <ul class="dropdown-menu" id="refreshDropDown">
-        <li><a href="#" id="refresh_0">Manual</a></li>
-        <li><a href="#" id="refresh_500">Every 0.5 seconds</a></li>
-        <li><a href="#" id="refresh_1000">Every second</a></li>
-        <li><a href="#" id="refresh_2000">Every 2 seconds</a></li>
+        <li><a class="dropdown-item" href="#" id="refresh_0">Manual</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#" id="refresh_1000">Every second</a></li>
+        <li><a class="dropdown-item" href="#" id="refresh_2000">Every 2 seconds</a></li>
+        <li><a class="dropdown-item" href="#" id="refresh_5000">Every 5 seconds</a></li>
       </ul>
     </div>
   </div>
@@ -72,16 +72,24 @@
   </div>
   <div id="header-right" style="float: right"></div>
 </div>
-<div id="main-container"></div>
-<div id="wall-container"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col" id="main-container"></div>
+    </div>
+    <div class="row">
+        <div id="wall-container" class="col">
+        </div>
+    </div>
+</div>
+
 <div id="docker"></div>
 <!-- Connect -->
 <script>
   window.onload = function() {
-    var conf, channel;
-    conf = new Monitor(node);
+    let conf = new Monitor(node);
     node.setup('nodegame', conf);
-    channel = JSUS.getQueryString('channel');
+    let channel = JSUS.getQueryString('channel');
     if (!channel) {
       alert('You must specify a channel!');
       return;

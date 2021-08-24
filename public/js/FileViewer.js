@@ -16,7 +16,7 @@
 
     // ## Meta-data
 
-    FileViewer.version = '0.1.0';
+    FileViewer.version = '0.2.0';
     FileViewer.description = 'Displays the results files in a folder.';
 
     FileViewer.title = 'File Viewer';
@@ -100,13 +100,13 @@
 
         W.add('button', group, {
             innerHTML: 'Refresh',
-            className: 'btn btn-sm'
+            className: 'btn btn-outline-dark btn-sm'
         })
         .onclick = this.refresh;
 
         W.add('button', group, {
             innerHTML: 'Select All',
-            className: 'btn btn-sm'
+            className: 'btn btn-outline-dark btn-sm'
         })
         .onclick = () => {
             this.tree.jstree().select_all();
@@ -114,7 +114,7 @@
 
         W.add('button', group, {
             innerHTML: 'Select None',
-            className: 'btn btn-sm'
+            className: 'btn btn-outline-dark btn-sm'
         })
         .onclick = () => {
             this.tree.jstree().deselect_all();
@@ -122,7 +122,7 @@
 
         this.downloadBtn = W.add('button', group, {
             innerHTML: 'Download Selected',
-            className: 'btn btn-sm',
+            className: 'btn btn-outline-dark btn-sm',
             disabled: true
         });
 

@@ -31,7 +31,7 @@
 
     // ## Meta-data
 
-    ClientList.version = '0.8.0';
+    ClientList.version = '0.9.0';
     ClientList.description = 'Displays all clients of a room.';
 
     ClientList.title = 'Clients';
@@ -247,7 +247,7 @@
         selectionDiv = W.add('div', this.bodyDiv, {
             id: 'selectionDiv',
             innerHTML: 'Selected IDs: '
-        });            
+        });
 
         this.clientsField = W.add('textarea', selectionDiv, {
             rows: 1,
@@ -296,12 +296,12 @@
 
         node.on('INFO_CLIENTS', function(clients) {
             var t;
-            
+
             // Update the contents.
             that.roomLogicId = clients.logic ? clients.logic.id : null;
             that.writeClients(clients);
 
-            
+
             // Update selection info.
             t = that.availableRooms[node.game.roomInUse].treatmentName;
             that.selectionInfo = makeRoomTitle(clients, t);
@@ -312,7 +312,7 @@
         node.on('ROOM_SELECTED', function(room) {
             room = room || {};
             that.customMsg.show();
-            if (room.type === 'Garage') {                
+            if (room.type === 'Garage') {
                 that.chatter.hide();
                 that.kicker.hide();
                 that.uicontrols.hide();
@@ -324,14 +324,14 @@
                 that.kicker.show();
                 that.uicontrols.show();
 
-                if (room.type === 'Game') {                    
+                if (room.type === 'Game') {
                     that.waitroomControls.hide();
                     that.gameControls.setRoom(room);
                     that.gameControls.show();
                 }
                 else {
                     that.gameControls.hide();
-                    if (room.type === 'Waiting') {                        
+                    if (room.type === 'Waiting') {
                         that.waitroomControls.refreshTreatments();
                         that.waitroomControls.show();
                     }
@@ -393,7 +393,7 @@
             'CustomMsg',
             mainContainer,
             opts);
-        
+
         this.uicontrols = node.widgets.append(
             'UIControls',
             mainContainer,
@@ -590,19 +590,18 @@
     };
 
     ClientList.prototype.updateTitle = function() {
-        var ol, li;
 
+        let nav = W.get('nav', {
+            'aria-label': 'breadcrumb'
+        });
+
+        let ol = W.add('ol', nav, { className: 'breadcrumb' });
         // Use breadcrumbs of the form "<channelname> / <roomname> / Clients".
-        ol = document.createElement('ol');
-        ol.className = 'breadcrumb';
 
-        li = document.createElement('li');
-        li.innerHTML = 'Clients';
-        ol.appendChild(li);
+        W.add('li', ol, { innerHTML: 'Clients', className: 'breadcrumb-item' });
 
-        li = document.createElement('li');
-        ol.appendChild(li);
-        li.className = 'active';
+        let li = W.add('li', ol, { className: 'breadcrumb-item active' });
+
 
         if (!this.channelName) {
             li.innerHTML = 'No channel selected';
@@ -611,22 +610,22 @@
             li.innerHTML = this.channelName;
 
             if (this.roomName) {
-                li.className = 'active';
+
                 li = document.createElement('li');
                 li.innerHTML = this.roomName;
-                li.className = 'active';
+                li.className = 'breadcrumb-item active';
                 ol.appendChild(li);
             }
 
             li = document.createElement('li');
-            li.className = 'active';
+            li.className = 'breadcrumb-item active';
 
             li.innerHTML = this.selectionInfo;
 
             ol.appendChild(li);
         }
 
-        this.setTitle(ol);
+        this.setTitle(nav);
     };
 
     ClientList.prototype.updateSelection = function(useSelectAll) {

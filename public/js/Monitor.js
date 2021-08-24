@@ -87,16 +87,19 @@ function Monitor(node) {
             title = name.charAt(0).toUpperCase() + name.slice(1);
             tmpElem = document.createElement('li');
             tmpElem.className = '';
-            if (active) tmpElem.className += ' active';
+            let className = "nav-link";
+            if (active) className += ' active';
             tmpElem.innerHTML =
-                '<a href="#' + name + '" role="tab" data-toggle="tab">' +
-                title + '</a>';
+                '<button type="button" data-bs-target="#' + name + '" class="' +
+                className + '" role="tab" data-bs-toggle="tab">' +
+                title + '</button>';
             tabList.appendChild(tmpElem);
             tmpElem.onclick = function() {
                 that.tabInUse = name;
                 node.game.refresh(name);
                 node.emit('TAB_SELECTED', name);
             };
+            // Tab content.
             tmpElem = document.createElement('div');
             tmpElem.className = 'tab-pane';
             if (active) tmpElem.className += ' active';
@@ -344,7 +347,12 @@ function Monitor(node) {
             title: 'Data Folder'
         });
         node.widgets.append('MemoryView', tmpElem);
-        // node.widgets.append('ExportView', tmpElem);
+        node.widgets.append('ExportView', tmpElem);
+        node.widgets.append('FileViewer', tmpElem, {
+            type: 'EXPORT',
+            title: 'Exports Folder',
+            sort: 'date'
+        });
 
         // Server view.
         tmpElem = this.addTab('server');
