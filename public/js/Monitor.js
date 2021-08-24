@@ -287,28 +287,6 @@ function Monitor(node) {
 
         // ## Init.
 
-        // Refresh.
-        this.refreshButton = document.getElementById('refresh');
-        this.refreshButton.onclick = function() {
-            // TODO: refresh only node.game.tabInUse.
-            node.game.refresh();
-        };
-
-        this.refreshDropDown = document.getElementById('refreshDropDown');
-        this.refreshDropDown.onclick = function(event) {
-            var target, interval;
-            target = event.target;
-            if (!target || !target.id) return;
-            interval = parseInt(target.id.substring("refresh_".length), 10);
-            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
-            if (interval) {
-                autoRefreshInterval = setInterval(function() {
-                    // TODO: refresh only tab in use.
-                    node.game.refresh();
-                }, interval);
-            }
-        };
-
         // The monitor uri (differs if there is default channel or not).
         this.monitorUri = null;
 

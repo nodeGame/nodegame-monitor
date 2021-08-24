@@ -220,6 +220,60 @@
 
         that = this;
 
+        // Title Bar.
+
+        let div = W.get('div');
+
+        W.add('nav', div, {
+            'aria-label': 'breadcrumb'
+        });
+
+        let refresh =
+        `<div id="refresh-container" style="float: right; padding: 0; margin: 0; display: inline-flex">
+          <div class="btn-group" role="group">
+            <button type="button" id="refresh"  class="btn btn-primary">Refresh</button>
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" id="refreshDropDown">
+              <li><a class="dropdown-item" href="#" id="refresh_0">Manual</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" id="refresh_1000">Every second</a></li>
+              <li><a class="dropdown-item" href="#" id="refresh_2000">Every 2 seconds</a></li>
+              <li><a class="dropdown-item" href="#" id="refresh_5000">Every 5 seconds</a></li>
+            </ul>
+          </div>
+        </div>`;
+
+        div.innerHTML += refresh;
+
+        this.setTitle(div);
+        this.updateTitle();
+
+        // Refresh.
+        this.refreshButton = document.getElementById('refresh');
+        this.refreshButton.onclick = function() {
+            // TODO: refresh only node.game.tabInUse.
+            node.game.refresh();
+        };
+
+        this.refreshDropDown = document.getElementById('refreshDropDown');
+        this.refreshDropDown.onclick = function(event) {
+            var target, interval;
+            target = event.target;
+            if (!target || !target.id) return;
+            interval = parseInt(target.id.substring("refresh_".length), 10);
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            if (interval) {
+                autoRefreshInterval = setInterval(function() {
+                    // TODO: refresh only tab in use.
+                    node.game.refresh();
+                }, interval);
+            }
+        };
+
+        // Main Table.
+
         // Add tables in a 3x1 table element:
         tableStructure = document.createElement('table');
         tableStructure.id = 'clientlist-table';
@@ -595,14 +649,14 @@
 
     ClientList.prototype.updateTitle = function() {
 
-        let nav = W.get('nav', {
-            'aria-label': 'breadcrumb'
-        });
+        let nav = this.headingDiv.querySelector('nav');
+        nav.innerHTML = '';
+        nav.style.display = 'inline-flex';
 
         let ol = W.add('ol', nav, { className: 'breadcrumb' });
         // Use breadcrumbs of the form "<channelname> / <roomname> / Clients".
 
-        W.add('li', ol, { innerHTML: 'Clients', className: 'breadcrumb-item' });
+        // W.add('li', ol, { innerHTML: 'Clients', className: 'breadcrumb-item' });
 
         let li = W.add('li', ol, { className: 'breadcrumb-item active' });
 
@@ -629,7 +683,7 @@
             ol.appendChild(li);
         }
 
-        this.setTitle(nav);
+        // this.setTitle(nav);
     };
 
     ClientList.prototype.updateSelection = function(useSelectAll) {
@@ -688,8 +742,9 @@
             }
         }
         this.clientsField.value = JSON.stringify(recipients);
-        this.bodyDiv.querySelector('#selected-clients-count').innerHTML = '(' +
-        recipients.length + ')'
+
+        this.bodyDiv.querySelector('#selected-clients-count').innerHTML =
+        recipients.length ? '(' + recipients.length + ')' : '';
     };
 
     function makeChannelTitle(chanInfo) {
