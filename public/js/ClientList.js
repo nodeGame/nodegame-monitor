@@ -155,7 +155,7 @@
         this.roomTable.setHeader(['Room']);
         this.clientTable.setHeader([
             this.selectAll,
-            'ID', 'Type', 'Stage', 'Level', 'Paused', 'Last Error'
+            'ID', 'Type', 'Stage', 'Stage', 'Status', 'Win', 'Last Error'
         ]);
 
         this.clientsField = null;
@@ -182,8 +182,10 @@
     };
 
     ClientList.prototype.setRoom = function(roomId, refreshClients) {
-        var roomObj, roomName;
+        var roomObj, roomName, roomSeq;
 
+
+        roomSeq = {};
         if (null === roomId) {
             roomName = null;
             // Hide client table if no room is selected:
@@ -200,10 +202,27 @@
                                 roomId);
             }
             roomName = roomObj.name;
+
+            let seq = roomObj.sequence;
+            for (let i = 0 ; i < seq.length ; i++) {
+                let value = (i+1);
+                let text = seq[i].id;
+                for (let j = 0 ; j < seq[i].steps.length ; j++) {
+                    let ss = seq[i].steps.length === 1;
+                    let value2 = value + '.' + (j+1);
+                    let text2 = ss ? text : text + '.' + seq[i].steps[j];
+                    roomSeq[value2] = text2;
+                }
+            }
         }
 
         this.roomId = roomId;
         this.roomName = roomName;
+        this.roomSeq = roomSeq;
+
+
+
+
         this.roomLogicId = null;
 
         node.emit('ROOM_SELECTED', roomObj);
@@ -565,16 +584,37 @@
     ClientList.prototype.writeClients = (function() {
 
         function addClientToRow(prevSel, clientObj) {
+            // Store info.
             this.clientMap[clientObj.id] = clientObj;
+
+            // Prepare data for table.
+
+            // Client id.
+            let clientId = clientObj.id || 'N/A';
+            if (clientId.length > 8) {
+                let short = '...' + clientId.substring(clientId.length-5);
+                clientId = W.get('span', {
+                    title: clientId,
+                    innerHTML: short
+                });
+            }
+
+            // Stage: num, seq, level.
             let stage = 'N/A';
             if (clientObj.stage) {
                 stage = clientObj.stage.stage + '.' + clientObj.stage.step;
                 let r = clientObj.stage.round;
                 if (r > 1) stage += ' (' + r + ')';
             }
+            debugger
+            let stageId = this.roomSeq[clientObj.stage.stage + '.' + clientObj.stage.step] || 'N/A';
+            let stageLevel = stageLevels[clientObj.stageLevel];
+            if (clientObj.paused) stageLevel += '(paused)';
+
+
             this.clientTable.addRow([
                 {id: clientObj.id, prevSel: prevSel, that: this},
-                clientObj.id || 'N/A',
+                clientId,
                 // clientObj.sid || 'N/A',
                 {
                     type: 'string' !== typeof clientObj.clientType ?
@@ -583,8 +623,9 @@
                 },
                 // 'boolean' === typeof clientObj.admin ? clientObj.admin : 'N/A',
                 stage,
-                stageLevels[clientObj.stageLevel],
-                'boolean' === typeof clientObj.paused ? clientObj.paused : 'N/A',
+                stageId,
+                stageLevel,
+                clientObj.win ?? '-',
                 clientObj.log || '-'
             ]);
         }

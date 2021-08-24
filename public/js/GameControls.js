@@ -1,6 +1,6 @@
 /**
  * # GameControls widget for nodeGame
- * Copyright(c) 2019 Stefano Balietti
+ * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
  * Sends game-related messages to clients
@@ -18,7 +18,7 @@
 
     // ## Meta-data
 
-    GameControls.version = '0.3.0';
+    GameControls.version = '0.4.0';
     GameControls.description = 'Sends game-related messages to clients';
 
     GameControls.title = 'Game Controls';
@@ -47,7 +47,7 @@
         var that;
         var tableRow2, tableCell2;
         var btnDiv, button, forceCheckbox, label;
-       
+
         that = this;
 
         // Add row for buttons:
@@ -63,13 +63,18 @@
             className: 'force-checkbox'
         });
         label.appendChild(document.createTextNode(' Force'));
-        
-        btnDiv.appendChild(createCmdButton('PAUSE', 'Pause', forceCheckbox));
-        btnDiv.appendChild(createCmdButton('RESUME', 'Resume', forceCheckbox));
+
+        let btn = createCmdButton('PAUSE', 'Pause',
+                                  forceCheckbox, 'btn btn-danger');
+        btnDiv.appendChild(btn);
+
+        btn = createCmdButton('RESUME', 'Resume',
+                                  forceCheckbox, 'btn btn-warning');
+        btnDiv.appendChild(btn);
 
         btnDiv.appendChild(label);
         btnDiv.appendChild(document.createElement('hr'));
-        
+
         // Add buttons for setup/start/stop.
 
         // Force checkbox and label.
@@ -79,26 +84,26 @@
             className: 'force-checkbox'
         });
         label.appendChild(document.createTextNode(' Force'));
-        
+
         btnDiv.appendChild(
             createCmdButton('SETUP', 'Setup', forceCheckbox, 'btn-sm'));
         btnDiv.appendChild(
             createCmdButton('START', 'Start', forceCheckbox, 'btn-sm'));
         btnDiv.appendChild(
             createCmdButton('STOP', 'Stop', forceCheckbox, 'btn-sm'));
-        
-        btnDiv.appendChild(label);        
+
+        btnDiv.appendChild(label);
         btnDiv.appendChild(document.createElement('hr'));
-        
+
         this.selectStage = W.add('select', this.bodyDiv);
-        
+
         // Add StateBar.
         createInputAndButton(
             this,
             'Change stage to',
             'Set',
             function(stageField) {
-                
+
                 var to, stage;
                 to = node.game.clientList.getSelectedClients();
                 try {
@@ -109,7 +114,7 @@
                     node.err('Invalid stage, not sent: ' + e);
                 }
             });
-        
+
 
 
         this.selectStage.onchange = function() {
@@ -126,26 +131,25 @@
         this.room = room;
         populateSelectStage(this.selectStage, room.sequence);
     };
- 
-    
+
+
     // Helper functions.
 
     /**
      * Make a button that sends a given ROOMCOMMAND.
      */
     function createCmdButton(cmd, label, forceCheckbox, className) {
-        var button;
-        button = document.createElement('button');
-        button.className = className || 'btn';
-        button.innerHTML = label;
+        let button = W.get('button', {
+            className: className || 'btn-outline-secondary',
+            innerHTML: label
+        });
         button.onclick = function() {
-            var cl;
-            var clients, doLogic;
-            cl = node.game.clientList;
+            let cl = node.game.clientList;
             // Get selected clients.
-            clients = cl.getSelectedClients();
+            let clients = cl.getSelectedClients();
             if (!clients || clients.length === 0) return;
             // If the room's logic client is selected, handle it specially.
+            let doLogic;
             if (node.game.roomLogicId) {
                 doLogic = J.removeElement(cl.roomLogicId, clients);
             }
@@ -172,7 +176,7 @@
         select.innerHTML = '';
         // Select from list option.
         opt = document.createElement('option');
-        opt.text = '- Select from list or type below -';
+        opt.text = 'Select here or type below';
         opt.value = -1;
         select.appendChild(opt);
         // Sequence.
@@ -205,14 +209,14 @@
         tmp.className = 'input-group-btn';
 
         var button = document.createElement('button');
-        button.className = 'btn btn-default';
+        button.className = 'btn btn-secondary';
         button.innerHTML = text;
         button.type = 'button';
         button.style['padding-bottom'] = '7px';
 
         // Pass input to onclick callback.
         if (onclick) button.onclick = function() { onclick(myInput); };
-        
+
         tmp.appendChild(button);
         inputGroup.appendChild(tmp);
 

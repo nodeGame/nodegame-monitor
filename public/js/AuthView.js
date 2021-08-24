@@ -1,6 +1,6 @@
 /**
  * # AuthView widget for nodeGame
- * Copyright(c) 2017 Stefano Balietti
+ * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
  * Shows files available in data/ dir.
@@ -14,11 +14,9 @@
 
     node.widgets.register('AuthView', AuthView);
 
-    var JSUS = node.JSUS;
-
     // ## Meta-data
 
-    AuthView.version = '0.0.1';
+    AuthView.version = '0.1.0';
     AuthView.description = 'Displays the current authorization settings.';
 
     AuthView.title = 'Authorization Settings';
@@ -26,7 +24,6 @@
 
     // ## Dependencies
     AuthView.dependencies = {
-        JSUS: {},
         Table: {}
     };
 
@@ -123,8 +120,8 @@
         t.addRow(['Total Player IDs', this.auth.totalPlayerIds]);
         if (this.auth.claimedIds) {
             t.addRow(['Claimed IDs', this.auth.claimedIds]);
-        }        
-        t.parse();        
+        }
+        t.parse();
     };
 
     function makeLink(that, name, anchor, file) {
