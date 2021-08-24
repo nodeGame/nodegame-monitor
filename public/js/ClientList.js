@@ -155,7 +155,7 @@
         this.roomTable.setHeader(['Room']);
         this.clientTable.setHeader([
             this.selectAll,
-            'ID', 'Type', 'Stage', 'Stage', 'Status', 'Win', 'Last Error'
+            'ID', 'Type', 'Step', 'Step Name', 'Status', 'Tot. Time', 'Win', 'Last Error'
         ]);
 
         this.clientsField = null;
@@ -204,14 +204,17 @@
             roomName = roomObj.name;
 
             let seq = roomObj.sequence;
-            for (let i = 0 ; i < seq.length ; i++) {
-                let value = (i+1);
-                let text = seq[i].id;
-                for (let j = 0 ; j < seq[i].steps.length ; j++) {
-                    let ss = seq[i].steps.length === 1;
-                    let value2 = value + '.' + (j+1);
-                    let text2 = ss ? text : text + '.' + seq[i].steps[j];
-                    roomSeq[value2] = text2;
+            if (seq) {
+                // Semi-duplicated code in GameControls.
+                for (let i = 0 ; i < seq.length ; i++) {
+                    let value = (i+1);
+                    let text = seq[i].id;
+                    for (let j = 0 ; j < seq[i].steps.length ; j++) {
+                        let ss = seq[i].steps.length === 1;
+                        let value2 = value + '.' + (j+1);
+                        let text2 = ss ? text : text + '.' + seq[i].steps[j];
+                        roomSeq[value2] = text2;
+                    }
                 }
             }
         }
@@ -606,11 +609,14 @@
                 let r = clientObj.stage.round;
                 if (r > 1) stage += ' (' + r + ')';
             }
-            debugger
+
             let stageId = this.roomSeq[clientObj.stage.stage + '.' + clientObj.stage.step] || 'N/A';
             let stageLevel = stageLevels[clientObj.stageLevel];
             if (clientObj.paused) stageLevel += '(paused)';
 
+            // Time.
+            let d = clientObj.connectTime;
+            let time = d ? diffMinutes(new Date(d)) + 'min' : 'N/A';
 
             this.clientTable.addRow([
                 {id: clientObj.id, prevSel: prevSel, that: this},
@@ -625,6 +631,7 @@
                 stage,
                 stageId,
                 stageLevel,
+                time,
                 clientObj.win ?? '-',
                 clientObj.log || '-'
             ]);
@@ -836,6 +843,12 @@
         }
         if (treatmentName) s += ' &nbsp;:&nbsp; ' + treatmentName;
         return s;
+    }
+
+    function diffMinutes(dt2, dt1 = new Date()) {
+        let diff = (dt2.getTime() - dt1.getTime()) / 1000;
+        diff /= 60;
+        return Math.abs(Math.round(diff));
     }
 
 })(node);
