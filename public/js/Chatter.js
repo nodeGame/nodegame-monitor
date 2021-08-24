@@ -14,8 +14,6 @@
 
     node.widgets.register('Chatter', Chatter);
 
-    var JSUS = node.JSUS;
-
     // ## Meta-data
 
     Chatter.version = '0.3.0';
@@ -26,7 +24,6 @@
 
     // ## Dependencies
     Chatter.dependencies = {
-        JSUS: {}
     };
 
     // Position 0 is default.
@@ -212,7 +209,7 @@
 
         var btnMode = document.createElement('button');
         btnMode.className = 'btn btn-secondary dropdown-toggle';
-        btnMode['data-toggle'] = 'dropdown';
+        btnMode['data-bs-toggle'] = 'dropdown';
         btnMode['aria-haspopup'] = 'true';
         btnMode['aria-expanded'] = 'false';
         btnMode.innerHTML = Chatter.modes[0].name + ' ';
@@ -232,6 +229,7 @@
             li = document.createElement('li');
             li.id = tmp.id;
             a = document.createElement('a');
+            a.className = 'dropdown-item';
             a.href = '#';
             a.innerHTML = '<strong>' + tmp.name + '</strong>: ' +
                 tmp.description;
@@ -262,6 +260,7 @@
                 ul.style = 'display: block; text-align: left';
                 toggled = true;
             }
+            return false;
         };
 
         ul.onclick = function(eventData) {

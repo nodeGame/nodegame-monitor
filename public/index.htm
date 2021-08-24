@@ -12,11 +12,11 @@
 <script src="js/FileViewer.js" charset="utf-8"></script>
 <!-- <script src="js/ResultsView.js" charset="utf-8"></script> -->
 <script src="js/MemoryView.js" charset="utf-8"></script>
-<script src="js/ExportView.js" charset="utf-8"></script>
 <script src="js/AuthView.js" charset="utf-8"></script>
 <script src="js/RequirementsView.js" charset="utf-8"></script>
 <script src="js/WaitRoomView.js" charset="utf-8"></script>
 <script src="js/ServerView.js" charset="utf-8"></script>
+<script src="js/Exporter.js" charset="utf-8"></script>
 <!-- <script src="js/LogFiles.js" charset="utf-8"></script> -->
 <script src="js/Chatter.js" charset="utf-8"></script>
 <script src="js/UIControls.js" charset="utf-8"></script>
@@ -26,7 +26,8 @@
 <script src="js/Kicker.js" charset="utf-8"></script>
 <script src="js/Monitor.js" charset="utf-8"></script>
 <!-- Third party libraries -->
-<script src="resources/jquery-1.11.1.min.js" charset="utf-8"></script>
+<!-- <script src="resources/jquery-1.11.1.min.js" charset="utf-8"></script> -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 <!-- bootstrap -->
 <!-- <script src="resources/bootstrap.js" charset="utf-8"></script>
@@ -38,7 +39,6 @@
 <!-- jstree -->
 <!-- <script src="resources/jstree/jstree.js" charset="utf-8"></script>
 <script src="resources/jstree.js" charset="utf-8"></script> -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
 <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
 
@@ -48,8 +48,7 @@
 <!-- Final CSS -->
 <link rel="stylesheet" href="./css/monitor.css"></link>
 <div id="header">
-  <div id="refresh-container" style="float: left; padding: 0; margin: 0">
-    <!-- Split button -->
+  <div id="refresh-container" style="float: left; padding: 0; margin: 0; display: none">
     <div class="btn-group" role="group">
       <button type="button" id="refresh"  class="btn btn-primary">Refresh</button>
       <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
@@ -75,10 +74,13 @@
 
 <div class="container">
     <div class="row">
-        <div class="col" id="main-container"></div>
+        <div class="card-group">
+
+            <div class="col" id="main-container"></div>
+        </div>
     </div>
     <div class="row">
-        <div id="wall-container" class="col">
+        <div id="wall-container" class="col my-5">
         </div>
     </div>
 </div>

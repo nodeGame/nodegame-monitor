@@ -1,6 +1,6 @@
 /**
  * # Kicker widget for nodeGame
- * Copyright(c) 2019 Stefano Balietti
+ * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
  * Kicks, moves and redirect players
@@ -14,11 +14,9 @@
 
     node.widgets.register('Kicker', Kicker);
 
-    var JSUS = node.JSUS;
-
     // ## Meta-data
 
-    Kicker.version = '0.1.0';
+    Kicker.version = '0.2.0';
     Kicker.description = 'Kicks, moves and redirect players';
 
     Kicker.title = 'Redirect or Kick Out';
@@ -41,7 +39,7 @@
         this.bodyDiv.appendChild(str);
         this.bodyDiv.appendChild(document.createElement('br'));
         this.bodyDiv.appendChild(document.createElement('br'));
-        
+
         that = this;
 
         elems = getInputAndButton(
@@ -63,11 +61,11 @@
             });
         inputGroup = elems[0];
         redirectInput = elems[1];
-        
+
         this.bodyDiv.appendChild(inputGroup);
 
         this.bodyDiv.appendChild(document.createElement('hr'));
-        
+
         kickBtn = document.createElement('button');
         kickBtn.className = 'btn btn-danger';
         kickBtn.innerHTML = 'Kick Out';
@@ -105,14 +103,14 @@
         tmp.className = 'input-group-btn';
 
         var button = document.createElement('button');
-        button.className = 'btn btn-default';
+        button.className = 'btn btn-outline-primary';
         button.innerHTML = text;
         button.type = 'button';
         button.style['padding-bottom'] = '7px';
 
         // Pass input to onclick callback.
         if (onclick) button.onclick = function() { onclick(myInput); };
-        
+
         tmp.appendChild(button);
         inputGroup.appendChild(tmp);
 

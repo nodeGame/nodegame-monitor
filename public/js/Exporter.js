@@ -1,5 +1,5 @@
 /**
- * # ExportView widget for nodeGame
+ * # Exporter widget for nodeGame
  * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
@@ -12,27 +12,29 @@
 
     "use strict";
 
-    node.widgets.register('ExportView', ExportView);
+    node.widgets.register('Exporter', Exporter);
 
     const Table = W.Table;
 
     // ## Meta-data
 
-    ExportView.version = '0.2.0';
-    ExportView.description = 'Exports logs and data';
+    Exporter.version = '0.2.0';
+    Exporter.description = 'Exports data and logs';
 
-    ExportView.title = 'Export View';
-    ExportView.className = 'custommsg';
+    Exporter.title = 'Export Data/Logs';
+    Exporter.className = 'exporter';
 
     // ## Dependencies
-    ExportView.dependencies = {
+    Exporter.dependencies = {
         Table: {}
     };
 
-    function ExportView(options) {
+    function Exporter(options) {
     }
 
-    ExportView.prototype.append = function() {
+    Exporter.prototype.append = function() {
+
+        this.panelDiv.classList.add('h-100');
 
         let radioGroup = `
 <div class="btn-group" role="group" aria-label="Log or Data Group">

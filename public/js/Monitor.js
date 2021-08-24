@@ -108,6 +108,16 @@ function Monitor(node) {
             return tmpElem;
         };
 
+        this.addTile = (name, root, opts = {}) => {
+            // m-5: margin x5
+            // if (!opts.className) opts.className = 'col-sm-3 m-5';
+            let col = W.add('div', root, 'col');
+            let w = node.widgets.append(name, col, opts);
+            return w;
+        };
+
+
+
         this.refreshChannels = function() {
             // Ask server for channel list.
             that.waitingForChannels = true;
@@ -321,48 +331,83 @@ function Monitor(node) {
 
         // Client list and controls.
         tmpElem = this.addTab('clients', true);
-        clientList = node.widgets.append('ClientList', tmpElem);
+        // clientList = node.widgets.append('ClientList', tmpElem);
+        clientList = this.addTile('ClientList', tmpElem, { className: 'xx'});
         this.clientList = clientList;
 
         // Game details.
         tmpElem = this.addTab('settings');
-        node.widgets.append('GameDetails', tmpElem);
+        // node.widgets.append('GameDetails', tmpElem);
+        this.addTile('GameDetails', tmpElem);
 
         // WaitRoom view.
         tmpElem = this.addTab('waitroom');
-        node.widgets.append('WaitRoomView', tmpElem);
+        // node.widgets.append('WaitRoomView', tmpElem);
+        this.addTile('WaitRoomView', tmpElem);
 
         // Auth view.
         tmpElem = this.addTab('auth');
-        node.widgets.append('AuthView', tmpElem);
+        // node.widgets.append('AuthView', tmpElem);
+        this.addTile('AuthView', tmpElem);
 
         // Auth view.
         tmpElem = this.addTab('requirements');
-        node.widgets.append('RequirementsView', tmpElem);
+        // node.widgets.append('RequirementsView', tmpElem);
+        this.addTile('RequirementsView', tmpElem);
 
         // Results view.
         tmpElem = this.addTab('results');
-        node.widgets.append('FileViewer', tmpElem, {
+        // node.widgets.append('FileViewer', tmpElem, {
+        //     type: 'RESULTS',
+        //     title: 'Data Folder'
+        // });
+        // node.widgets.append('MemoryView', tmpElem);
+        // node.widgets.append('ExportView', tmpElem);
+        // node.widgets.append('FileViewer', tmpElem, {
+        //     type: 'EXPORT',
+        //     title: 'Exports Folder',
+        //     sort: 'date'
+        // });
+
+        this.addTile('FileViewer', tmpElem, {
             type: 'RESULTS',
-            title: 'Data Folder'
+            title: 'Data Folder',
+            className: 'resultsview'
         });
-        node.widgets.append('MemoryView', tmpElem);
-        node.widgets.append('ExportView', tmpElem);
-        node.widgets.append('FileViewer', tmpElem, {
+        this.addTile('MemoryView', tmpElem);
+        this.addTile('FileViewer', tmpElem, {
             type: 'EXPORT',
-            title: 'Exports Folder',
-            sort: 'date'
+            title: 'Export Folder',
+            sort: 'date',
+            className: 'exportview'
         });
 
         // Server view.
         tmpElem = this.addTab('server');
-        node.widgets.append('ServerView', tmpElem);
-        node.widgets.append('FileViewer', tmpElem, {
+        // node.widgets.append('ServerView', tmpElem);
+        // node.widgets.append('FileViewer', tmpElem, {
+        //     type: 'LOGS',
+        //     title: 'Logs Folder',
+        //     sort: 'date'
+        // });
+        this.addTile('ServerView', tmpElem);
+        this.addTile('FileViewer', tmpElem, {
             type: 'LOGS',
             title: 'Logs Folder',
-            sort: 'date'
+            sort: 'date',
+            className: 'logsview'
         });
+        this.addTile('Exporter', tmpElem);
+
         // node.widgets.append('LogFiles', tmpElem);
+
+
+        this.wall = node.widgets.append(
+            'DebugWall',
+            document.getElementById('wall-container'), {
+                collapsible: true
+        });
+
 
         // Refresh.
         this.refresh();

@@ -11,10 +11,10 @@
   font-weight: 500;
 }
 
-.monitor_tile .panel-body {
+/* .monitor_tile .card-body {
   height: 260px;
   width: 300px;
-}
+} */
 
 .clearfix {
   overflow: auto;
@@ -132,7 +132,7 @@ table {
 
 /* CustomMsg */
 
-.custommsg .panel-body {
+.custommsg .card-body {
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -142,7 +142,7 @@ table {
 }
 
 .custommsg table tr td:last-child {
-  width: 250px;
+  width: 230px;
 }
 
 .custommsg input, .custommsg select, .custommsg textarea {
@@ -195,7 +195,7 @@ table {
 
 /* .chat {} */
 
-.chat .panel-body {
+.chat .card-body {
   width: 330px;
   height: 380px;
 }
@@ -336,7 +336,7 @@ ul.nav-tabs {
   margin-right: 50px;;
 }
 
-.resultsview .panel-body {
+.resultsview .card-body {
   max-height: 500px;
   overflow-y: scroll;
 }
@@ -386,14 +386,14 @@ table.auth td {
 /* Log Files */
 /* Server View */
 
-.serverview .panel-body,.logfiles .panel-body {
+.serverview .card-body,.logfiles .card-body {
   min-width: 200px;
   max-width: 300px;
   height: 350px;
 }
 
 
-.logfiles .panel-body {
+.logfiles .card-body {
   overflow-y: scroll;
 }
 

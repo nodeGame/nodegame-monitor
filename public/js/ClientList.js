@@ -255,11 +255,6 @@
             className: 'form-control',
         });
 
-        this.wall = node.widgets.append(
-            'DebugWall',
-            document.getElementById('wall-container'), {
-                collapsible: true
-            });
 
         this.channelTable.parse();
 

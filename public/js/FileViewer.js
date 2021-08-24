@@ -20,7 +20,7 @@
     FileViewer.description = 'Displays the results files in a folder.';
 
     FileViewer.title = 'File Viewer';
-    FileViewer.className = 'resultsview';
+    FileViewer.className = 'fileviewer';
 
     // ## Dependencies
     FileViewer.dependencies = {
