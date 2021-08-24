@@ -155,7 +155,7 @@
         this.roomTable.setHeader(['Room']);
         this.clientTable.setHeader([
             this.selectAll,
-            'ID', 'Type', 'Admin', 'Stage', 'Level', 'Paused', 'Last Error'
+            'ID', 'Type', 'Stage', 'Level', 'Paused', 'Last Error'
         ]);
 
         this.clientsField = null;
@@ -501,6 +501,12 @@
 
         function addClientToRow(prevSel, clientObj) {
             this.clientMap[clientObj.id] = clientObj;
+            let stage = 'N/A';
+            if (clientObj.stage) {
+                stage = clientObj.stage.stage + '.' + clientObj.stage.step;
+                let r = clientObj.stage.round;
+                if (r > 1) stage += ' (' + r + ')';
+            }
             this.clientTable.addRow([
                 {id: clientObj.id, prevSel: prevSel, that: this},
                 clientObj.id || 'N/A',
@@ -510,9 +516,8 @@
                         'N/A' : clientObj.clientType,
                     thisMonitor: (clientObj.id === node.player.id)
                 },
-                'boolean' === typeof clientObj.admin ? clientObj.admin : 'N/A',
-                clientObj.stage ?
-                    GameStage.toHash(clientObj.stage, 'S.s-r') : 'N/A',
+                // 'boolean' === typeof clientObj.admin ? clientObj.admin : 'N/A',
+                stage,
                 stageLevels[clientObj.stageLevel],
                 'boolean' === typeof clientObj.paused ? clientObj.paused : 'N/A',
                 clientObj.log || '-'

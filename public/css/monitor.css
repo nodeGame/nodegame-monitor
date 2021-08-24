@@ -79,10 +79,6 @@ table {
   /* max-width: 800px; */
 }
 
-.clientlist {
-  width: 100%;
-}
-
 .monitor-checkbox {
   margin-left: 5px;
   vertical-align: text-top;
@@ -121,6 +117,20 @@ table {
  * Monitor widgets
  * ***************
  */
+
+/* Client List */
+
+ .clientlist {
+   width: 100%;
+ }
+
+ .clientlist a {
+   text-decoration: none;
+ }
+
+ .clientlist a:hover {
+   text-decoration: underline;
+ }
 
 
 /* GameControls */
@@ -275,9 +285,10 @@ table#gametable tr td {
   border: 1px solid #CCC;
 }
 
-.panel-heading > ol.breadcrumb {
+.breadcrumb {
   margin: 0;
   padding: 0;
+  font-size: x-large;
 }
 
 .ng_clickable:hover {

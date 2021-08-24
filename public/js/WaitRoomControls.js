@@ -200,7 +200,7 @@
 
   WaitRoomControls.prototype.refreshTreatments = function() {
     var treatments, ul;
-    var li, a, t, liT1, liT2, liT3, litT4;
+    var li, a, t, liT1, liT2, liT3, liT4;
     var i, chosenTreatment;
 
     ul = this.treatmentsList;
