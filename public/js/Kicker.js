@@ -43,7 +43,7 @@
         that = this;
 
         elems = getInputAndButton(
-            'Full URI or page in game',
+            'Full URI or frame',
             'Redirect',
             function() {
                 var uri, clients;

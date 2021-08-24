@@ -11,10 +11,10 @@
   font-weight: 500;
 }
 
-/* .monitor_tile .card-body {
+.monitor_tile .card-body {
   height: 260px;
   width: 300px;
-} */
+}
 
 .clearfix {
   overflow: auto;
@@ -329,23 +329,38 @@ ul.nav-tabs {
 }
 */
 
-/* Results View */
+/* FileViewer */
 
-.resultsview, .exportview {
-  max-width: 500px;
-  margin-right: 50px;;
-}
-
-.resultsview .card-body {
+.fileviewer .card-body {
   max-height: 500px;
   overflow-y: scroll;
 }
 
+/* Results View */
+
+.resultsview {
+  max-width: 500px;
+  margin-right: 50px;;
+}
+
 /* Memory View */
 
-.memoryview, .exportview {
-  max-width: 450px;
+.memoryview {
+  max-width: 470px;
 }
+
+/* Memory View */
+
+.exporter {
+  width: 470px;
+  height: 206px !important;
+}
+
+.exporter textarea {
+  width: 100%;
+}
+
+
 
 /* For generic settings-viewers: auth, waitroom, requirements, etc. */
 
@@ -376,7 +391,7 @@ table.auth td {
 }
 
 .version-module {
-  width: 100px;
+  width: 120px;
   display: inline-block;
   text-align: right;
   font-weight: bold;
@@ -389,7 +404,7 @@ table.auth td {
 .serverview .card-body,.logfiles .card-body {
   min-width: 200px;
   max-width: 300px;
-  height: 350px;
+  height: 400px;
 }
 
 

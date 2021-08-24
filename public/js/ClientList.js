@@ -361,7 +361,8 @@
         opts = {
             collapsible: true,
             hidden: true,
-            className: ' monitor_tile'
+            className: ' monitor_tile mt-2 mx-2',
+            bootstrap5: true
         };
 
         // The ClientList tab.

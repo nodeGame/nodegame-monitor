@@ -112,6 +112,7 @@ function Monitor(node) {
             // m-5: margin x5
             // if (!opts.className) opts.className = 'col-sm-3 m-5';
             let col = W.add('div', root, 'col');
+            opts.bootstrap5 = true;
             let w = node.widgets.append(name, col, opts);
             return w;
         };
@@ -374,7 +375,7 @@ function Monitor(node) {
             title: 'Data Folder',
             className: 'resultsview'
         });
-        this.addTile('MemoryView', tmpElem);
+        this.addTile('MemoryView', tmpElem, { className: 'mb-2' });
         this.addTile('FileViewer', tmpElem, {
             type: 'EXPORT',
             title: 'Export Folder',
@@ -405,7 +406,8 @@ function Monitor(node) {
         this.wall = node.widgets.append(
             'DebugWall',
             document.getElementById('wall-container'), {
-                collapsible: true
+                collapsible: true,
+                bootstrap5: true
         });
 
 

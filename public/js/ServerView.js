@@ -1,6 +1,6 @@
 /**
  * # ServerView widget for nodeGame
- * Copyright(c) 2018 Stefano Balietti <ste@nodegame.org>
+ * Copyright(c) 2021 Stefano Balietti <ste@nodegame.org>
  * MIT Licensed
  *
  * Shows information about server and its submodules
@@ -14,11 +14,9 @@
 
     node.widgets.register('ServerView', ServerView);
 
-    var JSUS = node.JSUS;
-
     // ## Meta-data
 
-    ServerView.version = '0.1.0';
+    ServerView.version = '0.1.1';
     ServerView.description = 'Shows information about server and its submodules';
 
     ServerView.title = 'Server Info';
@@ -54,7 +52,7 @@
 
     ServerView.prototype.displayVersionsData = function(versions) {
         var m, ul, vm;
-        ul = document.createElement(ul);
+        ul = document.createElement('ul');
         ul.className = 'version-module-list';
         ul.appendChild(createVersionLi('NodeGame', versions.nodegame));
         ul.appendChild(createVersionLi('server', versions.server, true));
@@ -77,10 +75,10 @@
     };
 
     // ## Helper functions.
-    
+
     /**
      * ### createVersionLi
-     * 
+     *
      * Creates a <LI> tag with info about module and version
      *
      * @param {string} m The name of the module
@@ -97,7 +95,27 @@
         if (n) span.style['margin-top'] = '12px';
         span.innerHTML = m;
         li.appendChild(span);
-        li.appendChild(document.createTextNode(': ' + v));
+
+        let link = 'https://';
+        if (m === 'express') {
+            link += 'expressjs.com'
+        }
+        else if (m === 'socket.io') {
+            link += m;
+        }
+        else {
+            let ar = ['NDDB', 'JSUS', 'NodeGame'];
+            link += 'github.com/nodegame/';
+            if (!~ar.indexOf(m)) link += 'nodegame-';
+            if (m === 'gameTemplate') link += 'game-template';
+            else link += m.toLowerCase();
+        }
+        let a = document.createElement('a');
+        a.href = link;
+        a.target = '_blank';
+        a.innerHTML = v;
+        li.appendChild(document.createTextNode(': '));
+        li.appendChild(a);
         return li;
     }
 

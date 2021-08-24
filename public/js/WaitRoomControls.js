@@ -131,7 +131,7 @@
 
       // Here we create the Button holding the treatment.
       var btnTreatment = document.createElement("button");
-      btnTreatment.className = "btn btn-default btn " + "dropdown-toggle";
+      btnTreatment.className = "btn btn-primary dropdown-toggle";
       btnTreatment["data-toggle"] = "dropdown";
       btnTreatment["aria-haspopup"] = "true";
       btnTreatment["aria-expanded"] = "false";
@@ -179,7 +179,7 @@
 
       var str;
       str = document.createTextNode(
-        "Dipatch may fail if not " + "enough players."
+        "May fail if not enough players."
       );
       w.dispatchNowDiv.appendChild(str);
       w.dispatchNowDiv.appendChild(document.createElement("br"));
@@ -200,7 +200,7 @@
 
   WaitRoomControls.prototype.refreshTreatments = function() {
     var treatments, ul;
-    var li, a, t, liT1, liT2, liT3;
+    var li, a, t, liT1, liT2, liT3, litT4;
     var i, chosenTreatment;
 
     ul = this.treatmentsList;
@@ -208,7 +208,7 @@
     // Clear the list.
     ul.innerHTML = "";
 
-    treatments = ["treatment_random", "treatment_rotate"];
+    treatments = [ "treatment_random", "treatment_rotate", "treatment_latin_square" ];
 
     if (node.game.channelInUse) {
       // Reusing t.
@@ -221,7 +221,8 @@
       // only Connects Bots should be used.
       if (this.execMode === "WAIT_FOR_N_PLAYERS") {
         this.dispatchNowDiv.style.display = "none";
-      } else {
+      }
+      else {
         this.dispatchNowDiv.style.display = "";
       }
 
@@ -247,12 +248,14 @@
       li = document.createElement("li");
       li.id = t;
       a = document.createElement("a");
+      a.className = 'dropdown-item';
       a.href = "#";
       a.innerHTML = "<strong>" + t + "</strong>";
       li.appendChild(a);
       if (t === "treatment_rotate") liT1 = li;
       else if (t === "treatment_random") liT2 = li;
-      else if (t === WaitRoomControls.customCbName) liT3 = li;
+      else if (t === "treatment_latin_square") liT3 = li;
+      else if (t === WaitRoomControls.customCbName) liT4 = li;
       else ul.appendChild(li);
 
       // Set chosen treatment.
@@ -270,7 +273,8 @@
     ul.appendChild(li);
     ul.appendChild(liT1);
     ul.appendChild(liT2);
-    if (liT3) ul.appendChild(liT3);
+    ul.appendChild(liT3);
+    if (liT4) ul.appendChild(liT4);
   };
 
   /**
@@ -283,13 +287,14 @@
     inputGroupSize,
     treatmentInput
   ) {
-    var that, button;
-    that = this;
-    button = document.createElement("button");
+
+    let that = this;
+    let button = document.createElement("button");
     button.className = "btn";
     button.innerHTML = label;
     if (command === "OPEN") button.className += " btn-success";
     else if (command === "CLOSE") button.className += " btn-danger";
+    else button.className += ' btn-primary';
 
     button.onclick = function() {
       var data, value;
