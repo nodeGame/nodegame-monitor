@@ -159,6 +159,12 @@
         ]);
 
         this.clientsField = null;
+
+
+        // ## The button controlling refresh/auto-refresh.
+        this.refreshButton = null;
+        // ## The auto-refresh options.
+        this.refreshDropDown = null;
     }
 
     ClientList.prototype.setChannel = function(channelName) {
@@ -257,6 +263,8 @@
             node.game.refresh();
         };
 
+
+        let autoRefreshInterval = null;
         this.refreshDropDown = document.getElementById('refreshDropDown');
         this.refreshDropDown.onclick = function(event) {
             var target, interval;

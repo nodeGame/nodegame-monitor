@@ -21,8 +21,7 @@ function Monitor(node) {
 
     stager.setOnInit(function() {
         var that;
-        var refreshButton, autoRefreshLabel;
-        var autoRefresh, autoRefreshInterval;
+
         var tmpElem;
         var clientList;
 
@@ -58,11 +57,6 @@ function Monitor(node) {
         this.alertClose.onclick = function() {
             that.alertDiv.style.display = 'none';
         };
-
-        // ## The button controlling refresh/auto-refresh.
-        this.refreshButton = null;
-        // ## The auto-refresh options.
-        this.refreshDropDown = null;
 
         // Flags for receiving data.
         this.waitingForChannels = false;
