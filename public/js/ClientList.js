@@ -222,6 +222,7 @@
 
         // Add tables in a 3x1 table element:
         tableStructure = document.createElement('table');
+        tableStructure.id = 'clientlist-table';
         this.bodyDiv.appendChild(tableStructure);
         tableRow = document.createElement('tr');
         tableRow.style['vertical-align'] = 'top';
@@ -246,7 +247,9 @@
         // Add client selection field:
         selectionDiv = W.add('div', this.bodyDiv, {
             id: 'selectionDiv',
-            innerHTML: 'Selected IDs: '
+            innerHTML:
+                '<strong id="client-selected-title">Selected Clients: ' +
+                '</strong><em id="selected-clients-count"></em>'
         });
 
         this.clientsField = W.add('textarea', selectionDiv, {
@@ -685,6 +688,8 @@
             }
         }
         this.clientsField.value = JSON.stringify(recipients);
+        this.bodyDiv.querySelector('#selected-clients-count').innerHTML = '(' +
+        recipients.length + ')'
     };
 
     function makeChannelTitle(chanInfo) {

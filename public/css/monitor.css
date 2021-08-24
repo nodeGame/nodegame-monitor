@@ -124,6 +124,12 @@ table {
    width: 100%;
  }
 
+ #clientlist-table {
+     display: block;
+     max-height: 400px;
+     overflow-y: scroll;
+ }
+
  .clientlist a {
    text-decoration: none;
  }
