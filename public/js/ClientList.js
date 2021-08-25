@@ -168,6 +168,7 @@
     }
 
     ClientList.prototype.setChannel = function(channelName) {
+        debugger
         if (!channelName || channelName !== this.channelName) {
             // Hide room table if channel changed or no channel is selected:
             if (this.roomTable && this.roomTable.table.parentNode) {
@@ -353,13 +354,6 @@
         var that;
         that = this;
 
-        // Upon successful connection select current channel.
-        node.on('NODEGAME_READY', function() {
-            setTimeout(function() {
-                that.setChannel(node.socket.channelName);
-            });
-        });
-
         // Listen for server reply:
         node.on('INFO_CHANNELS', function(channels) {
             // Update the contents:
@@ -490,7 +484,7 @@
     };
 
     ClientList.prototype.writeChannels = function(channels) {
-        var chanKey, chanObj;
+        var chan, chanObj;
         var elem, oldSelected;
         var that;
 
@@ -498,9 +492,9 @@
         this.channelTable.clear(true);
 
         // Create a clickable row for each channel:
-        for (chanKey in channels) {
-            if (channels.hasOwnProperty(chanKey)) {
-                chanObj = channels[chanKey];
+        for (chan in channels) {
+            if (channels.hasOwnProperty(chan)) {
+                chanObj = channels[chan];
 
                 elem = document.createElement('a');
                 elem.className = 'ng_clickable';
@@ -515,7 +509,7 @@
                     };
                 }(chanObj, elem);
 
-                if (chanKey === node.game.channelInUse) elem.click();
+                if (chan === node.game.channelInUse) elem.click();
 
                 this.channelTable.addRow(elem);
             }

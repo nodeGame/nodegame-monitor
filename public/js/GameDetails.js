@@ -14,11 +14,11 @@
 
     node.widgets.register('GameDetails', GameDetails);
 
-    var Table = node.window.Table;
+    const Table = node.window.Table;
 
     // ## Meta-data
 
-    GameDetails.version = '0.6.0';
+    GameDetails.version = '0.6.1';
     GameDetails.description = 'Displays info about a game\'s configuration.';
 
     GameDetails.title = 'Game Details';
@@ -27,14 +27,11 @@
     // ## Dependencies
 
     GameDetails.dependencies = {
-        JSUS: {},
         Table: {}
     };
 
     function GameDetails(options) {
-        var that;
-
-        that = this;
+        let that = this;
 
         this.detailTable = new Table({ className: 'viewer details' });
         this.detailTable.setLeft([
@@ -44,13 +41,13 @@
             'Treatments:',
             'Client Types:',
             'Languages:',
-            'Levels:',            
+            'Levels:',
         ]);
 
         this.gameDetailDiv = document.createElement('div');
         this.gameDetailDiv.appendChild(this.detailTable.table);
         W.add('br', this.gameDetailDiv);
-        
+
         this.treatmentTable = new Table({
             className: 'table table-striped viewer details-treatment',
             render: { pipeline : function(item) {
@@ -58,7 +55,7 @@
                     return document.createTextNode(item.content + ': ');
                 }
             }}
-            
+
         });
         // this.treatmentTable.setHeader(['Key', 'Value']);
 
@@ -79,9 +76,7 @@
     };
 
     GameDetails.prototype.listeners = function() {
-        var that;
-
-        that = this;
+        let that = this;
 
         node.on('CHANNEL_SELECTED', function(channel) {
             that.writeGameInfo();
@@ -124,7 +119,7 @@
 
         if (J.isEmpty(node.game.gamesInfo)) {
             // Name.
-            this.detailTable.addRow('No game found!');
+            this.detailTable.addRow('No games found!');
             this.detailTable.parse();
             return;
         }
@@ -147,10 +142,10 @@
 
         // Name.
         this.detailTable.addRow([selGame.info.name]);
-        
+
         // Aliases.
         if (selGame.alias.length) aliases = [selGame.alias.join(', ')]
-        else aliases = ['-'];        
+        else aliases = ['-'];
         this.detailTable.addRow(aliases);
 
         // Descr.
@@ -177,7 +172,7 @@
                     return function() {
                         that.selectedTreatment = t;
                         that.writeTreatmentInfo();
-                        
+
                     };
                 })(treatment);
                 treatmentList.appendChild(elem);
@@ -188,7 +183,7 @@
         // Client Types.
 
         this.detailTable.addRow(selGame.clientTypes.join(', '));
-        
+
         // Languages.
 
         tmp = (function(selGame) {
@@ -203,9 +198,9 @@
             }
             return res;
         })(selGame);
-        
+
         this.detailTable.addRow(tmp);
-        
+
         // Levels.
 
         tmp = (function(selGame) {
@@ -217,7 +212,7 @@
             }
             return res;
         })(selGame);
-        
+
         this.detailTable.addRow(tmp);
 
         this.detailTable.parse();

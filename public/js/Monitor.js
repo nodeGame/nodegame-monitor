@@ -34,6 +34,11 @@ function Monitor(node) {
 
         // ## The name of the selected channel
         this.channelInUse = null;
+        if (node.game.channelName) {
+            // Set own channel as default channel in use.
+            let c = node.game.channelName;
+            this.channelInUse = c.substring(0, c.lastIndexOf('/'));
+        }
 
         // ## The id of the selected room.
         this.roomInUse = null;

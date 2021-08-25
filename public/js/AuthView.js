@@ -16,7 +16,7 @@
 
     // ## Meta-data
 
-    AuthView.version = '0.1.0';
+    AuthView.version = '0.2.0';
     AuthView.description = 'Displays the current authorization settings.';
 
     AuthView.title = 'Authorization Settings';
@@ -28,20 +28,11 @@
     };
 
     function AuthView(options) {
-        var that;
-        that = this;
+        let that = this;
 
         this.prefixLink = null;
-        this.downloadLinks = [];
-
         node.once('MONITOR_URI', function(uri) {
-            var i, len, obj;
             that.prefixLink = uri + 'authsettings/';
-            i = -1, len = that.downloadLinks.length;
-            for ( ; ++i < len ; ) {
-                obj = that.downloadLinks[i];
-                makeLink(that, obj.name, obj.anchor, obj.link);
-            }
         });
 
         this.table = new W.Table({
@@ -63,26 +54,37 @@
         node.socket.send(node.msg.create({
             target: 'SERVERCOMMAND',
             text:   'INFO',
-            data: { type: 'AUTH' }
+            data: {
+                type: 'AUTH',
+                game: node.game.channelInUse
+            }
         }));
 
     };
 
     AuthView.prototype.append = function() {
+
+        this.gameNameDiv = W.add('div', this.bodyDiv);;
+        this.gameNameDiv.classList.add('mb-1', 'fs-4', 'text-center');
         this.bodyDiv.appendChild(this.table.table);
+
         // Query server:
-        this.refresh();
+        // this.refresh();
     };
 
     AuthView.prototype.listeners = function() {
-        var that;
-        that = this;
+
+        node.on('CHANNEL_SELECTED', channel => {
+            this.gameNameDiv.innerHTML = (channel || ' - ');
+            if (!channel) this.table.clear();
+            else this.refresh();
+        });
 
         // Listen for server reply.
-        node.on.data('INFO_AUTH', function(msg) {
-            console.log(msg.data);
-            that.auth = msg.data;
-            that.displayData();
+        node.on.data('INFO_AUTH', (msg) => {
+            // console.log(msg.data);
+            this.auth = msg.data;
+            this.displayData();
         });
     };
 
@@ -106,6 +108,7 @@
                 else if (i === 'outFile' || i === 'inFile') {
                     l = document.createElement('a');
                     l.target = '_blank';
+                    debugger
                     makeLink(this, i, l, s[i]);
                     l.innerHTML = s[i];
                     t.addRow([ i, l]);
@@ -125,15 +128,6 @@
     };
 
     function makeLink(that, name, anchor, file) {
-        if (!that.downloadLinks[name]) {
-            that.downloadLinks[name] = {};
-            that.downloadLinks[name].name = name;
-            that.downloadLinks[name].anchor = anchor;
-            that.downloadLinks[name].file = file;
-        }
-        else {
-            anchor = that.downloadLinks[name].anchor;
-        }
         if (that.prefixLink) {
             anchor.href = that.prefixLink + name + '/' + file;
         }
