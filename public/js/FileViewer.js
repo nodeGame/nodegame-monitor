@@ -104,22 +104,24 @@
             innerHTML: 'Refresh',
             className: 'btn btn-outline-dark btn-sm'
         })
-        .onclick = this.refresh;
+        .onclick = () => this.refresh();
 
-        W.add('button', group, {
+        this.allBtn = W.add('button', group, {
             innerHTML: 'All',
             className: 'btn btn-outline-dark btn-sm'
-        })
-        .onclick = () => {
-            this.tree.jstree().select_all();
+        });
+
+        this.allBtn.onclick = () => {
+            if (this.tree) this.tree.jstree().select_all();
         };
 
-        W.add('button', group, {
+        this.noneBtn = W.add('button', group, {
             innerHTML: 'None',
             className: 'btn btn-outline-dark btn-sm'
-        })
-        .onclick = () => {
-            this.tree.jstree().deselect_all();
+        });
+
+        this.noneBtn.onclick = () => {
+            if (this.tree) this.tree.jstree().deselect_all();
         };
 
         this.downloadBtn = W.add('button', group, {
@@ -193,10 +195,11 @@
     FileViewer.prototype.listeners = function() {
         // Listen for server reply.
         node.on.data(`INFO_${this.type}`, msg => {
-            console.log(msg.data);
-            if (this.lastModified === msg.data.lastModified) return;
+            // console.log(msg.data);
+            this.noneBtn.disabled = !msg.data.lastModified;
+            this.allBtn.disabled = !msg.data.lastModified;
 
-            this.lastModified = msg.data.lastModified;
+            this.lastModified = msg.data.lastModified || 'N/A';
             this.receivedFiles = msg.data.files;
             this.receivedFiles.sort(this.sortBy[this.currentSort]);
             this.displayData();

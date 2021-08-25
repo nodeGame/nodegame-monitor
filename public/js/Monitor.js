@@ -313,22 +313,33 @@ function Monitor(node) {
         clientList = this.addTile('ClientList', tmpElem, { className: 'xx'});
         this.clientList = clientList;
 
+        let wiki = 'https://github.com/nodeGame/nodegame/wiki/';
+
         // Game details.
         tmpElem = this.addTab('settings');
         // node.widgets.append('GameDetails', tmpElem);
-        this.addTile('GameDetails', tmpElem);
+        this.addTile('GameDetails', tmpElem, {
+            info: wiki + 'Settings-and-Treatments-v6'
+        });
+
 
         // WaitRoom view.
         tmpElem = this.addTab('waitroom');
         // node.widgets.append('WaitRoomView', tmpElem);
-        this.addTile('WaitRoomView', tmpElem);
+        this.addTile('WaitRoomView', tmpElem, {
+            info: wiki + 'Waiting-Room-v6'
+        });
 
         // Auth view.
         tmpElem = this.addTab('permissions');
         // node.widgets.append('AuthView', tmpElem);
-        this.addTile('AuthView', tmpElem);
+        this.addTile('AuthView', tmpElem, {
+            info: wiki + 'Authorization-Rules-v6'
+        });
         // node.widgets.append('RequirementsView', tmpElem);
-        this.addTile('RequirementsView', tmpElem);
+        this.addTile('RequirementsView', tmpElem, {
+            info: wiki + 'Requirements-Checkings-v6'
+        });
 
         // Auth view.
         // tmpElem = this.addTab('requirements');
@@ -371,7 +382,9 @@ function Monitor(node) {
             sort: 'date',
             className: 'logsview'
         });
-        this.addTile('Exporter', tmpElem);
+        this.addTile('Exporter', tmpElem, {
+            info: 'https://github.com/nodeGame/nodegame/wiki/Export-v7'
+        });
         this.addTile('FileViewer', tmpElem, {
             type: 'EXPORT',
             title: 'Export Folder',
