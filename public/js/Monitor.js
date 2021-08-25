@@ -1,6 +1,6 @@
 /**
  * # Monitor for nodeGame
- * Copyright(c) 2019 Stefano Balietti
+ * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
  * Creates interface with tabs showing the status of game and server
@@ -324,14 +324,14 @@ function Monitor(node) {
         this.addTile('WaitRoomView', tmpElem);
 
         // Auth view.
-        tmpElem = this.addTab('auth');
+        tmpElem = this.addTab('permissions');
         // node.widgets.append('AuthView', tmpElem);
         this.addTile('AuthView', tmpElem);
-
-        // Auth view.
-        tmpElem = this.addTab('requirements');
         // node.widgets.append('RequirementsView', tmpElem);
         this.addTile('RequirementsView', tmpElem);
+
+        // Auth view.
+        // tmpElem = this.addTab('requirements');
 
         // Results view.
         tmpElem = this.addTab('results');
@@ -350,15 +350,11 @@ function Monitor(node) {
         this.addTile('FileViewer', tmpElem, {
             type: 'RESULTS',
             title: 'Data Folder',
-            className: 'resultsview'
+            className: 'resultsview',
+            addChannelToTitle: true
         });
         this.addTile('MemoryView', tmpElem, { className: 'mb-2' });
-        this.addTile('FileViewer', tmpElem, {
-            type: 'EXPORT',
-            title: 'Export Folder',
-            sort: 'date',
-            className: 'exportview'
-        });
+
 
         // Server view.
         tmpElem = this.addTab('server');
@@ -371,11 +367,17 @@ function Monitor(node) {
         this.addTile('ServerView', tmpElem);
         this.addTile('FileViewer', tmpElem, {
             type: 'LOGS',
-            title: 'Logs Folder',
+            title: 'Log Folder',
             sort: 'date',
             className: 'logsview'
         });
         this.addTile('Exporter', tmpElem);
+        this.addTile('FileViewer', tmpElem, {
+            type: 'EXPORT',
+            title: 'Export Folder',
+            sort: 'date',
+            className: 'exportview'
+        });
 
         // node.widgets.append('LogFiles', tmpElem);
 

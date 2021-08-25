@@ -78,6 +78,8 @@
         // if (opts.title) this.title = title;
         this.type = opts.type;
         if (opts.sort) this.currentSort = opts.sort;
+
+        this.addChannelToTitle = !!opts.addChannelToTitle;
     };
 
     FileViewer.prototype.refresh = function() {
@@ -105,7 +107,7 @@
         .onclick = this.refresh;
 
         W.add('button', group, {
-            innerHTML: 'Select All',
+            innerHTML: 'All',
             className: 'btn btn-outline-dark btn-sm'
         })
         .onclick = () => {
@@ -113,7 +115,7 @@
         };
 
         W.add('button', group, {
-            innerHTML: 'Select None',
+            innerHTML: 'None',
             className: 'btn btn-outline-dark btn-sm'
         })
         .onclick = () => {
@@ -121,7 +123,7 @@
         };
 
         this.downloadBtn = W.add('button', group, {
-            innerHTML: 'Download Selected',
+            innerHTML: 'Download',
             className: 'btn btn-outline-dark btn-sm',
             disabled: true
         });
@@ -165,6 +167,13 @@
               console.error(err);
             });
         };
+
+        // this.exportBtn = W.add('button', group, {
+        //     innerHTML: 'Export',
+        //     className: 'btn btn-outline-dark btn-sm',
+        //     disabled: true
+        // });
+
         W.add('br', this.header);
 
         this.infoSpan = W.add('span', this.header, {
@@ -191,6 +200,14 @@
             this.receivedFiles = msg.data.files;
             this.receivedFiles.sort(this.sortBy[this.currentSort]);
             this.displayData();
+        });
+
+        node.on('CHANNEL_SELECTED', channel => {
+            if (this.addChannelToTitle) {
+                let title = this.title ? this.title : '';
+                if (channel) title = `${channel} / ${title}`;
+                this.setTitle(title);
+            }
         });
     };
 
@@ -259,7 +276,6 @@
         // Update metadata.
         this.updateMetadata();
     };
-
 
     FileViewer.prototype.updateMetadata = function() {
         let d = new Date(this.lastModified);

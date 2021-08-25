@@ -1,6 +1,6 @@
 /**
  * # RequirementsView widget for nodeGame
- * Copyright(c) 2019 Stefano Balietti
+ * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
  * Shows requirements settings
@@ -14,19 +14,16 @@
 
     node.widgets.register('RequirementsView', RequirementsView);
 
-    var JSUS = node.JSUS;
-
     // ## Meta-data
 
-    RequirementsView.version = '0.0.1';
+    RequirementsView.version = '0.1.0';
     RequirementsView.description = 'Displays the current requirements settings.';
 
-    RequirementsView.title = 'Requirements Settings';
+    RequirementsView.title = 'Requirements';
     RequirementsView.className = 'reqview';
 
     // ## Dependencies
     RequirementsView.dependencies = {
-        JSUS: {},
         Table: {}
     };
 
@@ -50,13 +47,14 @@
     };
 
     RequirementsView.prototype.listeners = function() {
-        var that;
-        that = this;
-        node.on('CHANNEL_SELECTED', function() {
-            that.displayData();
+        node.on('CHANNEL_SELECTED', channel => {
+            let title = this.title ? this.title : '';
+            if (channel) title = `${channel} / ${title}`;
+            this.setTitle(title);
+            this.displayData();
         });
     };
-    
+
     RequirementsView.prototype.displayData = function() {
         var i, t, s, tmp;
         // Not ready yet.
@@ -74,7 +72,7 @@
                 }
             };
         }
-        t.parse();        
+        t.parse();
     };
 
 })(node);

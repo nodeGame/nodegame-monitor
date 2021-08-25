@@ -1,6 +1,6 @@
 /**
  * # WaitRoomView widget for nodeGame
- * Copyright(c) 2019 Stefano Balietti
+ * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
  * Shows requirements settings
@@ -14,20 +14,16 @@
 
     node.widgets.register("WaitRoomView", WaitRoomView);
 
-    var JSUS = node.JSUS;
-
     // ## Meta-data
 
-    WaitRoomView.version = "0.1.0";
+    WaitRoomView.version = "0.2.0";
     WaitRoomView.description = "Displays/Edits waitroom settings";
 
-    WaitRoomView.title = "WaitRoom Settings " +
-        "<em>(Warning! Edit feature experimental, only same type allowed)</em>";
+    WaitRoomView.title = "Wait Room";
     WaitRoomView.className = "waitroomview";
 
     // ## Dependencies
     WaitRoomView.dependencies = {
-        JSUS: {},
         Table: {}
     };
 
@@ -144,7 +140,7 @@
                                 .replace(/(\r\n|\n|\r)/gm,"");
                             changed = oldValue !==
                                 value.replace(/(\r\n|\n|\r)/gm,"");
-                            
+
                             if (changed) {
                                 try {
                                     value = J.eval(value);
@@ -240,13 +236,19 @@
 
     WaitRoomView.prototype.append = function() {
         this.bodyDiv.appendChild(this.table.table);
+        let warn = document.createTextNode('Edit feature ' +
+                   'experimental, variable type fixed.');
+        this.bodyDiv.appendChild(warn);
         this.bodyDiv.appendChild(this.editSaveButton);
     };
 
     WaitRoomView.prototype.listeners = function() {
         var that;
         that = this;
-        node.on("CHANNEL_SELECTED", function() {
+        node.on("CHANNEL_SELECTED", channel => {
+            let title = this.title ? this.title : '';
+            if (channel) title = `${channel} / ${title}`;
+            this.setTitle(title);
             that.displayData();
         });
     };

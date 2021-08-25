@@ -16,10 +16,10 @@
 
     // ## Meta-data
 
-    AuthView.version = '0.2.0';
+    AuthView.version = '0.3.0';
     AuthView.description = 'Displays the current authorization settings.';
 
-    AuthView.title = 'Authorization Settings';
+    AuthView.title = 'Authorization';
     AuthView.className = 'authView';
 
     // ## Dependencies
@@ -64,8 +64,6 @@
 
     AuthView.prototype.append = function() {
 
-        this.gameNameDiv = W.add('div', this.bodyDiv);;
-        this.gameNameDiv.classList.add('mb-1', 'fs-4', 'text-center');
         this.bodyDiv.appendChild(this.table.table);
 
         // Query server:
@@ -75,7 +73,9 @@
     AuthView.prototype.listeners = function() {
 
         node.on('CHANNEL_SELECTED', channel => {
-            this.gameNameDiv.innerHTML = (channel || ' - ');
+            let title = this.title ? this.title : '';
+            if (channel) title = `${channel} / ${title}`;
+            this.setTitle(title);
             if (!channel) this.table.clear();
             else this.refresh();
         });
@@ -108,7 +108,6 @@
                 else if (i === 'outFile' || i === 'inFile') {
                     l = document.createElement('a');
                     l.target = '_blank';
-                    debugger
                     makeLink(this, i, l, s[i]);
                     l.innerHTML = s[i];
                     t.addRow([ i, l]);

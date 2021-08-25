@@ -168,7 +168,6 @@
     }
 
     ClientList.prototype.setChannel = function(channelName) {
-        debugger
         if (!channelName || channelName !== this.channelName) {
             // Hide room table if channel changed or no channel is selected:
             if (this.roomTable && this.roomTable.table.parentNode) {

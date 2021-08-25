@@ -1,6 +1,6 @@
 /**
  * # MemoryView widget for nodeGame
- * Copyright(c) 2019 Stefano Balietti
+ * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
  * Shows items stored in the memory database of the logic of each game rooms.
@@ -14,11 +14,9 @@
 
     node.widgets.register('MemoryView', MemoryView);
 
-    var JSUS = node.JSUS;
-
     // ## Meta-data
 
-    MemoryView.version = '0.2.0';
+    MemoryView.version = '0.2.1';
     MemoryView.description = 'Shows items stored in the memory database ' +
         'of the logic of each game room.';
 
@@ -26,54 +24,43 @@
     MemoryView.className = 'memoryview';
 
     // ## Dependencies
-    MemoryView.dependencies = {
-        JSUS: {},
-        Table: {}
-    };
+    MemoryView.dependencies = {};
 
     function MemoryView(options) {
-        var that;
-        that = this;
-
-        this.lastModified = null;
-        this.lastModifiedSpan = null;
-
-        this.header = document.createElement('div');
 
         this.downloadAllLink = null;
 
-        node.once('MONITOR_URI', function(uri) {
-            that.downloadAllLink.href = uri + 'memorydb/*';
+        node.once('MONITOR_URI', uri => {
+            this.downloadAllLink.href = uri + 'memorydb/*';
         });
     }
 
-    MemoryView.prototype.refresh = function() {
-//         // Ask server for games:
-//         node.socket.send(node.msg.create({
-//             target: 'SERVERCOMMAND',
-//             text:   'INFO',
-//             data: {
-//                 type: 'RESULTS'
-//             }
-//         }));
-
-    };
-
     MemoryView.prototype.append = function() {
-        var b;
-        this.bodyDiv.appendChild(this.header);
 
-        this.downloadAllLink = W.add('a', this.header, {
+        this.gameNameDiv = W.add('div', this.bodyDiv);;
+        this.gameNameDiv.classList.add('mb-1', 'fs-4', 'text-center');
+
+        this.downloadAllLink = W.add('a', this.bodyDiv, {
             'target': '_blank',
             innerHTML: 'Download the memory database of all game rooms.',
             download: 'memorydb.json'
         });
 
-        this.header.appendChild(document.createElement('br'));
-        this.header.appendChild(document.createTextNode(
+        this.bodyDiv.appendChild(document.createElement('br'));
+        this.bodyDiv.appendChild(document.createTextNode(
             'Warning! This operation might affect the ' +
                 'server\'s performance.'
         ));
+
+    };
+
+    MemoryView.prototype.listeners = function() {
+
+        node.on('CHANNEL_SELECTED', channel => {
+            let title = this.title ? this.title : '';
+            if (channel) title = `${channel} / ${title}`;
+            this.setTitle(title);
+        });
 
     };
 
