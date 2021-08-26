@@ -113,6 +113,10 @@ table {
   margin-right: 20px;
 }
 
+.close {
+    text-decoration: none;
+}
+
 /* ***************
  * Monitor widgets
  * ***************

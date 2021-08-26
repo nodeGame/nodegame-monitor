@@ -197,7 +197,7 @@ function Monitor(node) {
             that.alertDiv.style.display = '';
             setTimeout(() => {
                 that.alertDiv.style.display = 'none';
-            }, 3000);
+            }, 6000);
         };
 
         // ## Listeners (must be added before the widgets).
