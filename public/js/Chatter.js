@@ -16,7 +16,7 @@
 
     // ## Meta-data
 
-    Chatter.version = '0.3.0';
+    Chatter.version = '0.3.1';
     Chatter.description = 'Manage chats with the clients.';
 
     Chatter.title = 'Start a Chat';
@@ -150,7 +150,8 @@
                     closable: true,
                     docked: true,
                     printNames: visibleTitle !== title,
-                    printStartTime: true
+                    printStartTime: true,
+                    bootstrap5: true
                 };
                 if (msg) opts.initialMsg = { msg: msg };
 
