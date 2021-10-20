@@ -1,7 +1,10 @@
 # CHANGELOG
 
-## current
+## 7.0.0
 - Screen is locked upon disconnection.
+- Major upgrade of interface, use Bootstrap 5 now.
+- Improved support for exporting data from logs and data folders.
+- FileViewer improved, uses jstree now.
 
 ## 6.0.1
 - Fixed chat modes.
