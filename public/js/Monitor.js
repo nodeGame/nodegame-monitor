@@ -1,5 +1,5 @@
 /**
- * # Monitor for nodeGame
+ i* # Monitor for nodeGame
  * Copyright(c) 2021 Stefano Balietti
  * MIT Licensed
  *
@@ -319,7 +319,7 @@ function Monitor(node) {
         tmpElem = this.addTab('settings');
         // node.widgets.append('GameDetails', tmpElem);
         this.addTile('GameDetails', tmpElem, {
-            info: wiki + 'Settings-and-Treatments-v6'
+            info: wiki + 'Settings-and-Treatments-v7'
         });
 
 
@@ -327,18 +327,18 @@ function Monitor(node) {
         tmpElem = this.addTab('waitroom');
         // node.widgets.append('WaitRoomView', tmpElem);
         this.addTile('WaitRoomView', tmpElem, {
-            info: wiki + 'Waiting-Room-v6'
+            info: wiki + 'Waiting-Room-v7'
         });
 
         // Auth view.
         tmpElem = this.addTab('permissions');
         // node.widgets.append('AuthView', tmpElem);
         this.addTile('AuthView', tmpElem, {
-            info: wiki + 'Authorization-Rules-v6'
+            info: wiki + 'Authorization-Rules-v7'
         });
         // node.widgets.append('RequirementsView', tmpElem);
         this.addTile('RequirementsView', tmpElem, {
-            info: wiki + 'Requirements-Checkings-v6'
+            info: wiki + 'Requirements-Checkings-v7'
         });
 
         // Auth view.

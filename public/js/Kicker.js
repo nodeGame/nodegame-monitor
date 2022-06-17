@@ -30,7 +30,6 @@
     function Kicker() {}
 
     Kicker.prototype.append = function() {
-        var that;
         var str;
         var kickBtn;
         var elems, inputGroup, redirectInput;
@@ -39,8 +38,6 @@
         this.bodyDiv.appendChild(str);
         this.bodyDiv.appendChild(document.createElement('br'));
         this.bodyDiv.appendChild(document.createElement('br'));
-
-        that = this;
 
         elems = getInputAndButton(
             'Full URI or frame',
