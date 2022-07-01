@@ -168,7 +168,7 @@
         };
 
         return button;
-    };
+    }
 
     function populateSelectStage(select, seq) {
         var i, j, value, text, ss, opt;
@@ -191,7 +191,7 @@
                 select.appendChild(opt);
             }
         }
-    };
+    }
 
 
     function createInputAndButton(w, placeHolder, text, onclick) {
