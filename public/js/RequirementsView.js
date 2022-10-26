@@ -62,15 +62,20 @@
         s = node.game.gamesInfo[node.game.channelInUse].requirements;
         t = this.table;
         t.clear();
-        t.addRow(['enabled',  s.enabled ]);
-        if (s.enabled) {
-            for (i in s) {
-                if (s.hasOwnProperty(i)) {
-                    if (i !== 'enabled' && i !== 'requirements') {
-                        t.addRow([i, s[i]]);
+        if (s) {
+            t.addRow(['enabled',  s.enabled ]);
+            if (s.enabled) {
+                for (i in s) {
+                    if (s.hasOwnProperty(i)) {
+                        if (i !== 'enabled' && i !== 'requirements') {
+                            t.addRow([i, s[i]]);
+                        }
                     }
-                }
-            };
+                };
+            }
+        }
+        else {
+            t.addRow(['No info',  'An error has occurred' ]); 
         }
         t.parse();
     };
