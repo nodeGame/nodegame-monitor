@@ -1,108 +1,106 @@
 <!DOCTYPE html>
 <title>nodeGame Monitor</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
 <body>
-<div id="root"></div>
-<!-- nodeGame default libraries -->
-<script src="/socket.io/socket.io.js"></script>
-<script src="/javascripts/nodegame-full.js" charset="utf-8"></script>
-<!-- nodeGame Monitor widgets -->
-<script src="js/ClientList.js" charset="utf-8"></script>
-<script src="js/GameDetails.js" charset="utf-8"></script>
-<script src="js/FileViewer.js" charset="utf-8"></script>
-<!-- <script src="js/ResultsView.js" charset="utf-8"></script> -->
-<script src="js/MemoryView.js" charset="utf-8"></script>
-<script src="js/AuthView.js" charset="utf-8"></script>
-<script src="js/RequirementsView.js" charset="utf-8"></script>
-<script src="js/WaitRoomView.js" charset="utf-8"></script>
-<script src="js/ServerView.js" charset="utf-8"></script>
-<script src="js/Exporter.js" charset="utf-8"></script>
-<!-- <script src="js/LogFiles.js" charset="utf-8"></script> -->
-<script src="js/Chatter.js" charset="utf-8"></script>
-<script src="js/UIControls.js" charset="utf-8"></script>
-<script src="js/WaitRoomControls.js" charset="utf-8"></script>
-<script src="js/CustomMsg.js" charset="utf-8"></script>
-<script src="js/GameControls.js" charset="utf-8"></script>
-<script src="js/Kicker.js" charset="utf-8"></script>
-<script src="js/Monitor.js" charset="utf-8"></script>
-<!-- Third party libraries -->
-<!-- <script src="resources/jquery-1.11.1.min.js" charset="utf-8"></script> -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <div id="root"></div>
+  <!-- nodeGame default libraries -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/javascripts/nodegame-full.js" charset="utf-8"></script>
+  <!-- nodeGame Monitor widgets -->
+  <script src="js/ClientList.js" charset="utf-8"></script>
+  <script src="js/GameDetails.js" charset="utf-8"></script>
+  <script src="js/FileViewer.js" charset="utf-8"></script>
+  <!-- <script src="js/ResultsView.js" charset="utf-8"></script> -->
+  <script src="js/MemoryView.js" charset="utf-8"></script>
+  <script src="js/AuthView.js" charset="utf-8"></script>
+  <script src="js/RequirementsView.js" charset="utf-8"></script>
+  <script src="js/WaitRoomView.js" charset="utf-8"></script>
+  <script src="js/ServerView.js" charset="utf-8"></script>
+  <script src="js/Exporter.js" charset="utf-8"></script>
+  <!-- <script src="js/LogFiles.js" charset="utf-8"></script> -->
+  <script src="js/Chatter.js" charset="utf-8"></script>
+  <script src="js/UIControls.js" charset="utf-8"></script>
+  <script src="js/WaitRoomControls.js" charset="utf-8"></script>
+  <script src="js/CustomMsg.js" charset="utf-8"></script>
+  <script src="js/GameControls.js" charset="utf-8"></script>
+  <script src="js/Kicker.js" charset="utf-8"></script>
+  <script src="js/Monitor.js" charset="utf-8"></script>
+  <!-- Third party libraries -->
+  <!-- <script src="resources/jquery-1.11.1.min.js" charset="utf-8"></script> -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<!-- bootstrap -->
-<!-- <script src="resources/bootstrap.js" charset="utf-8"></script>
+  <!-- bootstrap -->
+  <!-- <script src="resources/bootstrap.js" charset="utf-8"></script>
 <link rel="stylesheet" href="./resources/bootstrap.css"></link> -->
-<script src="/lib/bootstrap5/js/bootstrap.bundle.js" charset="utf-8"></script>
-<link rel="stylesheet" href="/lib/bootstrap5/css/bootstrap.css"></link>
+  <script src="/lib/bootstrap5/js/bootstrap.bundle.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="/lib/bootstrap5/css/bootstrap.css">
+  </link>
 
 
-<!-- jstree -->
-<!-- <script src="resources/jstree/jstree.js" charset="utf-8"></script>
+  <!-- jstree -->
+  <!-- <script src="resources/jstree/jstree.js" charset="utf-8"></script>
 <script src="resources/jstree.js" charset="utf-8"></script> -->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
 
-<!-- nodeGame css causes some formatting troubles.-->
-<!-- waitScreen declaration manually copied  -->
-<!-- <link rel="stylesheet" href="/stylesheets/nodegame.css"></link> -->
-<!-- Final CSS -->
-<link rel="stylesheet" href="./css/monitor.css"></link>
-<div id="header">
-  <div id="alert-container" style="float: right">
-    <div class="alert alert-success" id="alertDiv" style="display: none; padding: 0 0.2em 0 0.5em">
-      <a href="#" class="close" aria-label="close" id="alertClose">&times;</a>
-      <span id="alertContent"></span>
+  <!-- nodeGame css causes some formatting troubles.-->
+  <!-- waitScreen declaration manually copied  -->
+  <!-- <link rel="stylesheet" href="/stylesheets/nodegame.css"></link> -->
+  <!-- Final CSS -->
+  <link rel="stylesheet" href="./css/monitor.css">
+  </link>
+  <div id="header">
+    <div id="alert-container" style="float: right">
+      <div class="alert alert-success" id="alertDiv" style="display: none; padding: 0 0.2em 0 0.5em">
+        <a href="#" class="close" aria-label="close" id="alertClose">&times;</a>
+        <span id="alertContent"></span>
+      </div>
+    </div>
+    <div id="header-right" style="float: right"></div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="card-group">
+
+        <div class="col" id="main-container"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div id="wall-container" class="col my-5">
+      </div>
     </div>
   </div>
-  <div id="header-right" style="float: right"></div>
-</div>
 
-<div class="container">
-    <div class="row">
-        <div class="card-group">
+  <div id="docker"></div>
+  <!-- Connect -->
+  <script>
+    window.onload = async function () {
+      let conf = new Monitor(node);
+      node.setup('nodegame', conf);
 
-            <div class="col" id="main-container"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div id="wall-container" class="col my-5">
-        </div>
-    </div>
-</div>
+      const response = await fetch("endpoint", { method: 'POST' });
+      const endpoint = await response.text();
 
-<div id="docker"></div>
-<!-- Connect -->
-<script>
-  window.onload = function() {
-    let conf = new Monitor(node);
-    node.setup('nodegame', conf);
-    let channel = JSUS.getQueryString('channel');
-    if (!channel) {
-      alert('You must specify a channel!');
-      return;
-    }
-    if (channel.charAt(0) !== '/') {
-      node.game.channelName = channel;
-      channel = '/' + channel;
-    }
-    else {
-      node.game.channelName = channel.substr(0,(channel.length -1));
-    }
-    node.connect(channel, { query: 'clientType=mymonitor' });
-    node.once('PLAYER_CREATED', function(player) {
-      node.game.start();
-    });
+      // Removes first '/'.
+      node.game.channelName = endpoint.substring(1);
 
-    node.widgets.append('DisconnectBox', 'header-right', {
+      node.connect(endpoint, { query: 'clientType=mymonitor' });
+      node.once('PLAYER_CREATED', function (player) {
+        node.game.start();
+      });
+
+      node.widgets.append('DisconnectBox', 'header-right', {
         showStatus: false,
         hidden: true,
-        disconnectCb: function() {
-            setTimeout(()=> {
-                W.lockScreen('Disconnection detected! Please refresh the ' +
-                             'page to reload.');
-            });
+        disconnectCb: function () {
+          setTimeout(() => {
+            W.lockScreen('Disconnection detected! Please refresh the ' +
+              'page to reload.');
+          });
         }
-    });
-  };
-</script>
+      });
+    };
+  </script>
 </body>
